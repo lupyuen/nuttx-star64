@@ -217,7 +217,11 @@ u32 magic2 = 0x05435352;  /* Magic number 2, little endian, "RSC\x05" */
 u32 res3;                 /* Reserved for PE COFF offset */
 ```
 
-Let's analyse the Armbian Linux Kernel Image with Ghidra...
+# Analyse Armbian Kernel Image with Ghidra
+
+Let's analyse the Armbian Linux Kernel Image with [Ghidra](https://github.com/NationalSecurityAgency/ghidra).
+
+In Ghidra, create a New Project. Click File > Import File, select `armbi_root/boot/vmlinuz-5.15.0-starfive2`...
 
 -   Format: Raw Binary
 
@@ -230,5 +234,7 @@ Let's analyse the Armbian Linux Kernel Image with Ghidra...
 ![Load the Armbian Linux Kernel Image into Ghidra](https://lupyuen.github.io/images/star64-ghidra.png)
 
 ![Load the Armbian Linux Kernel Image into Ghidra](https://lupyuen.github.io/images/star64-ghidra2.png)
+
+Double-click `vmlinuz-5.15.0-starfive2`, analyse the file with the Default Options.
 
 TODO
