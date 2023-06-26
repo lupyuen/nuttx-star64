@@ -62,6 +62,10 @@ This says that Linux Kernel will be loaded at `0x4400` `0000`...
 kernel_addr_r=0x44000000
 ```
 
+(Yocto Image loads Linux Kernel at a different address, see next section)
+
+This probably means that U-Boot Bootloader is loaded at `0x4000` `0000`.
+
 Here are the files in `armbi_root/boot`...
 
 ```text
