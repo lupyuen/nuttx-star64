@@ -1,8 +1,10 @@
 # Apache NuttX RTOS for Pine64 Star64 64-bit RISC-V SBC (StarFive JH7110)
 
-Read the article...
+Read the articles...
 
 -   ["64-bit RISC-V with Apache NuttX Real-Time Operating System"](https://lupyuen.github.io/articles/riscv)
+
+-   ["Rolling to RISC-V"](https://lupyuen.github.io/articles/pinephone2#rolling-to-risc-v)
 
 # Linux Images for Star64
 
