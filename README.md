@@ -6,15 +6,15 @@ Read the article...
 
 # Linux Images for Star64
 
-Let's examine the Linux Images for Star64 SBC, to see how U-Boot Bootloader is configured.
+Let's examine the Linux Images for Star64 SBC, to see how U-Boot Bootloader is configured. (We'll boot NuttX later with U-Boot)
 
 According to [Software Releases for Star64](https://wiki.pine64.org/wiki/STAR64#Software_releases), we have...
 
-1.  [Yocto Images](https://github.com/Fishwaldo/meta-pine64) at [pine64.my-ho.st](https://pine64.my-ho.st:8443/)
+-   [Yocto Images](https://github.com/Fishwaldo/meta-pine64) at [pine64.my-ho.st](https://pine64.my-ho.st:8443/)
 
     Let's inspect [star64-image-minimal](https://pine64.my-ho.st:8443/star64-image-minimal-star64-1.2.wic.bz2)
 
-1.  [Armbian Images](https://www.armbian.com/star64/)
+-   [Armbian Images](https://www.armbian.com/star64/)
 
     Let's inspect [Armbian 23.8 Lunar (Minimal)](https://github.com/armbianro/os/releases/download/23.8.0-trunk.56/Armbian_23.8.0-trunk.56_Star64_lunar_edge_5.15.0_minimal.img.xz)
 
@@ -26,7 +26,7 @@ Uncompress the .xz, mount the .img file on Linux / macOS / Windows as an ISO Vol
 
 The image contains 1 used partition: `armbi_root` (642 MB) that contains the Linux Root Filesystem.
 
-We see the U-Boot Configuration at `armbi_root/boot/uEnv.txt`...
+We see the U-Boot Bootloader Configuration at `armbi_root/boot/uEnv.txt`...
 
 ```text
 fdt_high=0xffffffffffffffff
@@ -79,7 +79,7 @@ total 14808
 -rw-r--r-- 1 luppy luppy     1562 Apr  6  2011 vf2_uEnv.txt
 ```
 
-`vf2_uEnv.txt` contains...
+`boot/vf2_uEnv.txt` contains the U-Boot Bootloader Configuration...
 
 ```text
 # This is the sample jh7110_uEnv.txt file for starfive visionfive U-boot
@@ -116,6 +116,6 @@ bootwait=setenv _delay ${bootdelay}; echo ${_delay}; while test ${_delay} > 0; d
 boot2=run bootargs_ext; mmc dev ${devnum}; fatload mmc ${devnum}:${partnum} ${fileaddr} ${fitfile}; bootm start ${fileaddr}; run setupfdt1;run setupird;run setupfdt2; bootm loados ${fileaddr}; run chipa_set_linux; run cpu_vol_set; echo "Booting kernel in"; booti ${kernel_addr_r} ${irdaddr}:${filesize} ${fdtaddr}
 ```
 
-TODO
+TODO: Yocto boots from FIT File `fitImage`? Is this a Linux Flat Image?
 
 # TODO
