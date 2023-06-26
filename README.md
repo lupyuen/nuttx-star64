@@ -56,7 +56,7 @@ distro_bootpart=1
 bootcmd=run bootcmd_distro
 ```
 
-This says that Linux Kernel will be loaded at `0x4400` `0000`...
+[`kernel_addr_r`](https://u-boot.readthedocs.io/en/latest/develop/bootstd.html#environment-variables) says that Linux Kernel will be loaded at `0x4400` `0000`...
 
 ```text
 kernel_addr_r=0x44000000
@@ -162,7 +162,7 @@ bootwait=setenv _delay ${bootdelay}; echo ${_delay}; while test ${_delay} > 0; d
 boot2=run bootargs_ext; mmc dev ${devnum}; fatload mmc ${devnum}:${partnum} ${fileaddr} ${fitfile}; bootm start ${fileaddr}; run setupfdt1;run setupird;run setupfdt2; bootm loados ${fileaddr}; run chipa_set_linux; run cpu_vol_set; echo "Booting kernel in"; booti ${kernel_addr_r} ${irdaddr}:${filesize} ${fdtaddr}
 ```
 
-This says that Linux Kernel will be loaded at `0x4020` `0000`...
+[`kernel_addr_r`](https://u-boot.readthedocs.io/en/latest/develop/bootstd.html#environment-variables) says that Linux Kernel will be loaded at `0x4020` `0000`...
 
 ```text
 # boot Linux flat or compressed 'Image' stored at 'kernel_addr_r'
