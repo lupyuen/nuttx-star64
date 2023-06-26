@@ -193,4 +193,36 @@ Hence we will overwrite Armbian's `armbi_root/boot/Image` by the NuttX Kernel Im
 
 # Inside the Armbian Kernel Image
 
-TODO: What's inside `armbi_root/boot/Image`?
+_What's inside the Armbian Linux Kernel Image?_
+
+Let's look inside `armbi_root/boot/Image`...
+
+![Armbian Kernel Image](https://lupyuen.github.io/images/star64-kernel.png)
+
+See the "RISCV" at `0x30`? That's the Magic Number for the RISC-V Linux Image Header!
+
+-   ["Boot image header in RISC-V Linux"](https://www.kernel.org/doc/html/latest/riscv/boot-image-header.html)
+
+```text
+u32 code0;                /* Executable code */
+u32 code1;                /* Executable code */
+u64 text_offset;          /* Image load offset, little endian */
+u64 image_size;           /* Effective Image size, little endian */
+u64 flags;                /* kernel flags, little endian */
+u32 version;              /* Version of this header */
+u32 res1 = 0;             /* Reserved */
+u64 res2 = 0;             /* Reserved */
+u64 magic = 0x5643534952; /* Magic number, little endian, "RISCV" */
+u32 magic2 = 0x05435352;  /* Magic number 2, little endian, "RSC\x05" */
+u32 res3;                 /* Reserved for PE COFF offset */
+```
+
+Let's analyse the Armbian Linux Kernel Image with Ghidra...
+
+-   Language: RISCV > RV64GC (RISCV:LE:64:RV64GC:gcc)
+
+    [(StarFive JH7110 has 4 × RV64GC U74 Application Cores)](https://doc-en.rvspace.org/JH7110/Datasheet/JH7110_DS/c_u74_quad_core.html)
+
+![Load the Armbian Linux Kernel Image into Ghidra](https://lupyuen.github.io/images/star64-ghidra.png)
+
+TODO
