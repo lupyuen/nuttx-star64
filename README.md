@@ -56,6 +56,12 @@ distro_bootpart=1
 bootcmd=run bootcmd_distro
 ```
 
+This says that Linux Kernel will be loaded at `0x4400` `0000`...
+
+```text
+kernel_addr_r=0x44000000
+```
+
 Here are the files in `armbi_root/boot`...
 
 ```text
@@ -88,7 +94,7 @@ Uncompress the .bz2, rename as .img. Balena Etcher won't work with .bz2 files!
 
 Write the .img to a microSD Card with Balena Etcher. Insert the microSD Card into a Linux Machine. (Like Pinebook Pro)
 
-We'll see 4 used partitions...
+We see 4 used partitions...
 
 -   spl (2 MB): ???
 
@@ -148,6 +154,15 @@ bootwait=setenv _delay ${bootdelay}; echo ${_delay}; while test ${_delay} > 0; d
 boot2=run bootargs_ext; mmc dev ${devnum}; fatload mmc ${devnum}:${partnum} ${fileaddr} ${fitfile}; bootm start ${fileaddr}; run setupfdt1;run setupird;run setupfdt2; bootm loados ${fileaddr}; run chipa_set_linux; run cpu_vol_set; echo "Booting kernel in"; booti ${kernel_addr_r} ${irdaddr}:${filesize} ${fdtaddr}
 ```
 
+This says that Linux Kernel will be loaded at `0x4020` `0000`...
+
+```text
+# boot Linux flat or compressed 'Image' stored at 'kernel_addr_r'
+kernel_addr_r=0x40200000
+```
+
+(Different from Armbian: `0x4400` `0000`)
+
 Yocto's `root/boot` looks different from Armbian...
 
 ```text
@@ -160,4 +175,6 @@ lrwxrwxrwx 1 root root       17 Mar  9  2018 fitImage -> fitImage-5.15.107
 
 TODO: Yocto boots from FIT File `boot/fitImage`? Is this a Linux Flat Image?
 
-# TODO
+# Boot NuttX with U-Boot Bootloader
+
+TODO: Boot NuttX with Armbian or Yocto settings? `0x4400` `0000` or `0x4020` `0000`?
