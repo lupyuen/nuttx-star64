@@ -66,6 +66,10 @@ kernel_addr_r=0x44000000
 
 This probably means that U-Boot Bootloader is loaded at `0x4000` `0000`.
 
+U-Boot Bootloader loads the Linux Kernel from `armbi_root/boot/Image`
+
+Which is sym-linked to `armbi_root/boot/vmlinuz-5.15.0-starfive2`
+
 Here are the files in `armbi_root/boot`...
 
 ```text
@@ -100,9 +104,9 @@ Write the .img to a microSD Card with Balena Etcher. Insert the microSD Card int
 
 We see 4 used partitions...
 
--   spl (2 MB): ???
+-   spl (2 MB): [Secondary Program Loader](https://github.com/u-boot/u-boot)
 
--   uboot (4 MB): U-Boot Bootloader
+-   uboot (4 MB): [U-Boot Bootloader](https://u-boot.readthedocs.io/en/latest/index.html)
 
 -   boot (380 MB): Boot Configuration for U-Boot
 
@@ -167,6 +171,8 @@ kernel_addr_r=0x40200000
 
 (Different from Armbian: `0x4400` `0000`)
 
+So Yocto boots from the [Flat Image Tree (FIT)](https://u-boot.readthedocs.io/en/latest/usage/fit/index.html#): `boot/fitImage`
+
 Yocto's `root/boot` looks different from Armbian...
 
 ```text
@@ -177,8 +183,14 @@ lrwxrwxrwx 1 root root       17 Mar  9  2018 fitImage -> fitImage-5.15.107
 -rw-r--r-- 1 root root 15151064 Mar  9  2018 fitImage-initramfs-5.15.107
 ```
 
-TODO: Yocto boots from FIT File `boot/fitImage`? Is this a Linux Flat Image?
-
 # Boot NuttX with U-Boot Bootloader
 
-TODO: Boot NuttX with Armbian or Yocto settings? `0x4400` `0000` or `0x4020` `0000`?
+_Will we boot NuttX with Armbian or Yocto settings? `0x4400` `0000` or `0x4020` `0000`?_
+
+Armbian looks simpler, since it uses a plain Linux Kernel Image File `Image`. (Instead of Yocto's complicated Flat Image Tree)
+
+Hence we will overwrite Armbian's `armbi_root/boot/Image` by the NuttX Kernel Image.
+
+TODO: What's inside `armbi_root/boot/Image`?
+
+# TODO
