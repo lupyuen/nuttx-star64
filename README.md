@@ -6,6 +6,10 @@ Read the articles...
 
 -   ["Rolling to RISC-V"](https://lupyuen.github.io/articles/pinephone2#rolling-to-risc-v)
 
+Let's port Apache NuttX RTOS to Pine64 Star64 64-bit RISC-V SBC! (Based on StarFive JH7110 SoC)
+
+Hopefully NuttX will run on Pine64 PineTab-V, which is also based on StarFive JH7110 SoC.
+
 # Linux Images for Star64
 
 Let's examine the Linux Images for Star64 SBC, to see how U-Boot Bootloader is configured. (We'll boot NuttX later with U-Boot)
