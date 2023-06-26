@@ -54,6 +54,30 @@ distro_bootpart=1
 bootcmd=run bootcmd_distro
 ```
 
+Here are the files in `armbi_root/boot`...
+
+```text
+→ ls -l /Volumes/armbi_root/boot
+total 94416
+lrwxrwxrwx  1 Luppy  staff        24 Jun 21 13:59 Image -> vmlinuz-5.15.0-starfive2
+-rw-r--r--  1 Luppy  staff   4276712 Jun 21 12:16 System.map-5.15.0-starfive2
+-rw-r--r--  1 Luppy  staff      1536 Jun 21 14:00 armbian_first_run.txt.template
+-rw-r--r--  1 Luppy  staff     38518 Jun 21 14:00 boot.bmp
+-rw-r--r--  1 Luppy  staff    144938 Jun 21 12:16 config-5.15.0-starfive2
+lrwxrwxrwx  1 Luppy  staff        20 Jun 21 13:59 dtb -> dtb-5.15.0-starfive2
+drwxr-xr-x  1 Luppy  staff         0 Jun 21 13:59 dtb-5.15.0-starfive2
+drwxrwxr-x  1 Luppy  staff         0 Jun 21 13:58 extlinux
+lrwxrwxrwx  1 Luppy  staff        27 Jun 21 13:59 initrd.img -> initrd.img-5.15.0-starfive2
+-rw-r--r--  1 Luppy  staff  10911474 Jun 21 14:01 initrd.img-5.15.0-starfive2
+lrwxrwxrwx  1 Luppy  staff        27 Jun 21 13:59 initrd.img.old -> initrd.img-5.15.0-starfive2
+-rw-rw-r--  1 Luppy  staff       341 Jun 21 14:00 uEnv.txt
+lrwxrwxrwx  1 Luppy  staff        24 Jun 21 14:01 uInitrd -> uInitrd-5.15.0-starfive2
+-rw-r--r--  1 Luppy  staff  10911538 Jun 21 14:01 uInitrd-5.15.0-starfive2
+lrwxrwxrwx  1 Luppy  staff        24 Jun 21 13:59 vmlinuz -> vmlinuz-5.15.0-starfive2
+-rw-r--r--  1 Luppy  staff  22040576 Jun 21 12:16 vmlinuz-5.15.0-starfive2
+lrwxrwxrwx  1 Luppy  staff        24 Jun 21 13:59 vmlinuz.old -> vmlinuz-5.15.0-starfive2
+```
+
 # Yocto Image for Star64
 
 Let's inspect the Yocto Image for Star64: [star64-image-minimal](https://pine64.my-ho.st:8443/star64-image-minimal-star64-1.2.wic.bz2)
@@ -122,6 +146,16 @@ bootwait=setenv _delay ${bootdelay}; echo ${_delay}; while test ${_delay} > 0; d
 boot2=run bootargs_ext; mmc dev ${devnum}; fatload mmc ${devnum}:${partnum} ${fileaddr} ${fitfile}; bootm start ${fileaddr}; run setupfdt1;run setupird;run setupfdt2; bootm loados ${fileaddr}; run chipa_set_linux; run cpu_vol_set; echo "Booting kernel in"; booti ${kernel_addr_r} ${irdaddr}:${filesize} ${fdtaddr}
 ```
 
-TODO: Yocto boots from FIT File `fitImage`? Is this a Linux Flat Image?
+Yocto's `root/boot` looks different from Armbian...
+
+```text
+$ ls -l /run/media/luppy/root/boot
+total 24376
+lrwxrwxrwx 1 root root       17 Mar  9  2018 fitImage -> fitImage-5.15.107
+-rw-r--r-- 1 root root  9807808 Mar  9  2018 fitImage-5.15.107
+-rw-r--r-- 1 root root 15151064 Mar  9  2018 fitImage-initramfs-5.15.107
+```
+
+TODO: Yocto boots from FIT File `boot/fitImage`? Is this a Linux Flat Image?
 
 # TODO
