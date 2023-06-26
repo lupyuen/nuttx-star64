@@ -191,6 +191,6 @@ Armbian looks simpler, since it uses a plain Linux Kernel Image File `Image`. (I
 
 Hence we will overwrite Armbian's `armbi_root/boot/Image` by the NuttX Kernel Image.
 
-TODO: What's inside `armbi_root/boot/Image`?
+# Inside the Armbian Kernel Image
 
-# TODO
+TODO: What's inside `armbi_root/boot/Image`?
