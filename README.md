@@ -219,10 +219,16 @@ u32 res3;                 /* Reserved for PE COFF offset */
 
 Let's analyse the Armbian Linux Kernel Image with Ghidra...
 
+-   Format: Raw Binary
+
 -   Language: RISCV > RV64GC (RISCV:LE:64:RV64GC:gcc)
 
     [(StarFive JH7110 has 4 × RV64GC U74 Application Cores)](https://doc-en.rvspace.org/JH7110/Datasheet/JH7110_DS/c_u74_quad_core.html)
 
+-   Options > Base Address: 0x44000000
+
 ![Load the Armbian Linux Kernel Image into Ghidra](https://lupyuen.github.io/images/star64-ghidra.png)
+
+![Load the Armbian Linux Kernel Image into Ghidra](https://lupyuen.github.io/images/star64-ghidra2.png)
 
 TODO
