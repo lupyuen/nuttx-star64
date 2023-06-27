@@ -257,15 +257,25 @@ TODO: Any interesting CSR Instructions?
 
 # Serial Console on Star64
 
-TODO
+To access the Serial Console, here's how we connect a [USB Serial Adapter](https://pine64.com/product/serial-console-woodpecker-edition/) to Star64...
 
-[Star64 Schematic](https://files.pine64.org/doc/star64/Star64_Schematic_V1.1_20230504.pdf)
+According to [Star64 Schematic](https://files.pine64.org/doc/star64/Star64_Schematic_V1.1_20230504.pdf), UART0 TX and RX (GPIO 5 and 6) are connected to the Pi GPIO Header (Pins 8 and 10).
 
-UART0 TX/RX: GPIO 5/6
+We connect these pins...
 
-GND: Pin 6 (Brown)
+| Star64 GPIO Header | [USB Serial Adapter](https://pine64.com/product/serial-console-woodpecker-edition/) | Wire Colour |
+|:----:|:----:|:----|
+| Pin 6 (GND) | GND | Brown
+| Pin 8 (TX) | RX | Red
+| Pin 10 (RX) | TX | Orange
 
-TX/RX: Pins 8 and 10 of Pi GPIO Header (Red / Orange)
+On our computer, connect to the USB Serial Port at 115.2 kbps...
+
+```bash
+screen /dev/ttyUSB0 115200
+```
+
+We will see this U-Boot Bootloader Log...
 
 # Star64 U-Boot Bootloader Log
 
