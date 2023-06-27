@@ -108,11 +108,11 @@ We see 4 used partitions...
 
 -   uboot (4 MB): [U-Boot Bootloader](https://u-boot.readthedocs.io/en/latest/index.html)
 
--   boot (380 MB): Boot Configuration for U-Boot
+-   boot (380 MB): U-Boot Configuration and Linux Kernel Image
 
 -   root (686 MB): Linux Root Filesystem
 
-Plus 2 unused partitions. (Why?)
+Plus one unused partition (2 MB) at the top. (Why?)
 
 ![Yocto Image for Star64](https://lupyuen.github.io/images/star64-yocto.png)
 
@@ -171,7 +171,7 @@ kernel_addr_r=0x40200000
 
 (Different from Armbian: `0x4400` `0000`)
 
-So Yocto boots from the [Flat Image Tree (FIT)](https://u-boot.readthedocs.io/en/latest/usage/fit/index.html#): `boot/fitImage`
+Yocto boots from the [Flat Image Tree (FIT)](https://u-boot.readthedocs.io/en/latest/usage/fit/index.html#): `boot/fitImage`
 
 Yocto's `root/boot` looks different from Armbian...
 
