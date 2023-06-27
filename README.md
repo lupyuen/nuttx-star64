@@ -591,6 +591,12 @@ Environment size: 7246/65532 bytes
 StarFive # 
 ```
 
+# Boot Armbian on Star64
+
+TODO
+
+[Armbian Boot Log](https://gist.github.com/lupyuen/d73ace627318375fe20e90e4950f9c50)
+
 # Boot Yocto on Star64
 
 TODO
