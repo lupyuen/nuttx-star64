@@ -255,15 +255,17 @@ Double-click `FUN_440010ac` to see the Linux Boot Code...
 
 ![Linux Boot Code in Ghidra](https://lupyuen.github.io/images/star64-ghidra4.png)
 
+TODO: Where is the source file?
+
 TODO: Any interesting CSR Instructions?
 
 # Serial Console on Star64
 
-To access the Serial Console, here's how we connect a [USB Serial Adapter](https://pine64.com/product/serial-console-woodpecker-edition/) to Star64...
+To access the Serial Console, we connect a [USB Serial Adapter](https://pine64.com/product/serial-console-woodpecker-edition/) to Star64...
 
 According to [Star64 Schematic](https://files.pine64.org/doc/star64/Star64_Schematic_V1.1_20230504.pdf), UART0 TX and RX (GPIO 5 and 6) are connected to the Pi GPIO Header (Pins 8 and 10).
 
-We connect these pins...
+Thus we connect these pins...
 
 | Star64 GPIO Header | [USB Serial Adapter](https://pine64.com/product/serial-console-woodpecker-edition/) | Wire Colour |
 |:----:|:----:|:----|
@@ -277,11 +279,15 @@ On our computer, connect to the USB Serial Port at 115.2 kbps...
 screen /dev/ttyUSB0 115200
 ```
 
-We will see this U-Boot Bootloader Log...
+Power up Star64. The DIP Switches for GPIO 0 and 1 default to Low and Low, so Star64 should boot from Flash Memory, which has the U-Boot Bootloader inside.
+
+We'll see this U-Boot Bootloader Log...
+
+TODO: Explain OpenSBI
 
 # Star64 U-Boot Bootloader Log
 
-Here's the log for U-Boot Bootloader on Star64...
+Here's the log for U-Boot Bootloader on Star64 (without microSD Card)...
 
 ![Linux Boot Code in Ghidra](https://lupyuen.github.io/images/star64-uboot1.png)
 
