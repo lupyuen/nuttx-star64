@@ -195,7 +195,7 @@ Hence we will overwrite Armbian's `armbi_root/boot/Image` by the NuttX Kernel Im
 
 _What's inside the Armbian Linux Kernel Image?_
 
-Let's look inside `armbi_root/boot/Image`...
+Let's look inside `armbi_root/boot/vmlinuz-5.15.0-starfive2`...
 
 ![Armbian Kernel Image](https://lupyuen.github.io/images/star64-kernel.png)
 
@@ -217,9 +217,11 @@ u32 magic2 = 0x05435352;  /* Magic number 2, little endian, "RSC\x05" */
 u32 res3;                 /* Reserved for PE COFF offset */
 ```
 
-# Analyse Armbian Kernel Image with Ghidra
+Let's decompile the Kernel Image...
 
-Let's analyse the Armbian Linux Kernel Image with [Ghidra](https://github.com/NationalSecurityAgency/ghidra).
+# Decompile Armbian Kernel Image with Ghidra
+
+We decompile the Armbian Linux Kernel Image with [Ghidra](https://github.com/NationalSecurityAgency/ghidra).
 
 In Ghidra, create a New Project. Click File > Import File.
 
@@ -241,7 +243,7 @@ Select `armbi_root/boot/vmlinuz-5.15.0-starfive2` and enter these Import Options
 
 Double-click `vmlinuz-5.15.0-starfive2`, analyse the file with the Default Options.
 
-Ghidra displays the Disassembled Linux Kernel...
+Ghidra displays the Decompiled Linux Kernel...
 
 ![Disassembled Linux Kernel in Ghidra](https://lupyuen.github.io/images/star64-ghidra3.png)
 
