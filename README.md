@@ -269,7 +269,11 @@ TX/RX: Pins 8 and 10 of Pi GPIO Header (Red / Orange)
 
 # Star64 U-Boot Bootloader Log
 
-TODO
+Here's the log for U-Boot Bootloader on Star64...
+
+![Linux Boot Code in Ghidra](https://lupyuen.github.io/images/star64-uboot1.png)
+
+![Linux Boot Code in Ghidra](https://lupyuen.github.io/images/star64-uboot2.png)
 
 ```text
 U-Boot SPL 2021.10 (Jan 19 2023 - 04:09:41 +0800)
