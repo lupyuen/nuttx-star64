@@ -662,3 +662,9 @@ root/pine64
 pine64/pine64
 
 [(Source)](https://github.com/Fishwaldo/meta-pine64#usernames)
+
+# Boot Yocto Plasma on Star64
+
+TODO
+
+https://pine64.my-ho.st:8443/star64-image-plasma-star64-1.2.wic.bz2
