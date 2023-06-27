@@ -253,4 +253,14 @@ Double-click `FUN_440010ac` to see the Linux Boot Code...
 
 ![Linux Boot Code in Ghidra](https://lupyuen.github.io/images/star64-ghidra4.png)
 
+# Serial Console on Star64
+
 TODO
+
+[Star64 Schematic](https://files.pine64.org/doc/star64/Star64_Schematic_V1.1_20230504.pdf)
+
+UART0 TX/RX: GPIO 5/6
+
+GND: Pin 6 (Brown)
+
+TX/RX: Pins 8 and 10 of Pi GPIO Header (Red / Orange)
