@@ -245,6 +245,8 @@ Ghidra displays the Disassembled Linux Kernel...
 
 ![Disassembled Linux Kernel in Ghidra](https://lupyuen.github.io/images/star64-ghidra3.png)
 
+At Address `0x4400` `0002` we see a Jump to `FUN_440010ac`.
+
 Double-click `FUN_440010ac` to see the Linux Boot Code...
 
 ![Linux Boot Code in Ghidra](https://lupyuen.github.io/images/star64-ghidra4.png)
