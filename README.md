@@ -590,3 +590,15 @@ visionfive2_mem_set=fdt memory ${memory_addr} ${memory_size};
 Environment size: 7246/65532 bytes
 StarFive # 
 ```
+
+# Boot Yocto on Star64
+
+TODO
+
+[Yocto Boot Log](https://gist.github.com/lupyuen/b23edf50cecbee13e5aab3c0bae6c528)
+
+Usernames:
+root/pine64
+pine64/pine64
+
+[(Source)](https://github.com/Fishwaldo/meta-pine64#usernames)
