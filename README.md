@@ -36,7 +36,7 @@ Uncompress the .xz, mount the .img file on Linux / macOS / Windows as an ISO Vol
 
 The image contains 1 used partition: `armbi_root` (642 MB) that contains the Linux Root Filesystem.
 
-Plus one unused partition (2 MB) at the top. (Why?)
+Plus one unused partition (4 MB) at the top. (Why?)
 
 ![Armbian Image for Star64](https://lupyuen.github.io/images/star64-armbian.png)
 
