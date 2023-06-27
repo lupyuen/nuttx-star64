@@ -615,7 +615,7 @@ StarFive #
 
 # Boot Armbian on Star64
 
-TODO
+TODO: [Armbian 23.8 Lunar (Minimal)](https://github.com/armbianro/os/releases/download/23.8.0-trunk.56/Armbian_23.8.0-trunk.56_Star64_lunar_edge_5.15.0_minimal.img.xz)
 
 [Armbian Boot Log](https://gist.github.com/lupyuen/d73ace627318375fe20e90e4950f9c50)
 
@@ -653,7 +653,7 @@ jh7110-evb-uart5-pwm-i2c-tdm.dtb vf2-overlay
 
 # Boot Yocto on Star64
 
-TODO
+TODO: [star64-image-minimal](https://pine64.my-ho.st:8443/star64-image-minimal-star64-1.2.wic.bz2)
 
 [Yocto Boot Log](https://gist.github.com/lupyuen/b23edf50cecbee13e5aab3c0bae6c528)
 
@@ -665,6 +665,10 @@ pine64/pine64
 
 # Boot Yocto Plasma on Star64
 
-TODO
+TODO: [star64-image-plasma](https://pine64.my-ho.st:8443/star64-image-plasma-star64-1.2.wic.bz2)
 
-https://pine64.my-ho.st:8443/star64-image-plasma-star64-1.2.wic.bz2
+Usernames:
+root/pine64
+pine64/pine64
+
+![Yocto Plasma on Star64](https://lupyuen.github.io/images/star64-plasma.jpg)
