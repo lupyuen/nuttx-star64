@@ -221,7 +221,9 @@ u32 res3;                 /* Reserved for PE COFF offset */
 
 Let's analyse the Armbian Linux Kernel Image with [Ghidra](https://github.com/NationalSecurityAgency/ghidra).
 
-In Ghidra, create a New Project. Click File > Import File, select `armbi_root/boot/vmlinuz-5.15.0-starfive2`...
+In Ghidra, create a New Project. Click File > Import File.
+
+Select `armbi_root/boot/vmlinuz-5.15.0-starfive2` and enter these Import Options...
 
 -   Format: Raw Binary
 
@@ -231,10 +233,20 @@ In Ghidra, create a New Project. Click File > Import File, select `armbi_root/bo
 
 -   Options > Base Address: 0x44000000
 
+    (Based on the U-Boot Configuration from above)
+
 ![Load the Armbian Linux Kernel Image into Ghidra](https://lupyuen.github.io/images/star64-ghidra.png)
 
 ![Load the Armbian Linux Kernel Image into Ghidra](https://lupyuen.github.io/images/star64-ghidra2.png)
 
 Double-click `vmlinuz-5.15.0-starfive2`, analyse the file with the Default Options.
+
+Ghidra displays the Disassembled Linux Kernel...
+
+![Disassembled Linux Kernel in Ghidra](https://lupyuen.github.io/images/star64-ghidra3.png)
+
+Double-click `FUN_440010ac` to see the Linux Boot Code...
+
+![Linux Boot Code in Ghidra](https://lupyuen.github.io/images/star64-ghidra4.png)
 
 TODO
