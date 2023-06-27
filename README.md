@@ -68,9 +68,25 @@ kernel_addr_r=0x44000000
 
 This probably means that U-Boot Bootloader is loaded at `0x4000` `0000`.
 
-U-Boot Bootloader loads the Linux Kernel from `armbi_root/boot/Image`
+U-Boot Bootloader will also read the options from `armbi_root/boot/extlinux/extlinux.conf`...
+
+```text
+label Armbian
+  kernel /boot/Image
+  initrd /boot/uInitrd
+  fdt /boot/dtb/starfive/jh7110-star64-pine64.dtb
+  append root=UUID=99f62df4-be35-475c-99ef-2ba3f74fe6b5 console=ttyS0,115200n8 console=tty0 earlycon=sbi rootflags=data=writeback stmmaceth=chain_mode:1 rw rw no_console_suspend consoleblank=0 fsck.fix=yes fsck.repair=yes net.ifnames=0 splash plymouth.ignore-serial-consoles
+```
+
+TODO: What is `boot/uInitrd`?
+
+This says that U-Boot will load the Linux Kernel from `armbi_root/boot/Image`
 
 Which is sym-linked to `armbi_root/boot/vmlinuz-5.15.0-starfive2`
+
+But the Flattened Device Tree (FDT) is missing! `/boot/dtb/starfive/jh7110-star64-pine64.dtb`
+
+Which will fail the Armbian boot.
 
 Here are the files in `armbi_root/boot`...
 
@@ -191,7 +207,13 @@ _Will we boot NuttX with Armbian or Yocto settings? `0x4400` `0000` or `0x4020` 
 
 Armbian looks simpler, since it uses a plain Linux Kernel Image File `Image`. (Instead of Yocto's complicated Flat Image Tree)
 
-Hence we will overwrite Armbian's `armbi_root/boot/Image` by the NuttX Kernel Image.
+Hence we'll overwrite Armbian's `armbi_root/boot/Image` by the NuttX Kernel Image.
+
+We'll compile NuttX Kernel to boot at `0x4400` `0000`.
+
+NuttX Kernel will begin with a RISC-V Linux Header. (See next section)
+
+We'll use a Temporary File for the Flattened Device Tree (FDT) since it's missing from Armbian.
 
 # Inside the Armbian Kernel Image
 
@@ -596,6 +618,38 @@ StarFive #
 TODO
 
 [Armbian Boot Log](https://gist.github.com/lupyuen/d73ace627318375fe20e90e4950f9c50)
+
+Armbian failed to boot...
+
+```text
+Found /boot/extlinux/extlinux.conf
+Retrieving file: /boot/extlinux/extlinux.conf
+383 bytes read in 7 ms (52.7 KiB/s)
+1:[6CArmbian
+Retrieving file: /boot/uInitrd
+10911538 bytes read in 466 ms (22.3 MiB/s)
+Retrieving file: /boot/Image
+22040576 bytes read in 936 ms (22.5 MiB/s)
+append: root=UUID=99f62df4-be35-475c-99ef-2ba3f74fe6b5 console=ttyS0,115200n8 console=tty0 earlycon=sbi rootflags=data=writeback stmmaceth=chain_mode:1 rw rw no_console_suspend consoleblank=0 fsck.fix=yes fsck.repair=yes net.ifnames=0 splash plymouth.ignore-serial-consoles
+Retrieving file: /boot/dtb/starfive/jh7110-star64-pine64.dtb
+Failed to load '/boot/dtb/starfive/jh7110-star64-pine64.dtb'
+Skipping Armbian for failure retrieving FDT
+```
+
+The Flattened Device Tree (FDT) is missing! `/boot/dtb/starfive/jh7110-star64-pine64.dtb`
+
+```text
+→ ls /Volumes/armbi_root/boot/dtb-5.15.0-starfive2/starfive
+evb-overlay                      jh7110-evb-usbdevice.dtb
+jh7110-evb-can-pdm-pwmdac.dtb    jh7110-evb.dtb
+jh7110-evb-dvp-rgb2hdmi.dtb      jh7110-fpga.dtb
+jh7110-evb-i2s-ac108.dtb         jh7110-visionfive-v2-A10.dtb
+jh7110-evb-pcie-i2s-sd.dtb       jh7110-visionfive-v2-A11.dtb
+jh7110-evb-spi-uart2.dtb         jh7110-visionfive-v2-ac108.dtb
+jh7110-evb-uart1-rgb2hdmi.dtb    jh7110-visionfive-v2-wm8960.dtb
+jh7110-evb-uart4-emmc-spdif.dtb  jh7110-visionfive-v2.dtb
+jh7110-evb-uart5-pwm-i2c-tdm.dtb vf2-overlay
+```
 
 # Boot Yocto on Star64
 
