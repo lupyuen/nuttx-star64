@@ -294,9 +294,16 @@ Ghidra displays the Decompiled Linux Kernel...
 
 ![Disassembled Linux Kernel in Ghidra](https://lupyuen.github.io/images/star64-ghidra3.png)
 
-At Address `0x4400` `0002` we see a Jump to `FUN_440010ac`.
+At Address `0x4400` `0002` we see a Jump to `FUN_440010c8`...
 
-Double-click `FUN_440010ac` to see the Linux Boot Code...
+```text
+// Load -13 into Register S4
+li  s4,-0xd
+// Jump to Actual Boot Code
+j   FUN_440010c8
+```
+
+Double-click `FUN_440010c8` to see the Linux Boot Code...
 
 ![Linux Boot Code in Ghidra](https://lupyuen.github.io/images/star64-ghidra4.png)
 
