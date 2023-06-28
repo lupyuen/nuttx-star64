@@ -28,6 +28,8 @@ According to [Software Releases for Star64](https://wiki.pine64.org/wiki/STAR64#
 
     Let's inspect [Armbian 23.8 Lunar (Minimal)](https://github.com/armbianro/os/releases/download/23.8.0-trunk.56/Armbian_23.8.0-trunk.56_Star64_lunar_edge_5.15.0_minimal.img.xz)
 
+Current state of RISC-V Linux: [Linux on RISC-V (2022)](https://docs.google.com/presentation/d/1A0A6DnGyXR_MPpeg7QunQbv_yePPqid_uRswQe8Sj8M/edit#slide=id.p)
+
 # Armbian Image for Star64
 
 Let's inspect the Armbian Image for Star64: [Armbian 23.8 Lunar (Minimal)](https://github.com/armbianro/os/releases/download/23.8.0-trunk.56/Armbian_23.8.0-trunk.56_Star64_lunar_edge_5.15.0_minimal.img.xz)
@@ -326,7 +328,7 @@ Power up Star64. The DIP Switches for GPIO 0 and 1 default to Low and Low, so St
 
 We'll see this U-Boot Bootloader Log...
 
-TODO: Explain OpenSBI
+TODO: Explain [OpenSBI](https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/)
 
 # Star64 U-Boot Bootloader Log
 
