@@ -344,9 +344,7 @@ TODO: Explain [OpenSBI](https://www.thegoodpenguin.co.uk/blog/an-overview-of-ope
 
 Here's the log for U-Boot Bootloader on Star64 (without microSD Card)...
 
-![Linux Boot Code in Ghidra](https://lupyuen.github.io/images/star64-uboot1.png)
-
-![Linux Boot Code in Ghidra](https://lupyuen.github.io/images/star64-uboot2.png)
+![U-Boot Bootloader Log](https://lupyuen.github.io/images/star64-opensbi.jpg)
 
 ```text
 U-Boot SPL 2021.10 (Jan 19 2023 - 04:09:41 +0800)
