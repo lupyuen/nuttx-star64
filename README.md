@@ -8,6 +8,8 @@ Read the articles...
 
 -   ["Rolling to RISC-V"](https://lupyuen.github.io/articles/pinephone2#rolling-to-risc-v)
 
+-   ["Inspecting the RISC-V Linux Images for Star64 SBC"](https://lupyuen.github.io/articles/star64)
+
 Let's port Apache NuttX RTOS to [Pine64 Star64](https://wiki.pine64.org/wiki/STAR64) 64-bit RISC-V SBC!
 
 (Based on [StarFive JH7110 SoC](https://doc-en.rvspace.org/Doc_Center/jh7110.html))
