@@ -40,7 +40,7 @@ Uncompress the .xz, mount the .img file on Linux / macOS / Windows as an ISO Vol
 
 The image contains 1 used partition: `armbi_root` (612 MB) that contains the Linux Root Filesystem.
 
-Plus one unused partition (4 MB) at the top. (Why?)
+Plus one unused partition (4 MB) at the top. (Partition Table)
 
 ![Armbian Image for Star64](https://lupyuen.github.io/images/star64-armbian.png)
 
@@ -143,15 +143,15 @@ Write the .img to a microSD Card with Balena Etcher. Insert the microSD Card int
 
 We see 4 used partitions...
 
--   spl (2 MB): [Secondary Program Loader](https://github.com/u-boot/u-boot)
+-   spl (2 MB): [Secondary Program Loader](https://u-boot.readthedocs.io/en/latest/board/starfive/visionfive2.html#flashing)
 
--   uboot (4 MB): [U-Boot Bootloader](https://u-boot.readthedocs.io/en/latest/index.html)
+-   uboot (4 MB): [U-Boot Bootloader](https://u-boot.readthedocs.io/en/latest/board/starfive/visionfive2.html#flashing)
 
 -   boot (380 MB): U-Boot Configuration and Linux Kernel Image
 
 -   root (686 MB): Linux Root Filesystem
 
-Plus one unused partition (2 MB) at the top. (Why?)
+Plus one unused partition (2 MB) at the top. (Partition Table)
 
 ![Yocto Image for Star64](https://lupyuen.github.io/images/star64-yocto.png)
 
