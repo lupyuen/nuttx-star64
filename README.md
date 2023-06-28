@@ -34,7 +34,7 @@ Let's inspect the Armbian Image for Star64: [Armbian 23.8 Lunar (Minimal)](https
 
 Uncompress the .xz, mount the .img file on Linux / macOS / Windows as an ISO Volume.
 
-The image contains 1 used partition: `armbi_root` (642 MB) that contains the Linux Root Filesystem.
+The image contains 1 used partition: `armbi_root` (612 MB) that contains the Linux Root Filesystem.
 
 Plus one unused partition (4 MB) at the top. (Why?)
 
@@ -68,7 +68,7 @@ bootcmd=run bootcmd_distro
 kernel_addr_r=0x44000000
 ```
 
-(Yocto Image loads Linux Kernel at a different address, see next section)
+(Yocto Image boots Linux Kernel at a different address, see next section)
 
 This probably means that U-Boot Bootloader is loaded at `0x4000` `0000`.
 
@@ -82,15 +82,26 @@ label Armbian
   append root=UUID=99f62df4-be35-475c-99ef-2ba3f74fe6b5 console=ttyS0,115200n8 console=tty0 earlycon=sbi rootflags=data=writeback stmmaceth=chain_mode:1 rw rw no_console_suspend consoleblank=0 fsck.fix=yes fsck.repair=yes net.ifnames=0 splash plymouth.ignore-serial-consoles
 ```
 
-TODO: What is `boot/uInitrd`?
-
 This says that U-Boot will load the Linux Kernel from `armbi_root/boot/Image`
 
 Which is sym-linked to `armbi_root/boot/vmlinuz-5.15.0-starfive2`
 
 But the Flattened Device Tree (FDT) is missing! `/boot/dtb/starfive/jh7110-star64-pine64.dtb`
 
-Which will fail the Armbian boot.
+Which will fail the Armbian boot. (As we'll see later)
+
+```text
+→ ls /Volumes/armbi_root/boot/dtb-5.15.0-starfive2/starfive
+evb-overlay                      jh7110-evb-usbdevice.dtb
+jh7110-evb-can-pdm-pwmdac.dtb    jh7110-evb.dtb
+jh7110-evb-dvp-rgb2hdmi.dtb      jh7110-fpga.dtb
+jh7110-evb-i2s-ac108.dtb         jh7110-visionfive-v2-A10.dtb
+jh7110-evb-pcie-i2s-sd.dtb       jh7110-visionfive-v2-A11.dtb
+jh7110-evb-spi-uart2.dtb         jh7110-visionfive-v2-ac108.dtb
+jh7110-evb-uart1-rgb2hdmi.dtb    jh7110-visionfive-v2-wm8960.dtb
+jh7110-evb-uart4-emmc-spdif.dtb  jh7110-visionfive-v2.dtb
+jh7110-evb-uart5-pwm-i2c-tdm.dtb vf2-overlay
+```
 
 Here are the files in `armbi_root/boot`...
 
@@ -115,6 +126,8 @@ lrwxrwxrwx  1 Luppy  staff        24 Jun 21 13:59 vmlinuz -> vmlinuz-5.15.0-star
 -rw-r--r--  1 Luppy  staff  22040576 Jun 21 12:16 vmlinuz-5.15.0-starfive2
 lrwxrwxrwx  1 Luppy  staff        24 Jun 21 13:59 vmlinuz.old -> vmlinuz-5.15.0-starfive2
 ```
+
+TODO: Explain `boot/uInitrd` RAM Disk
 
 # Yocto Image for Star64
 
@@ -247,6 +260,8 @@ u32 res3;                 /* Reserved for PE COFF offset */
 
 Let's decompile the Kernel Image...
 
+TODO: Explain MZ and the funny RISC-V instruction at the top
+
 # Decompile Armbian Kernel Image with Ghidra
 
 We decompile the Armbian Linux Kernel Image with [Ghidra](https://github.com/NationalSecurityAgency/ghidra).
@@ -280,6 +295,8 @@ At Address `0x4400` `0002` we see a Jump to `FUN_440010ac`.
 Double-click `FUN_440010ac` to see the Linux Boot Code...
 
 ![Linux Boot Code in Ghidra](https://lupyuen.github.io/images/star64-ghidra4.png)
+
+TODO: Explain MZ and the funny RISC-V instruction at the top
 
 TODO: Where is the source file?
 
@@ -421,6 +438,13 @@ phy_startup() failed: -110FAILED: -110ethernet@16030000 Waiting for PHY auto neg
 phy_startup() failed: -110FAILED: -110ethernet@16040000 Waiting for PHY auto negotiation to complete......... TIMEOUT !
 phy_startup() failed: -110FAILED: -110StarFive # 
 StarFive # 
+```
+
+Which is OK because we haven't inserted a microSD Card.
+
+Here are the U-Boot Commands...
+
+```text
 StarFive # help
 ?         - alias for 'help'
 base      - print or set address offset
@@ -524,7 +548,11 @@ true      - do nothing, successfully
 unlz4     - lz4 uncompress a memory region
 unzip     - unzip a memory region
 version   - print monitor, compiler and linker version
+```
 
+Here are the U-Boot Settings...
+
+```text
 StarFive # printenv
 baudrate=115200
 boot_a_script=load ${devtype} ${devnum}:${distro_bootpart} ${scriptaddr} ${prefix}${script}; source ${scriptaddr}
@@ -619,11 +647,17 @@ StarFive #
 
 # Boot Armbian on Star64
 
-TODO: [Armbian 23.8 Lunar (Minimal)](https://github.com/armbianro/os/releases/download/23.8.0-trunk.56/Armbian_23.8.0-trunk.56_Star64_lunar_edge_5.15.0_minimal.img.xz)
+Let's boot Armbian on Star64!
 
-[Armbian Boot Log](https://gist.github.com/lupyuen/d73ace627318375fe20e90e4950f9c50)
+We download the Armbian Image for Star64: [Armbian 23.8 Lunar (Minimal)](https://github.com/armbianro/os/releases/download/23.8.0-trunk.56/Armbian_23.8.0-trunk.56_Star64_lunar_edge_5.15.0_minimal.img.xz)
 
-Armbian failed to boot...
+Uncompress the .xz, write the .img to a microSD Card with Balena Etcher.
+
+Here's what happens when we boot the microSD Card on Star64...
+
+-   [Armbian Boot Log](https://gist.github.com/lupyuen/d73ace627318375fe20e90e4950f9c50)
+
+Armbian fails to boot...
 
 ```text
 Found /boot/extlinux/extlinux.conf
@@ -655,24 +689,50 @@ jh7110-evb-uart4-emmc-spdif.dtb  jh7110-visionfive-v2.dtb
 jh7110-evb-uart5-pwm-i2c-tdm.dtb vf2-overlay
 ```
 
+We'll wait for the Armbian Team to fix this.
+
 # Boot Yocto on Star64
 
-TODO: [star64-image-minimal](https://pine64.my-ho.st:8443/star64-image-minimal-star64-1.2.wic.bz2)
+Now we boot Yocto on Star64.
 
-[Yocto Boot Log](https://gist.github.com/lupyuen/b23edf50cecbee13e5aab3c0bae6c528)
+We download the Yocto Minimal Image for Star64: [star64-image-minimal](https://pine64.my-ho.st:8443/star64-image-minimal-star64-1.2.wic.bz2)
 
-Usernames:
-root/pine64
-pine64/pine64
+Uncompress the .bz2, rename as .img. Balena Etcher won't work with .bz2 files!
+
+Write the .img to a microSD Card with Balena Etcher.
+
+Here's what happens when we boot the microSD Card on Star64...
+
+-   [Yocto Boot Log](https://gist.github.com/lupyuen/b23edf50cecbee13e5aab3c0bae6c528)
+
+Usernames and Passwords are...
+-   root / pine64
+-   pine64 / pine64
 
 [(Source)](https://github.com/Fishwaldo/meta-pine64#usernames)
 
+Yep the Yocto Minimal Image boots OK on Star64!
+
 # Boot Yocto Plasma on Star64
 
-TODO: [star64-image-plasma](https://pine64.my-ho.st:8443/star64-image-plasma-star64-1.2.wic.bz2)
+Finally we boot Yocto Plasma on Star64.
 
-Usernames:
-root/pine64
-pine64/pine64
+We download the Yocto Plasma Image for Star64: [star64-image-plasma](https://pine64.my-ho.st:8443/star64-image-plasma-star64-1.2.wic.bz2)
+
+Uncompress the .bz2, rename as .img. Balena Etcher won't work with .bz2 files!
+
+Write the .img to a microSD Card with Balena Etcher.
+
+When we boot the microSD Card on Star64, the Plasma Desktop Environment runs OK on a HDMI Display! (Pic below)
+
+Usernames and Passwords are...
+-   root / pine64
+-   pine64 / pine64
+
+[(Source)](https://github.com/Fishwaldo/meta-pine64#usernames)
 
 ![Yocto Plasma on Star64](https://lupyuen.github.io/images/star64-plasma.jpg)
+
+# NuttX on Star64
+
+TODO
