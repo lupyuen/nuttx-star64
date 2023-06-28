@@ -4,11 +4,11 @@
 
 Read the articles...
 
+-   ["Inspecting the RISC-V Linux Images for Star64 SBC"](https://lupyuen.github.io/articles/star64)
+
 -   ["64-bit RISC-V with Apache NuttX Real-Time Operating System"](https://lupyuen.github.io/articles/riscv)
 
 -   ["Rolling to RISC-V"](https://lupyuen.github.io/articles/pinephone2#rolling-to-risc-v)
-
--   ["Inspecting the RISC-V Linux Images for Star64 SBC"](https://lupyuen.github.io/articles/star64)
 
 Let's port Apache NuttX RTOS to [Pine64 Star64](https://wiki.pine64.org/wiki/STAR64) 64-bit RISC-V SBC!
 
@@ -452,6 +452,8 @@ StarFive #
 
 Which is OK because we haven't inserted a microSD Card.
 
+## U-Boot Commands for Star64
+
 Here are the U-Boot Commands...
 
 ```text
@@ -559,6 +561,8 @@ unlz4     - lz4 uncompress a memory region
 unzip     - unzip a memory region
 version   - print monitor, compiler and linker version
 ```
+
+## U-Boot Settings for Star64
 
 Here are the U-Boot Settings...
 
