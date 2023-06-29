@@ -829,6 +829,8 @@ NuttShell (NSH) NuttX-12.0.3
 nsh> 
 ```
 
+Which is correct because QEMU is running with 8 CPUs.
+
 TODO: Embed Linux Kernel Header in QEMU
 
 TODO: Set Kernel Start Address
