@@ -802,9 +802,16 @@ TODO: Embed Linux Kernel Header in QEMU
 
 TODO: Set Kernel Start Address
 
+From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L56-L57):
+
+```text
+CONFIG_RAM_SIZE=33554432
+CONFIG_RAM_START=0x80000000
+```
+
 TODO: Set UART Base Address
 
-From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16
+From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
 
 ```text
 CONFIG_16550_ADDRWIDTH=0
