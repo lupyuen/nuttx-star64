@@ -751,7 +751,7 @@ Usernames and Passwords are...
 
 ![Yocto Plasma on Star64](https://lupyuen.github.io/images/star64-plasma.jpg)
 
-# NuttX on Star64
+# UART Output on Star64
 
 TODO
 
@@ -793,3 +793,7 @@ static void u16550_send(struct uart_dev_s *dev, int ch)
 ```
 
 So we can transmit to UART0 by writing to `0x1000` `0000`. How convenient!
+
+# NuttX on Star64
+
+TODO
