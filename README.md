@@ -754,3 +754,42 @@ Usernames and Passwords are...
 # NuttX on Star64
 
 TODO
+
+UART0 is at 0x00_1000_0000
+
+[System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html)
+
+Register base address "0x10000000" and range "0x10000"
+
+[UART Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html)
+
+[UART Datasheet](https://doc-en.rvspace.org/JH7110/Datasheet/JH7110_DS/uart.html)
+
+[u16550_send](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L1539-L1553)
+
+```c
+/****************************************************************************
+ * Name: u16550_send
+ *
+ * Description:
+ *   This method will send one byte on the UART
+ *
+ ****************************************************************************/
+
+static void u16550_send(struct uart_dev_s *dev, int ch)
+{
+  FAR struct u16550_s *priv = (FAR struct u16550_s *)dev->priv;
+  u16550_serialout(priv, UART_THR_OFFSET, (uart_datawidth_t)ch);
+}
+```
+
+[u16550_serialout](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L610-L624)
+
+[UART_THR_OFFSET](https://github.com/apache/nuttx/blob/dc69b108b8e0547ecf6990207526c27aceaf1e2e/include/nuttx/serial/uart_16550.h#L172-L200) is 0
+
+```c
+#define UART_THR_INCR          0 /* (DLAB =0) Transmit Holding Register */
+#define UART_THR_OFFSET        (CONFIG_16550_REGINCR*UART_THR_INCR)
+```
+
+So we can transmit to UART0 by writing to `0x1000` `0000`. How convenient!
