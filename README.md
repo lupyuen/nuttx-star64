@@ -796,4 +796,10 @@ So we can transmit to UART0 by writing to `0x1000` `0000`. How convenient!
 
 # NuttX on Star64
 
-TODO
+TODO: Set Kernel Start Address
+
+TODO: Embed Linux Kernel Header
+
+TODO: Set UART Base Address
+
+TODO: Test in QEMU
