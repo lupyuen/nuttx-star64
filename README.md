@@ -798,6 +798,37 @@ So we can transmit to UART0 by writing to `0x1000` `0000`. How convenient!
 
 TODO: Test printing in QEMU
 
+From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_head.S#L43-L64):
+
+```text
+  /* Load UART Base Address to Register t0 */
+  li  t0, 0x10000000
+
+  /* Load `1` to Register t1 */
+  li  t1, 0x31
+  /* Store byte from Register t1 to UART Base Address, Offset 0 */
+  sb  t1, 0(t0)
+
+  /* Load `2` to Register t1 */
+  li  t1, 0x32
+  /* Store byte from Register t1 to UART Base Address, Offset 0 */
+  sb  t1, 0(t0)
+
+  /* Load `3` to Register t1 */
+  li  t1, 0x33
+  /* Store byte from Register t1 to UART Base Address, Offset 0 */
+  sb  t1, 0(t0)
+```
+
+Output:
+
+```text
++ qemu-system-riscv64 -semihosting -M virt,aclint=on -cpu rv64 -smp 8 -bios none -kernel nuttx -nographic
+123123123123123123112323
+NuttShell (NSH) NuttX-12.0.3
+nsh> 
+```
+
 TODO: Embed Linux Kernel Header in QEMU
 
 TODO: Set Kernel Start Address
