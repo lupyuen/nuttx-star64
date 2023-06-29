@@ -755,17 +755,17 @@ Usernames and Passwords are...
 
 TODO
 
+From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html):
+
 UART0 is at 0x00_1000_0000
 
-[System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html)
+From [UART Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html):
 
-Register base address "0x10000000" and range "0x10000"
-
-[UART Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html)
+UART Register base address "0x10000000" and range "0x10000"
 
 [UART Datasheet](https://doc-en.rvspace.org/JH7110/Datasheet/JH7110_DS/uart.html)
 
-[u16550_send](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L1539-L1553)
+From [u16550_send](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L1539-L1553):
 
 ```c
 /****************************************************************************
@@ -785,7 +785,7 @@ static void u16550_send(struct uart_dev_s *dev, int ch)
 
 [u16550_serialout](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L610-L624)
 
-[UART_THR_OFFSET](https://github.com/apache/nuttx/blob/dc69b108b8e0547ecf6990207526c27aceaf1e2e/include/nuttx/serial/uart_16550.h#L172-L200) is 0
+[UART_THR_OFFSET](https://github.com/apache/nuttx/blob/dc69b108b8e0547ecf6990207526c27aceaf1e2e/include/nuttx/serial/uart_16550.h#L172-L200) is 0:
 
 ```c
 #define UART_THR_INCR          0 /* (DLAB =0) Transmit Holding Register */
@@ -803,3 +803,34 @@ TODO: Embed Linux Kernel Header in QEMU
 TODO: Set Kernel Start Address
 
 TODO: Set UART Base Address
+
+From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16
+
+```text
+CONFIG_16550_ADDRWIDTH=0
+CONFIG_16550_UART0=y
+CONFIG_16550_UART0_BASE=0x10000000
+CONFIG_16550_UART0_CLOCK=3686400
+CONFIG_16550_UART0_IRQ=37
+CONFIG_16550_UART0_SERIAL_CONSOLE=y
+CONFIG_16550_UART=y
+```
+
+UART Base Address is already `0x1000` `0000` yay!
+
+TODO: Set CLINT and PLIC Addresses
+
+From [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
+
+```text
+0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
+0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
+```
+
+TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33):
+
+```c
+#define QEMU_RV_CLINT_BASE   0x02000000
+#define QEMU_RV_ACLINT_BASE  0x02f00000
+#define QEMU_RV_PLIC_BASE    0x0c000000
+```
