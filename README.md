@@ -705,7 +705,9 @@ jh7110-evb-uart4-emmc-spdif.dtb  jh7110-visionfive-v2.dtb
 jh7110-evb-uart5-pwm-i2c-tdm.dtb vf2-overlay
 ```
 
-We'll wait for the Armbian Team to fix this.
+The missing Device Tree is noted in this [__Pine64 Forum Post__](https://forum.pine64.org/showthread.php?tid=18276&pid=117607#pid117607). So we might need to check back later for the Official Armbian Image, if it's fixed.
+
+[(__balbes150__ suggests that we try this Armbian Image instead)](https://forum.pine64.org/showthread.php?tid=18420&pid=118331#pid118331)
 
 # Boot Yocto on Star64
 
