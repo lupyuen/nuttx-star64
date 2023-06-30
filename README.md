@@ -918,6 +918,38 @@ CONFIG_RAM_START=0x80000000
 
 Change to `0x4400` `0000`
 
+From [ld.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/scripts/ld.script#L21-L26)
+
+```text
+SECTIONS
+{
+  /* Previously 0x80000000 */
+  . = 0x44000000;
+
+  .text :
+```
+
+Also change this if building for NuttX Kernel Mode: [ld-kernel64.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/scripts/ld-kernel64.script#L21-L51):
+
+```text
+MEMORY
+{
+    /* Previously 0x80000000 */
+    kflash (rx) : ORIGIN = 0x44000000, LENGTH = 2048K   /* w/ cache */
+    /* Previously 0x80200000 */
+    ksram (rwx) : ORIGIN = 0x44200000, LENGTH = 2048K   /* w/ cache */
+    /* Previously 0x80400000 */
+    pgram (rwx) : ORIGIN = 0x44400000, LENGTH = 4096K   /* w/ cache */
+}
+...
+SECTIONS
+{
+  /* Previously 0x80000000 */
+  . = 0x44000000;
+
+  .text :
+```
+
 TODO: Set UART Base Address
 
 From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
