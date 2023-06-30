@@ -857,6 +857,15 @@ And offers to optimise our RISC-V Assembly Code...
 
 ![Cody AI Assistant optimises our RISC-V Assembly Code](https://lupyuen.github.io/images/riscv-cody2.png)
 
+But the output is incorrect ;-)
+
+```text
++ qemu-system-riscv64 -semihosting -M virt,aclint=on -cpu rv64 -smp 8 -bios none -kernel nuttx -nographic
+11111111
+NuttShell (NSH) NuttX-12.0.3
+nsh> 
+```
+
 # UART Output on Star64
 
 TODO: We'll take the UART Assembly Code from the previous section and run on Star64 / JH7110. (So we can troubleshoot the NuttX Boot Code)
