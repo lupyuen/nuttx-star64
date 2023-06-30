@@ -262,6 +262,10 @@ u32 magic2 = 0x05435352;  /* Magic number 2, little endian, "RSC\x05" */
 u32 res3;                 /* Reserved for PE COFF offset */
 ```
 
+This is how we decode the RISC-V Linux Header...
+
+-   [__"Decode the RISC-V Linux Header"__](https://lupyuen.github.io/articles/star64#appendix-decode-the-risc-v-linux-header)
+
 Let's decompile the Kernel Image...
 
 TODO: Explain MZ and the funny RISC-V instruction at the top
@@ -832,6 +836,10 @@ nsh>
 Which is correct because QEMU is running with 8 CPUs.
 
 TODO: Embed Linux Kernel Header in QEMU
+
+This is how we decode the RISC-V Linux Header...
+
+-   [__"Decode the RISC-V Linux Header"__](https://lupyuen.github.io/articles/star64#appendix-decode-the-risc-v-linux-header)
 
 TODO: Set Kernel Start Address
 
