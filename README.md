@@ -916,6 +916,8 @@ CONFIG_RAM_SIZE=33554432
 CONFIG_RAM_START=0x80000000
 ```
 
+Change to `0x4400` `0000`
+
 TODO: Set UART Base Address
 
 From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
