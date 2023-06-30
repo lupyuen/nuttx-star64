@@ -866,6 +866,8 @@ NuttShell (NSH) NuttX-12.0.3
 nsh> 
 ```
 
+The correct output is `123123123123123123112323`. (Because of the 8 CPUs)
+
 # UART Output on Star64
 
 TODO: We'll take the UART Assembly Code from the previous section and run on Star64 / JH7110. (So we can troubleshoot the NuttX Boot Code)
