@@ -835,6 +835,14 @@ nsh>
 
 Which is correct because QEMU is running with 8 CPUs.
 
+[Cody AI Assistant](https://about.sourcegraph.com/cody) explains our RISC-V Assembly Code...
+
+![Cody AI Assistant explains our RISC-V Assembly Code](https://lupyuen.github.io/images/riscv-cody1.png)
+
+And optimises our RISC-V Assembly Code...
+
+![Cody AI Assistant optimises our RISC-V Assembly Code](https://lupyuen.github.io/images/riscv-cody2.png)
+
 TODO: Embed Linux Kernel Header in QEMU
 
 This is how we decode the RISC-V Linux Header...
