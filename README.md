@@ -755,21 +755,33 @@ Usernames and Passwords are...
 
 ![Yocto Plasma on Star64](https://lupyuen.github.io/images/star64-plasma.jpg)
 
-# UART Output on Star64
+# NuttX prints to QEMU Console
 
-TODO
+Our NuttX Kernel will print to the Serial Console for debugging. Before that, let's write some RISC-V Assembly Code to print to the QEMU Console!
 
-From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html):
+Earlier we ran NuttX on QEMU Emulator for 64-bit RISC-V...
 
-UART0 is at 0x00_1000_0000
+-   ["64-bit RISC-V with Apache NuttX Real-Time Operating System"](https://lupyuen.github.io/articles/riscv)
 
-From [UART Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html):
+QEMU emulates a 16550 UART Port. (Similar to Star64 / JH7110)
 
-UART Register base address "0x10000000" and range "0x10000"
+From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
 
-[UART Datasheet](https://doc-en.rvspace.org/JH7110/Datasheet/JH7110_DS/uart.html)
+```text
+CONFIG_16550_ADDRWIDTH=0
+CONFIG_16550_UART0=y
+CONFIG_16550_UART0_BASE=0x10000000
+CONFIG_16550_UART0_CLOCK=3686400
+CONFIG_16550_UART0_IRQ=37
+CONFIG_16550_UART0_SERIAL_CONSOLE=y
+CONFIG_16550_UART=y
+```
 
-From [u16550_send](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L1539-L1553):
+Base Address of QEMU's UART Port is `0x1000` `0000`. (Same as Star64 / JH7110 yay!)
+
+_How to print to the 16550 UART Port?_
+
+Let's check the 16550 UART Driver in NuttX. From [u16550_send](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L1539-L1553):
 
 ```c
 /****************************************************************************
@@ -787,7 +799,9 @@ static void u16550_send(struct uart_dev_s *dev, int ch)
 }
 ```
 
-[u16550_serialout](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L610-L624)
+[(u16550_serialout is defined here)](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L610-L624)
+
+To print a character, the driver writes to the UART Base Address (`0x1000` `0000`) at Offset UART_THR_OFFSET.
 
 [UART_THR_OFFSET](https://github.com/apache/nuttx/blob/dc69b108b8e0547ecf6990207526c27aceaf1e2e/include/nuttx/serial/uart_16550.h#L172-L200) is 0:
 
@@ -796,11 +810,11 @@ static void u16550_send(struct uart_dev_s *dev, int ch)
 #define UART_THR_OFFSET        (CONFIG_16550_REGINCR*UART_THR_INCR)
 ```
 
-So we can transmit to UART0 by writing to `0x1000` `0000`. How convenient!
+So we can transmit to UART Port by simply writing to `0x1000` `0000`. How convenient!
 
-# NuttX on Star64
+_How to print to the QEMU Console?_
 
-TODO: Test printing in QEMU
+Let's do the printing in RISC-V Assembly Code, so that we can debug the NuttX Boot Code.
 
 From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_head.S#L43-L64):
 
@@ -824,7 +838,7 @@ From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star6
   sb  t1, 0(t0)
 ```
 
-Output:
+This prints "123" to the QEMU Console. Here's the output:
 
 ```text
 + qemu-system-riscv64 -semihosting -M virt,aclint=on -cpu rv64 -smp 8 -bios none -kernel nuttx -nographic
@@ -833,7 +847,7 @@ NuttShell (NSH) NuttX-12.0.3
 nsh> 
 ```
 
-Which is correct because QEMU is running with 8 CPUs.
+Which is correct because QEMU is running with 8 CPUs. Yay!
 
 [Cody AI Assistant](https://about.sourcegraph.com/cody) explains our RISC-V Assembly Code...
 
@@ -842,6 +856,22 @@ Which is correct because QEMU is running with 8 CPUs.
 And optimises our RISC-V Assembly Code...
 
 ![Cody AI Assistant optimises our RISC-V Assembly Code](https://lupyuen.github.io/images/riscv-cody2.png)
+
+# UART Output on Star64
+
+TODO: We'll take the UART Assembly Code from the previous section and run on Star64 / JH7110. (So we can troubleshoot the NuttX Boot Code)
+
+From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html):
+
+UART0 is at 0x00_1000_0000
+
+From [UART Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html):
+
+UART Register base address "0x10000000" and range "0x10000"
+
+[UART Datasheet](https://doc-en.rvspace.org/JH7110/Datasheet/JH7110_DS/uart.html)
+
+# NuttX on Star64
 
 TODO: Embed Linux Kernel Header in QEMU
 
