@@ -907,6 +907,8 @@ Which assembles to...
 
 Check that the lengths and offsets match the RISC-V Linux Header Format.
 
+Tested OK with QEMU.
+
 TODO: Set Kernel Start Address
 
 From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L56-L57):
