@@ -882,6 +882,31 @@ real_start:
   li  t0, 0x10000000
 ```
 
+Which assembles to...
+
+```text
+0000000080000000 <__start>:
+    80000000:	5a4d                	li	s4,-13
+    80000002:	a83d                	j	80000040 <real_start>
+	...
+    80000010:	9e7c                	0x9e7c
+    80000012:	0002                	c.slli64	zero
+	...
+    80000020:	0002                	c.slli64	zero
+	...
+    8000002e:	0000                	unimp
+    80000030:	4952                	lw	s2,20(sp)
+    80000032:	00564353          	fadd.s	ft6,fa2,ft5,rmm
+    80000036:	0000                	unimp
+    80000038:	5352                	lw	t1,52(sp)
+    8000003a:	00000543          	fmadd.s	fa0,ft0,ft0,ft0,rne
+	...
+
+0000000080000040 <real_start>:
+```
+
+Check that the lengths and offsets match the RISC-V Linux Header Format.
+
 TODO: Set Kernel Start Address
 
 From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L56-L57):
