@@ -781,7 +781,7 @@ Base Address of QEMU's UART Port is `0x1000` `0000`. (Same as Star64 / JH7110 ya
 
 _How to print to the 16550 UART Port?_
 
-Let's check the 16550 UART Driver in NuttX. From [u16550_send](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L1539-L1553):
+Let's check the 16550 UART Driver in NuttX. From [uart_16550.c](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L1539-L1553):
 
 ```c
 /****************************************************************************
@@ -816,7 +816,7 @@ _How to print to the QEMU Console?_
 
 Let's do the printing in RISC-V Assembly Code, so that we can debug the NuttX Boot Code.
 
-From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_head.S#L43-L64):
+From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_head.S#L71-L93):
 
 ```text
   /* Load UART Base Address to Register t0 */
