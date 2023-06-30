@@ -843,6 +843,45 @@ This is how we decode the RISC-V Linux Header...
 
 Copy from Arm64 Linux Header: [arm64_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/arm64/src/common/arm64_head.S#L79-L118)
 
+To [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_head.S#L42-L75):
+
+```text
+__start:
+  /* Begin Test */
+
+  /* DO NOT MODIFY. Image Header expected by Linux bootloaders.
+   *
+   * This `li` instruction has no meaningful effect except that
+   * its opcode forms the magic "MZ" signature of a PE/COFF file
+   * that is required for UEFI applications.
+   *
+   * Some bootloaders check the magic "MZ" to see if the image is a valid
+   * Linux image. But modifying the bootLoader is unnecessary unless we
+   * need to do a customized secure boot. So we just put "MZ" in the
+   * header to make the bootloader happy.
+   */
+
+  li      s4, -0xd             /* Magic Signature "MZ" (2 bytes) */
+  j       real_start           /* Jump to Kernel Start (2 bytes) */
+  .long   0                    /* Executable Code padded to 8 bytes */
+  /* TODO: Is this used? */
+  .quad   0x0                  /* Image load offset from start of RAM */
+  /* TODO: _e_initstack - __start */
+  .quad   171644               /* Effective size of kernel image, little-endian */
+  .quad   0x0                  /* Kernel flags, little-endian */
+  .long   0x2                  /* Version of this header */
+  .long   0                    /* Reserved */
+  .quad   0                    /* Reserved */
+  .ascii  "RISCV\x00\x00\x00"  /* Magic number, "RISCV" (8 bytes) */
+  .ascii  "RSC\x05"            /* Magic number 2, "RSC\x05" (4 bytes) */
+  .long   0                    /* Reserved for PE COFF offset */
+
+real_start:
+
+  /* Load UART Base Address to Register t0 */
+  li  t0, 0x10000000
+```
+
 TODO: Set Kernel Start Address
 
 From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L56-L57):
