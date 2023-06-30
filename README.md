@@ -853,7 +853,7 @@ Which is correct because QEMU is running with 8 CPUs. Yay!
 
 ![Cody AI Assistant explains our RISC-V Assembly Code](https://lupyuen.github.io/images/riscv-cody1.png)
 
-And optimises our RISC-V Assembly Code...
+And offers to optimise our RISC-V Assembly Code...
 
 ![Cody AI Assistant optimises our RISC-V Assembly Code](https://lupyuen.github.io/images/riscv-cody2.png)
 
@@ -871,7 +871,7 @@ UART Register base address "0x10000000" and range "0x10000"
 
 [UART Datasheet](https://doc-en.rvspace.org/JH7110/Datasheet/JH7110_DS/uart.html)
 
-# NuttX on Star64
+# RISC-V Linux Kernel Header
 
 TODO: Embed Linux Kernel Header in QEMU
 
@@ -947,6 +947,8 @@ Check that the lengths and offsets match the RISC-V Linux Header Format.
 
 Tested OK with QEMU.
 
+# NuttX Kernel Start Address
+
 TODO: Set Kernel Start Address
 
 From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L56-L57):
@@ -990,6 +992,8 @@ SECTIONS
   .text :
 ```
 
+# NuttX on Star64
+
 TODO: Set UART Base Address
 
 From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
@@ -1022,3 +1026,7 @@ TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-
 #define QEMU_RV_ACLINT_BASE  0x02f00000
 #define QEMU_RV_PLIC_BASE    0x0c000000
 ```
+
+TODO: Copy nuttx.bin to /boot/Image
+
+TODO: Fix missing Device Tree
