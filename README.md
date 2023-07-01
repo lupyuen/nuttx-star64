@@ -849,6 +849,8 @@ nsh>
 
 Which is correct because QEMU is running with 8 CPUs. Yay!
 
+![NuttX prints to QEMU Console](https://lupyuen.github.io/images/riscv-print.png)
+
 [Cody AI Assistant](https://about.sourcegraph.com/cody) explains our RISC-V Assembly Code...
 
 ![Cody AI Assistant explains our RISC-V Assembly Code](https://lupyuen.github.io/images/riscv-cody1.png)
@@ -958,7 +960,7 @@ Check that the lengths and offsets match the RISC-V Linux Header Format.
 
 Tested OK with QEMU.
 
-# NuttX Kernel Start Address
+# Set Start Address of NuttX Kernel
 
 TODO: Set Kernel Start Address
 
@@ -1001,6 +1003,16 @@ SECTIONS
   . = 0x44000000;
 
   .text :
+```
+
+RISC-V Disassembly of NuttX Kernel shows that the Start Address is correct...
+
+```text
+0000000044000000 <__start>:
+  li      s4, -0xd             /* Magic Signature "MZ" (2 bytes) */
+    44000000:	5a4d                	li	s4,-13
+  j       real_start           /* Jump to Kernel Start (2 bytes) */
+    44000002:	a83d                	j	44000040 <real_start>
 ```
 
 # NuttX on Star64
