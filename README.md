@@ -1063,7 +1063,11 @@ RISC-V Disassembly of NuttX Kernel shows that the Start Address is correct...
 
 # Boot NuttX on Star64
 
-Let's boot NuttX on Star64! Starting with the Armbian Image for Star64.
+Let's boot NuttX on Star64! We begin with the [__Armbian Image for Star64__](https://www.armbian.com/star64/)...
+
+-   [__Armbian 23.8 Lunar for Star64 (Minimal)__](https://github.com/armbianro/os/releases/download/23.8.0-trunk.56/Armbian_23.8.0-trunk.56_Star64_lunar_edge_5.15.0_minimal.img.xz)
+
+Write the Armbian Image to a microSD Card with Balena Etcher.
 
 We fix the missing Device Tree...
 
@@ -1075,7 +1079,7 @@ cp \
   /boot/dtb/starfive/jh7110-star64-pine64.dtb
 ```
 
-Then we delete the sym-link `/boot/Image` and copy `nuttx.bin` to `/boot/Image`...
+Then we delete the sym-link `/boot/Image` and copy the NuttX Binary Image `nuttx.bin` to `/boot/Image`...
 
 ```bash
 ## Export the NuttX Binary Image to nuttx.bin
