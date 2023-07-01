@@ -880,7 +880,7 @@ nsh>
 
 The correct output is `123123123123123123112323`. (Because of the 8 CPUs)
 
-# UART Output on Star64
+# UART Base Address for Star64
 
 TODO: We'll take the UART Assembly Code from the previous section and run on Star64 / JH7110. (So we can troubleshoot the NuttX Boot Code)
 
@@ -893,6 +893,22 @@ From [UART Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SD
 UART Register base address "0x10000000" and range "0x10000"
 
 [UART Datasheet](https://doc-en.rvspace.org/JH7110/Datasheet/JH7110_DS/uart.html)
+
+TODO: Set UART Base Address
+
+From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
+
+```text
+CONFIG_16550_ADDRWIDTH=0
+CONFIG_16550_UART0=y
+CONFIG_16550_UART0_BASE=0x10000000
+CONFIG_16550_UART0_CLOCK=3686400
+CONFIG_16550_UART0_IRQ=37
+CONFIG_16550_UART0_SERIAL_CONSOLE=y
+CONFIG_16550_UART=y
+```
+
+UART Base Address is already `0x1000` `0000` yay!
 
 # RISC-V Linux Kernel Header
 
@@ -1025,23 +1041,23 @@ RISC-V Disassembly of NuttX Kernel shows that the Start Address is correct...
     44000002:	a83d                	j	44000040 <real_start>
 ```
 
-# NuttX on Star64
+# Boot NuttX on Star64
 
-TODO: Set UART Base Address
+TODO: Fix missing Device Tree
 
-From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
+Edit `/boot/extlinux/extlinux.conf`. Change
 
 ```text
-CONFIG_16550_ADDRWIDTH=0
-CONFIG_16550_UART0=y
-CONFIG_16550_UART0_BASE=0x10000000
-CONFIG_16550_UART0_CLOCK=3686400
-CONFIG_16550_UART0_IRQ=37
-CONFIG_16550_UART0_SERIAL_CONSOLE=y
-CONFIG_16550_UART=y
+fdt /boot/dtb/starfive/jh7110-star64-pine64.dtb
 ```
 
-UART Base Address is already `0x1000` `0000` yay!
+to
+
+```text
+fdt /boot/dtb/starfive/jh7110-visionfive-v2.dtb
+```
+
+TODO: Copy nuttx.bin to /boot/Image
 
 TODO: Set CLINT and PLIC Addresses
 
@@ -1059,7 +1075,3 @@ TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-
 #define QEMU_RV_ACLINT_BASE  0x02f00000
 #define QEMU_RV_PLIC_BASE    0x0c000000
 ```
-
-TODO: Copy nuttx.bin to /boot/Image
-
-TODO: Fix missing Device Tree
