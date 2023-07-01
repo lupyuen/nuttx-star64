@@ -943,8 +943,7 @@ __start:
   li      s4, -0xd             /* Magic Signature "MZ" (2 bytes) */
   j       real_start           /* Jump to Kernel Start (2 bytes) */
   .long   0                    /* Executable Code padded to 8 bytes */
-  /* TODO: Is this used? */
-  .quad   0x0                  /* Image load offset from start of RAM */
+  .quad   0x200000             /* Image load offset from start of RAM */
   /* TODO: _e_initstack - __start */
   .quad   171644               /* Effective size of kernel image, little-endian */
   .quad   0x0                  /* Kernel flags, little-endian */
@@ -961,30 +960,47 @@ real_start:
   li  t0, 0x10000000
 ```
 
-Which assembles to...
+Note that Image Load Offset must be `0x20` `0000`!
 
 ```text
-0000000080000000 <__start>:
-    80000000:	5a4d                	li	s4,-13
-    80000002:	a83d                	j	80000040 <real_start>
-	...
-    80000010:	9e7c                	0x9e7c
-    80000012:	0002                	c.slli64	zero
-	...
-    80000020:	0002                	c.slli64	zero
-	...
-    8000002e:	0000                	unimp
-    80000030:	4952                	lw	s2,20(sp)
-    80000032:	00564353          	fadd.s	ft6,fa2,ft5,rmm
-    80000036:	0000                	unimp
-    80000038:	5352                	lw	t1,52(sp)
-    8000003a:	00000543          	fmadd.s	fa0,ft0,ft0,ft0,rne
-	...
-
-0000000080000040 <real_start>:
+  .quad   0x200000             /* Image load offset from start of RAM */
 ```
 
-Check that the lengths and offsets match the RISC-V Linux Header Format.
+That's because our kernel starts at `0x4020` `0000`
+
+Here's the assembled output...
+
+```text
+0000000040200000 <__start>:
+  li      s4, -0xd             /* Magic Signature "MZ" (2 bytes) */
+    40200000:	5a4d                	li	s4,-13
+  j       real_start           /* Jump to Kernel Start (2 bytes) */
+    40200002:	a83d                	j	40200040 <real_start>
+    40200004:	0000                	unimp
+    40200006:	0000                	unimp
+    40200008:	0000                	unimp
+    4020000a:	0020                	addi	s0,sp,8
+    4020000c:	0000                	unimp
+    4020000e:	0000                	unimp
+    40200010:	9e7c                	0x9e7c
+    40200012:	0002                	c.slli64	zero
+	...
+    40200020:	0002                	c.slli64	zero
+	...
+    4020002e:	0000                	unimp
+    40200030:	4952                	lw	s2,20(sp)
+    40200032:	00564353          	fadd.s	ft6,fa2,ft5,rmm
+    40200036:	0000                	unimp
+    40200038:	5352                	lw	t1,52(sp)
+    4020003a:	00000543          	fmadd.s	fa0,ft0,ft0,ft0,rne
+	...
+
+0000000040200040 <real_start>:
+```
+
+Check that the lengths and offsets match the RISC-V Linux Header Format...
+
+-   [__"Decode the RISC-V Linux Header"__](https://lupyuen.github.io/articles/star64#appendix-decode-the-risc-v-linux-header)
 
 Tested OK with QEMU.
 
@@ -999,7 +1015,7 @@ CONFIG_RAM_SIZE=33554432
 CONFIG_RAM_START=0x80000000
 ```
 
-Change to `0x4400` `0000`
+Change to `0x4020` `0000`
 
 From [ld.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/scripts/ld.script#L21-L26)
 
@@ -1007,7 +1023,7 @@ From [ld.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boa
 SECTIONS
 {
   /* Previously 0x80000000 */
-  . = 0x44000000;
+  . = 0x40200000;
 
   .text :
 ```
@@ -1018,17 +1034,17 @@ Also change this if building for NuttX Kernel Mode: [ld-kernel64.script](https:/
 MEMORY
 {
     /* Previously 0x80000000 */
-    kflash (rx) : ORIGIN = 0x44000000, LENGTH = 2048K   /* w/ cache */
+    kflash (rx) : ORIGIN = 0x40200000, LENGTH = 2048K   /* w/ cache */
     /* Previously 0x80200000 */
-    ksram (rwx) : ORIGIN = 0x44200000, LENGTH = 2048K   /* w/ cache */
+    ksram (rwx) : ORIGIN = 0x40400000, LENGTH = 2048K   /* w/ cache */
     /* Previously 0x80400000 */
-    pgram (rwx) : ORIGIN = 0x44400000, LENGTH = 4096K   /* w/ cache */
+    pgram (rwx) : ORIGIN = 0x40600000, LENGTH = 4096K   /* w/ cache */
 }
 ...
 SECTIONS
 {
   /* Previously 0x80000000 */
-  . = 0x44000000;
+  . = 0x40200000;
 
   .text :
 ```
@@ -1036,16 +1052,18 @@ SECTIONS
 RISC-V Disassembly of NuttX Kernel shows that the Start Address is correct...
 
 ```text
-0000000044000000 <__start>:
+0000000040200000 <__start>:
   li      s4, -0xd             /* Magic Signature "MZ" (2 bytes) */
-    44000000:	5a4d                	li	s4,-13
+    40200000:	5a4d                	li	s4,-13
   j       real_start           /* Jump to Kernel Start (2 bytes) */
-    44000002:	a83d                	j	44000040 <real_start>
+    40200002:	a83d                	j	40200040 <real_start>
 ```
 
 # Boot NuttX on Star64
 
-TODO: Fix missing Device Tree
+Let's boot NuttX on Star64! Starting with the Armbian Image for Star64.
+
+We fix the missing Device Tree...
 
 ```bash
 sudo chmod go+w /run/media/luppy/armbi_root/boot
@@ -1055,44 +1073,62 @@ cp \
   /boot/dtb/starfive/jh7110-star64-pine64.dtb
 ```
 
-TODO: Copy nuttx.bin to /boot/Image
+Then we delete the sym-link `/boot/Image` and copy `nuttx.bin` to `/boot/Image`...
 
-TODO: NuttX crashes on boot
+```bash
+## Delete /boot/Image
+rm /run/media/luppy/armbi_root/boot/Image
+
+## Copy nuttx.bin to /boot/Image
+cp nuttx.bin /run/media/luppy/armbi_root/boot/Image
+```
+
+Insert the microSD Card into Star64 and power up.
+
+NuttX boots with `123` yay!
 
 ```text
-## Warning: defaulting to text format
-## Error: "boot2" not defined
-switch to partitions #0, OK
-mmc1 is current device
-Scanning mmc 1:1...
-Found /boot/extlinux/extlinux.conf
 Retrieving file: /boot/extlinux/extlinux.conf
 383 bytes read in 7 ms (52.7 KiB/s)
-1:      Armbian
+1:[6CArmbian
 Retrieving file: /boot/uInitrd
-10911538 bytes read in 465 ms (22.4 MiB/s)
+10911538 bytes read in 466 ms (22.3 MiB/s)
 Retrieving file: /boot/Image
-163201 bytes read in 13 ms (12 MiB/s)
+163201 bytes read in 14 ms (11.1 MiB/s)
 append: root=UUID=99f62df4-be35-475c-99ef-2ba3f74fe6b5 console=ttyS0,115200n8 console=tty0 earlycon=sbi rootflags=data=writeback stmmaceth=chain_mode:1 rw rw no_console_suspend consoleblank=0 fsck.fix=yes fsck.repair=yes net.ifnames=0 splash plymouth.ignore-serial-consoles
 Retrieving file: /boot/dtb/starfive/jh7110-star64-pine64.dtb
-50235 bytes read in 12 ms (4 MiB/s)
-Moving Image from 0x40200000 to 0x40000000, end=40029e7c
-Unhandled exception: Store/AMO access fault
-EPC: 00000000fff47a98 RA: 00000000fff498bc TVAL: 0000000040000000
-EPC: 0000000040201a98 RA: 00000000402038bc reloc adjusted
+50235 bytes read in 14 ms (3.4 MiB/s)
+## Loading init Ramdisk from Legacy Image at 46100000 ...
+   Image Name:   uInitrd
+   Image Type:   RISC-V Linux RAMDisk Image (gzip compressed)
+   Data Size:    10911474 Bytes = 10.4 MiB
+   Load Address: 00000000
+   Entry Point:  00000000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 46000000
+   Booting using the fdt blob at 0x46000000
+   Using Device Tree in place at 0000000046000000, end 000000004600f43a
 
-SP:  00000000ff7336b0 GP:  00000000ff735e00 TP:  0000000000000001
-T0:  0000000040029dfd T1:  0000005643534952 T2:  0000000005435352
-S0:  0000000040200000 S1:  0000000000001000 A0:  0000000040000000
-A1:  0000000040200000 A2:  00000000a83d5a4d A3:  0000000000000000
-A4:  0000000000029e7c A5:  0000000000000000 A6:  0000000000000002
-A7:  0000000000000000 S2:  0000000000000003 S3:  0000000000000000
-S4:  0000000000000000 S5:  00000000fffdbb50 S6:  00000000ff733898
-S7:  00000000fffb4a58 S8:  0000000000000001 S9:  0000000000000002
-S10: 0000000000000000 S11: 0000000000000000 T3:  03100313100002b7
-T4:  0320031300628023 T5:  0330031300628023 T6:  0000000040000000
+Starting kernel ...
 
-Code: b383 0385 be03 0405 be83 0485 bf03 0505 (e110)
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123Unhandled exception: Illegal instruction
+EPC: 000000004020005c RA: 00000000fff471c6 TVAL: 00000000f1402573
+EPC: ffffffff804ba05c RA: 00000000402011c6 reloc adjusted
+
+SP:  00000000ff733630 GP:  00000000ff735e00 TP:  0000000000000001
+T0:  0000000010000000 T1:  0000000000000033 T2:  7869662e6b637366
+S0:  0000000000000400 S1:  00000000ffff1428 A0:  0000000000000001
+A1:  0000000046000000 A2:  0000000000000600 A3:  0000000000004000
+A4:  0000000000000000 A5:  0000000040200000 A6:  00000000fffd5708
+A7:  0000000000000000 S2:  00000000fff47194 S3:  0000000000000003
+S4:  fffffffffffffff3 S5:  00000000fffdbb50 S6:  0000000000000000
+S7:  0000000000000000 S8:  00000000fff47194 S9:  0000000000000002
+S10: 0000000000000000 S11: 0000000000000000 T3:  0000000000000023
+T4:  000000004600b5cc T5:  000000000000ff00 T6:  000000004600b5cc
+
+Code: 0313 0320 8023 0062 0313 0330 8023 0062 (2573 f140)
 
 
 resetting ...
@@ -1100,7 +1136,7 @@ reset not supported yet
 ### ERROR ### Please RESET the board ###
 ```
 
-Why? `Moving Image from 0x40200000 to 0x40000000, end=40029e7c`
+TODO: Why does NuttX crash at `4020005c`?
 
 TODO: Set CLINT and PLIC Addresses
 
