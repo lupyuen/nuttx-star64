@@ -757,7 +757,7 @@ Usernames and Passwords are...
 
 # NuttX prints to QEMU Console
 
-Our NuttX Kernel will print to the Serial Console for debugging. Before that, let's write some RISC-V Assembly Code to print to the QEMU Console!
+Our NuttX Kernel will print to Star64 Serial Console for debugging. Before that, let's write some RISC-V Assembly Code to print to the QEMU Console!
 
 Earlier we ran NuttX on QEMU Emulator for 64-bit RISC-V...
 
@@ -765,7 +765,9 @@ Earlier we ran NuttX on QEMU Emulator for 64-bit RISC-V...
 
 QEMU emulates a 16550 UART Port. (Similar to Star64 / JH7110)
 
-From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
+_What's the Base Address of QEMU's UART Port?_
+
+According to the NuttX Configuration for QEMU: [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16)
 
 ```text
 CONFIG_16550_ADDRWIDTH=0
@@ -803,7 +805,7 @@ static void u16550_send(struct uart_dev_s *dev, int ch)
 
 To print a character, the driver writes to the UART Base Address (`0x1000` `0000`) at Offset UART_THR_OFFSET.
 
-[UART_THR_OFFSET](https://github.com/apache/nuttx/blob/dc69b108b8e0547ecf6990207526c27aceaf1e2e/include/nuttx/serial/uart_16550.h#L172-L200) is 0:
+And we discover that [UART_THR_OFFSET](https://github.com/apache/nuttx/blob/dc69b108b8e0547ecf6990207526c27aceaf1e2e/include/nuttx/serial/uart_16550.h#L172-L200) is 0:
 
 ```c
 #define UART_THR_INCR          0 /* (DLAB =0) Transmit Holding Register */
