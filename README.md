@@ -1076,6 +1076,12 @@ cp \
 Then we delete the sym-link `/boot/Image` and copy `nuttx.bin` to `/boot/Image`...
 
 ```bash
+## Export the NuttX Binary Image to nuttx.bin
+riscv64-unknown-elf-objcopy \
+  -O binary \
+  nuttx \
+  nuttx.bin
+
 ## Delete /boot/Image
 rm /run/media/luppy/armbi_root/boot/Image
 
@@ -1085,9 +1091,19 @@ cp nuttx.bin /run/media/luppy/armbi_root/boot/Image
 
 Insert the microSD Card into Star64 and power up.
 
-NuttX boots with `123` yay!
+NuttX boots with `123` yay! [(As printed by our Boot Code)](https://github.com/lupyuen/nuttx-star64#nuttx-prints-to-qemu-console)
+
+```text
+Starting kernel ...
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123
+Unhandled exception: Illegal instruction
+```
 
 ![Boot NuttX on Star64](https://lupyuen.github.io/images/star64-nuttx.png)
+
+Here's the complete log...
 
 ```text
 Retrieving file: /boot/extlinux/extlinux.conf
