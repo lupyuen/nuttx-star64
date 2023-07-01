@@ -1254,7 +1254,9 @@ TODO: Remove `csrr a0, mhartid`
 
 _What about other CSR Instructions in our NuttX Boot Code?_
 
-TODO: To Disable Interrupts: Change mie to [sie](https://five-embeddev.com/riscv-isa-manual/latest/supervisor.html#supervisor-interrupt-registers-sip-and-sie)
+We change the Machine-Level `m` Registers to Supervisor-Level `s` Registers.
+
+TODO: To Disable Interrupts: Change `mie` to [`sie`](https://five-embeddev.com/riscv-isa-manual/latest/supervisor.html#supervisor-interrupt-registers-sip-and-sie)
 
 ```text
 /* Disable all interrupts (i.e. timer, external) in mie */
@@ -1263,7 +1265,7 @@ csrw  mie, zero
 
 [(Source)](https://lupyuen.github.io/articles/riscv#disable-interrupts)
 
-TODO: To Load Interrupt Vector Table: Change mtvec to [stvec](https://five-embeddev.com/riscv-isa-manual/latest/supervisor.html#supervisor-trap-vector-base-address-register-stvec)
+TODO: To Load Interrupt Vector Table: Change `mtvec` to [`stvec`](https://five-embeddev.com/riscv-isa-manual/latest/supervisor.html#supervisor-trap-vector-base-address-register-stvec)
 
 ```text
 /* Load address of Interrupt Vector Table */
@@ -1271,6 +1273,36 @@ csrw  mtvec, t0
 ```
 
 [(Source)](https://lupyuen.github.io/articles/riscv#load-interrupt-vector)
+
+_The Linux Boot Code looks confusing. What are CSR_IE and CSR_IP?_
+
+```text
+/* Mask all interrupts */
+csrw CSR_IE, zero
+csrw CSR_IP, zero
+```
+
+[(Source)](https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S#L195-L200)
+
+That's because the Linux Boot Code will work for Machine Level AND Supervisor Level! Here's how `CSR_IE` and `CSR_IP` are mapped to the `m` and `s` CSR Registers...
+
+(Remember: `CONFIG_RISCV_M_MODE` is false for NuttX)
+
+```text
+#ifdef CONFIG_RISCV_M_MODE
+  /* Use Machine-Level CSR Registers */
+  # define CSR_IE		CSR_MIE
+  # define CSR_IP		CSR_MIP
+  ...
+#else
+  /* Use Supervisor-Level CSR Registers */
+  # define CSR_IE		CSR_SIE
+  # define CSR_IP		CSR_SIP
+  ...
+#endif /* !CONFIG_RISCV_M_MODE */
+```
+
+[(Source)](https://github.com/torvalds/linux/blob/master/arch/riscv/include/asm/csr.h#L391-L444)
 
 TODO: See [mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
 
