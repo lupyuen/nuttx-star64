@@ -1219,21 +1219,27 @@ RISC-V runs at 3 Privilege Levels...
 
 - U: User Level (Least powerful)
 
-NuttX runs at Supervisor Level, which [doesn't allow access to some CSR Registers](https://five-embeddev.com/riscv-isa-manual/latest/machine.html).  (Including [Hart ID](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#hart-id-register-mhartid))
+NuttX runs at Supervisor Level, which [doesn't allow access to Machine-Level CSR Registers](https://five-embeddev.com/riscv-isa-manual/latest/machine.html).  (Including [Hart ID](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#hart-id-register-mhartid))
+
+(The `m` in `mhartid` signifies that it's a Machine-Level Register)
 
 _What runs at Machine Level?_
 
-[OpenSBI](https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/) (Supervisor Binary Interface) is the first thing that boots on Star64. It runs at Machine Level and it starts the U-Boot Bootloader.
+[OpenSBI](https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/) (Supervisor Binary Interface) is the first thing that boots on Star64. It runs at Machine Level and starts the U-Boot Bootloader.
 
-Refer to [RISC-V SBI Spec](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.pdf)
+[(See the RISC-V SBI Spec)](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.pdf)
+
+_What about U-Boot Bootloader?_
 
 U-Boot Bootloader runs at Supervisor Level. And starts NuttX, also at Supervisor Level.
 
+So OpenSBI is the only thing that runs at Machine Level. And can access the Machine-Level Registers.
+
 _How to get the Hart ID from OpenSBI?_
 
-Refer to the Linux Boot Code: [linux/arch/riscv/kernel/head.S](https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S)
+Let's refer to the Linux Boot Code: [linux/arch/riscv/kernel/head.S](https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S)
 
-(`CONFIG_RISCV_M_MODE` is False and `CONFIG_EFI` is True)
+(Tip: `CONFIG_RISCV_M_MODE` is False and `CONFIG_EFI` is True)
 
 From [linux/blob/master/arch/riscv/kernel/head.S](https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S#L292-L295):
 
@@ -1243,7 +1249,7 @@ mv s0, a0
 mv s1, a1
 ```
 
-Here we see that U-Boot [(or OpenSBI)](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.adoc#function-hart-start-fid-0) passes 2 arguments to our kernel...
+Here we see that U-Boot [(or OpenSBI)](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.adoc#function-hart-start-fid-0) will pass 2 arguments when it starts our kernel...
 
 - Register A0: Hart ID
 
@@ -1251,11 +1257,11 @@ Here we see that U-Boot [(or OpenSBI)](https://github.com/riscv-non-isa/riscv-sb
 
 So we'll simply read the Hart ID from Register A0. (And ignore A1)
 
-TODO: Remove `csrr  a0, mhartid`
+TODO: Remove `csrr a0, mhartid`
 
 _What about other CSR Instructions in our NuttX Boot Code?_
 
-TODO: mie
+TODO: To Disable Interrupts: Change mie to [sie](https://five-embeddev.com/riscv-isa-manual/latest/supervisor.html#supervisor-interrupt-registers-sip-and-sie)
 
 ```text
 /* Disable all interrupts (i.e. timer, external) in mie */
@@ -1264,7 +1270,7 @@ csrw  mie, zero
 
 [(Source)](https://lupyuen.github.io/articles/riscv#disable-interrupts)
 
-TODO: mtvec
+TODO: To Load Interrupt Vector Table: Change mtvec to [stvec](https://five-embeddev.com/riscv-isa-manual/latest/supervisor.html#supervisor-trap-vector-base-address-register-stvec)
 
 ```text
 /* Load address of Interrupt Vector Table */
