@@ -1215,7 +1215,7 @@ But it fails! Probably because we don't have sufficient privilege to access the 
 
 We are probably running at Supervisor Level, which [doesn't allow access to the CSR Registers](https://five-embeddev.com/riscv-isa-manual/latest/machine.html) (including Hart ID).
 
-TODO: Get the Hart ID from OpenSBI
+TODO: Get the Hart ID from OpenSBI. See [mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
 
 TODO: Refer to Linux Boot Code: [linux/arch/riscv/kernel/head.S](https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S)
 
