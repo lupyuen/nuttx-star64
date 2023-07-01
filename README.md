@@ -1015,7 +1015,7 @@ CONFIG_RAM_SIZE=33554432
 CONFIG_RAM_START=0x80000000
 ```
 
-Change to `0x4020` `0000`
+Change to `0x40200000`
 
 From [ld.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/scripts/ld.script#L21-L26)
 
@@ -1086,6 +1086,8 @@ cp nuttx.bin /run/media/luppy/armbi_root/boot/Image
 Insert the microSD Card into Star64 and power up.
 
 NuttX boots with `123` yay!
+
+![Boot NuttX on Star64](https://lupyuen.github.io/images/star64-nuttx.png)
 
 ```text
 Retrieving file: /boot/extlinux/extlinux.conf
