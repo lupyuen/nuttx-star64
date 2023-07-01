@@ -212,8 +212,6 @@ boot2=run bootargs_ext; mmc dev ${devnum}; fatload mmc ${devnum}:${partnum} ${fi
 kernel_addr_r=0x40200000
 ```
 
-(Different from Armbian: `0x4400` `0000`)
-
 Yocto boots from the [Flat Image Tree (FIT)](https://u-boot.readthedocs.io/en/latest/usage/fit/index.html#): `boot/fitImage`
 
 Yocto's `root/boot` looks different from Armbian...
@@ -228,13 +226,13 @@ lrwxrwxrwx 1 root root       17 Mar  9  2018 fitImage -> fitImage-5.15.107
 
 # Boot NuttX with U-Boot Bootloader
 
-_Will we boot NuttX with Armbian or Yocto settings? `0x4400` `0000` or `0x4020` `0000`?_
+_Will we boot NuttX with Armbian or Yocto settings?_
 
 Armbian looks simpler, since it uses a plain Linux Kernel Image File `Image`. (Instead of Yocto's complicated Flat Image Tree)
 
 Hence we'll overwrite Armbian's `armbi_root/boot/Image` by the NuttX Kernel Image.
 
-We'll compile NuttX Kernel to boot at `0x4400` `0000`.
+We'll compile NuttX Kernel to boot at `0x4020` `0000`.
 
 NuttX Kernel will begin with a RISC-V Linux Header. (See next section)
 
@@ -1019,7 +1017,7 @@ CONFIG_RAM_SIZE=33554432
 CONFIG_RAM_START=0x80000000
 ```
 
-Change to `0x40200000`
+We changed to `0x40200000`
 
 From [ld.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/scripts/ld.script#L21-L26)
 
