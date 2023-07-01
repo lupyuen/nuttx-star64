@@ -843,7 +843,15 @@ From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star6
 This prints "123" to the QEMU Console. Here's the output:
 
 ```text
-+ qemu-system-riscv64 -semihosting -M virt,aclint=on -cpu rv64 -smp 8 -bios none -kernel nuttx -nographic
++ qemu-system-riscv64 \
+  -semihosting \
+  -M virt,aclint=on \
+  -cpu rv64 \
+  -smp 8 \
+  -bios none \
+  -kernel nuttx \
+  -nographic
+
 123123123123123123112323
 NuttShell (NSH) NuttX-12.0.3
 nsh> 
