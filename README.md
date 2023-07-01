@@ -1225,6 +1225,8 @@ See [mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/
 
 TODO: Refer to Linux Boot Code: [linux/arch/riscv/kernel/head.S](https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S)
 
+How does it get the Hart ID and prepare the MMU?
+
 `CONFIG_RISCV_M_MODE` is False
 
 `CONFIG_EFI` is True
