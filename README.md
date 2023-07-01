@@ -1181,7 +1181,7 @@ TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-
 #define QEMU_RV_PLIC_BASE    0x0c000000
 ```
 
-# NuttX Crashes When Booting
+# NuttX Fails To Get Hart ID
 
 Earlier we saw NuttX crashing when booting on Star64...
 
@@ -1194,7 +1194,9 @@ Unhandled exception: Illegal instruction
 EPC: 000000004020005c RA: 00000000fff471c6 TVAL: 00000000f1402573
 ```
 
-Why does NuttX crash at `4020005c`? Here's our RISC-V Boot Code...
+_Why did NuttX crash at `4020005c`?_
+
+Here's our RISC-V Boot Code...
 
 From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_head.S#L92-L103):
 
@@ -1202,12 +1204,14 @@ From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star6
 nuttx/arch/risc-v/src/chip/qemu_rv_head.S:95
   /* Load mhartid (cpuid) */
   csrr a0, mhartid
-    4020005c:	f1402573          	csrr	a0,mhartid
+    4020005c:	f1402573  csrr a0, mhartid
 ```
 
-NuttX tries loads the CPU ID (Hart ID) from the RISC-V Control and Status Register (CSR). [(Explained here)](https://lupyuen.github.io/articles/riscv#get-cpu-id)
+NuttX tries loads the CPU ID or Hardware Thread "Hart" ID from the RISC-V Control and Status Register (CSR). [(Explained here)](https://lupyuen.github.io/articles/riscv#get-cpu-id)
 
-But it fails! Probably because we don't have sufficient privilege to access the CPU ID. RISC-V runs at 3 Privilege Levels...
+But it fails! Because we don't have sufficient privilege to access the Hart ID.
+
+RISC-V runs at 3 Privilege Levels...
 
 - M: Machine Level (Most powerful)
 
@@ -1215,18 +1219,58 @@ But it fails! Probably because we don't have sufficient privilege to access the 
 
 - U: User Level (Least powerful)
 
-We are running at Supervisor Level, which [doesn't allow access to the CSR Registers](https://five-embeddev.com/riscv-isa-manual/latest/machine.html).  (Including Hart ID)
+NuttX runs at Supervisor Level, which [doesn't allow access to some CSR Registers](https://five-embeddev.com/riscv-isa-manual/latest/machine.html).  (Including [Hart ID](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#hart-id-register-mhartid))
 
-TODO: Get the Hart ID from OpenSBI. (Supervisor Binary Interface)
+_What runs at Machine Level?_
 
-See [RISC-V SBI Spec](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.pdf)
+[OpenSBI](https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/) (Supervisor Binary Interface) is the first thing that boots on Star64. It runs at Machine Level and it starts the U-Boot Bootloader.
 
-See [mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
+Refer to [RISC-V SBI Spec](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.pdf)
 
-TODO: Refer to Linux Boot Code: [linux/arch/riscv/kernel/head.S](https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S)
+U-Boot Bootloader runs at Supervisor Level. And starts NuttX, also at Supervisor Level.
 
-How does it get the Hart ID and prepare the MMU?
+_How to get the Hart ID from OpenSBI?_
 
-`CONFIG_RISCV_M_MODE` is False
+Refer to the Linux Boot Code: [linux/arch/riscv/kernel/head.S](https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S)
 
-`CONFIG_EFI` is True
+(`CONFIG_RISCV_M_MODE` is False and `CONFIG_EFI` is True)
+
+From [linux/blob/master/arch/riscv/kernel/head.S](https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S#L292-L295):
+
+```c
+/* Save hart ID and DTB physical address */
+mv s0, a0
+mv s1, a1
+```
+
+Here we see that U-Boot [(or OpenSBI)](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.adoc#function-hart-start-fid-0) passes 2 arguments to our kernel...
+
+- Register A0: Hart ID
+
+- Register A1: RAM Address of Device Tree
+
+So we'll simply read the Hart ID from Register A0. (And ignore A1)
+
+TODO: Remove `csrr  a0, mhartid`
+
+_What about other CSR Instructions in our NuttX Boot Code?_
+
+TODO: mie
+
+```text
+/* Disable all interrupts (i.e. timer, external) in mie */
+csrw  mie, zero
+```
+
+[(Source)](https://lupyuen.github.io/articles/riscv#disable-interrupts)
+
+TODO: mtvec
+
+```text
+/* Load address of Interrupt Vector Table */
+csrw  mtvec, t0
+```
+
+[(Source)](https://lupyuen.github.io/articles/riscv#load-interrupt-vector)
+
+TODO: See [mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
