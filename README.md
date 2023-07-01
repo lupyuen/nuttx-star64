@@ -1065,13 +1065,23 @@ We're ready to boot NuttX on Star64!
 
 # Boot NuttX on Star64
 
-Let's boot NuttX on Star64! We begin with the [__Armbian Image for Star64__](https://www.armbian.com/star64/)...
+Let's boot NuttX on Star64! We compile [NuttX for 64-bit RISC-V QEMU](https://lupyuen.github.io/articles/riscv#appendix-build-apache-nuttx-rtos-for-64-bit-risc-v-qemu) with these tweaks...
+
+- ["NuttX prints to QEMU Console"](https://github.com/lupyuen/nuttx-star64#nuttx-prints-to-qemu-console)
+
+- ["UART Base Address for Star64"](https://github.com/lupyuen/nuttx-star64#uart-base-address-for-star64)
+
+- ["RISC-V Linux Kernel Header"](https://github.com/lupyuen/nuttx-star64#risc-v-linux-kernel-header)
+
+- ["Set Start Address of NuttX Kernel"](https://github.com/lupyuen/nuttx-star64#set-start-address-of-nuttx-kernel)
+
+For the microSD Image, we pick this [__Armbian Image for Star64__](https://www.armbian.com/star64/)...
 
 -   [__Armbian 23.8 Lunar for Star64 (Minimal)__](https://github.com/armbianro/os/releases/download/23.8.0-trunk.56/Armbian_23.8.0-trunk.56_Star64_lunar_edge_5.15.0_minimal.img.xz)
 
 Write the Armbian Image to a microSD Card with Balena Etcher.
 
-We fix the missing Device Tree...
+We fix the [Missing Device Tree](https://lupyuen.github.io/articles/star64#armbian-image-for-star64)...
 
 ```bash
 sudo chmod go+w /run/media/luppy/armbi_root/boot
@@ -1099,7 +1109,7 @@ cp nuttx.bin /run/media/luppy/armbi_root/boot/Image
 
 Insert the microSD Card into Star64 and power up.
 
-NuttX boots with `123` yay! [(As printed by our Boot Code)](https://github.com/lupyuen/nuttx-star64#nuttx-prints-to-qemu-console)
+NuttX boots with `123` yay! [(Which is printed by our Boot Code)](https://github.com/lupyuen/nuttx-star64#nuttx-prints-to-qemu-console)
 
 ```text
 Starting kernel ...
@@ -1163,23 +1173,6 @@ reset not supported yet
 ```
 
 Why does NuttX crash at `4020005c`? See the next section...
-
-TODO: Set CLINT and PLIC Addresses
-
-From [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
-
-```text
-0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
-0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
-```
-
-TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33):
-
-```c
-#define QEMU_RV_CLINT_BASE   0x02000000
-#define QEMU_RV_ACLINT_BASE  0x02f00000
-#define QEMU_RV_PLIC_BASE    0x0c000000
-```
 
 # NuttX Fails To Get Hart ID
 
@@ -1280,3 +1273,20 @@ csrw  mtvec, t0
 [(Source)](https://lupyuen.github.io/articles/riscv#load-interrupt-vector)
 
 TODO: See [mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
+
+TODO: Set CLINT and PLIC Addresses
+
+From [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
+
+```text
+0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
+0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
+```
+
+TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33):
+
+```c
+#define QEMU_RV_CLINT_BASE   0x02000000
+#define QEMU_RV_ACLINT_BASE  0x02f00000
+#define QEMU_RV_PLIC_BASE    0x0c000000
+```
