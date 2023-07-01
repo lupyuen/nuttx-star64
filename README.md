@@ -886,21 +886,15 @@ The correct output is `123123123123123123112323`. (Because of the 8 CPUs)
 
 # UART Base Address for Star64
 
-TODO: We'll take the UART Assembly Code from the previous section and run on Star64 / JH7110. (So we can troubleshoot the NuttX Boot Code)
+We'll take the UART Assembly Code from the previous section and run on Star64 / JH7110. (So we can troubleshoot the NuttX Boot Code)
 
-From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html):
+Based on [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html), UART0 is at 0x00_1000_0000.
 
-UART0 is at 0x00_1000_0000
+Also from [UART Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html): UART Register Base Address is "0x10000000" with range "0x10000".
 
-From [UART Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html):
+[(JH7110 UART Datasheet)](https://doc-en.rvspace.org/JH7110/Datasheet/JH7110_DS/uart.html)
 
-UART Register base address "0x10000000" and range "0x10000"
-
-[UART Datasheet](https://doc-en.rvspace.org/JH7110/Datasheet/JH7110_DS/uart.html)
-
-TODO: Set UART Base Address
-
-From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
+Let's set the UART Base Address in NuttX. From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
 
 ```text
 CONFIG_16550_ADDRWIDTH=0
@@ -912,19 +906,21 @@ CONFIG_16550_UART0_SERIAL_CONSOLE=y
 CONFIG_16550_UART=y
 ```
 
-UART Base Address is already `0x1000` `0000` yay!
+NuttX UART Base Address is already `0x1000` `0000`. No changes needed yay!
 
 # RISC-V Linux Kernel Header
 
-TODO: Embed Linux Kernel Header in QEMU
+For U-Boot Bootloader to boot NuttX, we need to embed the RISC-V Linux Kernel Header...
+
+-   [__"Inside the Kernel Image"__](https://lupyuen.github.io/articles/star64#inside-the-kernel-image)
 
 This is how we decode the RISC-V Linux Header...
 
 -   [__"Decode the RISC-V Linux Header"__](https://lupyuen.github.io/articles/star64#appendix-decode-the-risc-v-linux-header)
 
-Copy from Arm64 Linux Header: [arm64_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/arm64/src/common/arm64_head.S#L79-L118)
+We copy the Arm64 Linux Header from [arm64_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/arm64/src/common/arm64_head.S#L79-L118)...
 
-To [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_head.S#L42-L75):
+And tweak for RISC-V Linux Header, like this: [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_head.S#L42-L75):
 
 ```text
 __start:
@@ -1004,11 +1000,17 @@ Check that the lengths and offsets match the RISC-V Linux Header Format...
 
 -   [__"Decode the RISC-V Linux Header"__](https://lupyuen.github.io/articles/star64#appendix-decode-the-risc-v-linux-header)
 
-Tested OK with QEMU.
+And our RISC-V Boot Code tested OK with QEMU.
 
 # Set Start Address of NuttX Kernel
 
-TODO: Set Kernel Start Address
+Earlier we saw that Star64's U-Boot Bootloader will load Linux Kernels into RAM at Address `0x4020` `0000`...
+
+- ["Armbian Image for Star64"](https://lupyuen.github.io/articles/star64#armbian-image-for-star64)
+
+- ["Yocto Image for Star64"](https://lupyuen.github.io/articles/star64#yocto-image-for-star64)
+
+To boot NuttX on Star64, let's set the Start Address of the NuttX Kernel to `0x4020` `0000`.
 
 From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L56-L57):
 
@@ -1017,20 +1019,19 @@ CONFIG_RAM_SIZE=33554432
 CONFIG_RAM_START=0x80000000
 ```
 
-We changed to `0x40200000`
+We changed the above NuttX Build Config to `0x40200000`
 
-From [ld.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/scripts/ld.script#L21-L26)
+We also updated the Linker Script: [ld.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/scripts/ld.script#L21-L26)
 
 ```text
 SECTIONS
 {
   /* Previously 0x80000000 */
   . = 0x40200000;
-
   .text :
 ```
 
-Also change this if building for NuttX Kernel Mode: [ld-kernel64.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/scripts/ld-kernel64.script#L21-L51):
+Remember to change this if building for NuttX Kernel Mode: [ld-kernel64.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/scripts/ld-kernel64.script#L21-L51):
 
 ```text
 MEMORY
@@ -1047,7 +1048,6 @@ SECTIONS
 {
   /* Previously 0x80000000 */
   . = 0x40200000;
-
   .text :
 ```
 
@@ -1060,6 +1060,8 @@ RISC-V Disassembly of NuttX Kernel shows that the Start Address is correct...
   j       real_start           /* Jump to Kernel Start (2 bytes) */
     40200002:	a83d                	j	40200040 <real_start>
 ```
+
+We're ready to boot NuttX on Star64!
 
 # Boot NuttX on Star64
 
