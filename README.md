@@ -1047,19 +1047,60 @@ RISC-V Disassembly of NuttX Kernel shows that the Start Address is correct...
 
 TODO: Fix missing Device Tree
 
-Edit `/boot/extlinux/extlinux.conf`. Change
-
-```text
-fdt /boot/dtb/starfive/jh7110-star64-pine64.dtb
-```
-
-to
-
-```text
-fdt /boot/dtb/starfive/jh7110-visionfive-v2.dtb
+```bash
+sudo chmod go+w /run/media/luppy/armbi_root/boot
+sudo chmod go+w /run/media/luppy/armbi_root/boot/dtb/starfive
+cp \
+  /boot/dtb/starfive/jh7110-visionfive-v2.dtb \
+  /boot/dtb/starfive/jh7110-star64-pine64.dtb
 ```
 
 TODO: Copy nuttx.bin to /boot/Image
+
+TODO: NuttX crashes on boot
+
+```text
+## Warning: defaulting to text format
+## Error: "boot2" not defined
+switch to partitions #0, OK
+mmc1 is current device
+Scanning mmc 1:1...
+Found /boot/extlinux/extlinux.conf
+Retrieving file: /boot/extlinux/extlinux.conf
+383 bytes read in 7 ms (52.7 KiB/s)
+1:      Armbian
+Retrieving file: /boot/uInitrd
+10911538 bytes read in 465 ms (22.4 MiB/s)
+Retrieving file: /boot/Image
+163201 bytes read in 13 ms (12 MiB/s)
+append: root=UUID=99f62df4-be35-475c-99ef-2ba3f74fe6b5 console=ttyS0,115200n8 console=tty0 earlycon=sbi rootflags=data=writeback stmmaceth=chain_mode:1 rw rw no_console_suspend consoleblank=0 fsck.fix=yes fsck.repair=yes net.ifnames=0 splash plymouth.ignore-serial-consoles
+Retrieving file: /boot/dtb/starfive/jh7110-star64-pine64.dtb
+50235 bytes read in 12 ms (4 MiB/s)
+Moving Image from 0x40200000 to 0x40000000, end=40029e7c
+Unhandled exception: Store/AMO access fault
+EPC: 00000000fff47a98 RA: 00000000fff498bc TVAL: 0000000040000000
+EPC: 0000000040201a98 RA: 00000000402038bc reloc adjusted
+
+SP:  00000000ff7336b0 GP:  00000000ff735e00 TP:  0000000000000001
+T0:  0000000040029dfd T1:  0000005643534952 T2:  0000000005435352
+S0:  0000000040200000 S1:  0000000000001000 A0:  0000000040000000
+A1:  0000000040200000 A2:  00000000a83d5a4d A3:  0000000000000000
+A4:  0000000000029e7c A5:  0000000000000000 A6:  0000000000000002
+A7:  0000000000000000 S2:  0000000000000003 S3:  0000000000000000
+S4:  0000000000000000 S5:  00000000fffdbb50 S6:  00000000ff733898
+S7:  00000000fffb4a58 S8:  0000000000000001 S9:  0000000000000002
+S10: 0000000000000000 S11: 0000000000000000 T3:  03100313100002b7
+T4:  0320031300628023 T5:  0330031300628023 T6:  0000000040000000
+
+Code: b383 0385 be03 0405 be83 0485 bf03 0505 (e110)
+
+
+resetting ...
+reset not supported yet
+### ERROR ### Please RESET the board ###
+```
+
+Why? `Moving Image from 0x40200000 to 0x40000000, end=40029e7c`
 
 TODO: Set CLINT and PLIC Addresses
 
