@@ -332,6 +332,8 @@ Thus we connect these pins...
 | Pin 8 (TX) | RX | Red
 | Pin 10 (RX) | TX | Orange
 
+Set the Voltage Jumper to 3V3. (Instead of 5V)
+
 On our computer, connect to the USB Serial Port at 115.2 kbps...
 
 ```bash
