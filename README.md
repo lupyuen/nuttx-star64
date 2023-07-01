@@ -942,7 +942,7 @@ __start:
    * header to make the bootloader happy.
    */
 
-  li      s4, -0xd             /* Magic Signature "MZ" (2 bytes) */
+  c.li    s4, -13              /* Magic Signature "MZ" (2 bytes) */
   j       real_start           /* Jump to Kernel Start (2 bytes) */
   .long   0                    /* Executable Code padded to 8 bytes */
   .quad   0x200000             /* Image load offset from start of RAM */
@@ -1160,7 +1160,7 @@ reset not supported yet
 ### ERROR ### Please RESET the board ###
 ```
 
-TODO: Why does NuttX crash at `4020005c`?
+Why does NuttX crash at `4020005c`? See the next section...
 
 TODO: Set CLINT and PLIC Addresses
 
@@ -1178,3 +1178,47 @@ TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-
 #define QEMU_RV_ACLINT_BASE  0x02f00000
 #define QEMU_RV_PLIC_BASE    0x0c000000
 ```
+
+# NuttX Crashes When Booting
+
+Earlier we saw NuttX crashing when booting on Star64...
+
+```text
+Starting kernel ...
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123
+Unhandled exception: Illegal instruction
+EPC: 000000004020005c RA: 00000000fff471c6 TVAL: 00000000f1402573
+```
+
+Why does NuttX crash at `4020005c`? Here's our RISC-V Boot Code...
+
+From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_head.S#L92-L103):
+
+```text
+nuttx/arch/risc-v/src/chip/qemu_rv_head.S:95
+  /* Load mhartid (cpuid) */
+  csrr a0, mhartid
+    4020005c:	f1402573          	csrr	a0,mhartid
+```
+
+NuttX tries loads the CPU ID (Hart ID) from the RISC-V Control and Status Register (CSR). [(Explained here)](https://lupyuen.github.io/articles/riscv#get-cpu-id)
+
+But it fails! Probably because we don't have sufficient privilege to access the CPU ID. RISC-V runs at 3 Privilege Levels...
+
+- M: Machine Level (Most powerful)
+
+- S: Supervisor Level (Less powerful)
+
+- U: User Level (Least powerful)
+
+We are probably running at Supervisor Level, which [doesn't allow access to the CSR Registers](https://five-embeddev.com/riscv-isa-manual/latest/machine.html) (including Hart ID).
+
+TODO: Get the Hart ID from OpenSBI
+
+TODO: Refer to Linux Boot Code: [linux/arch/riscv/kernel/head.S](https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S)
+
+`CONFIG_RISCV_M_MODE` is False
+
+`CONFIG_EFI` is True
