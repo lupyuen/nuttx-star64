@@ -888,13 +888,23 @@ The correct output is `123123123123123123112323`. (Because of the 8 CPUs)
 
 We'll take the UART Assembly Code from the previous section and run on Star64 / JH7110. (So we can troubleshoot the NuttX Boot Code)
 
-Based on [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html), UART0 is at 0x00_1000_0000.
+_Does Star64 / JH7110 use a 16550 UART Controller like QEMU?_
 
-Also from [UART Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html): UART Register Base Address is "0x10000000" with range "0x10000".
+According to the [JH7110 UART Developing Guide](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/function_layer.html), Star64 / JH7110 uses the 8250 UART Controller...
+
+Which is [compatible with QEMU's 16550 UART Controller](https://en.wikipedia.org/wiki/16550_UART). So our UART Assembly Code for QEMU will run on Star64!
+
+_What's the UART Base Address for Star64 / JH7110?_
+
+Based on [JH7110 System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html), UART0 is at `0x1000` `0000`.
+
+Also from the [JH7110 UART Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html): UART Register Base Address is `0x1000` `0000` with range `0x10000`.
 
 [(JH7110 UART Datasheet)](https://doc-en.rvspace.org/JH7110/Datasheet/JH7110_DS/uart.html)
 
-Let's set the UART Base Address in NuttX. From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
+_Isn't that the same UART Base Address as QEMU?_
+
+Let's check the UART Base Address in NuttX for QEMU. From [nsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/nsh64/defconfig#L10-L16):
 
 ```text
 CONFIG_16550_ADDRWIDTH=0
@@ -906,7 +916,9 @@ CONFIG_16550_UART0_SERIAL_CONSOLE=y
 CONFIG_16550_UART=y
 ```
 
-NuttX UART Base Address is already `0x1000` `0000`. No changes needed yay!
+NuttX UART Base Address is `0x1000` `0000`. The exact same UART Base Address for QEMU AND Star64!
+
+So no changes needed, our UART Assembly Code will run on QEMU AND Star64 yay!
 
 # RISC-V Linux Kernel Header
 
