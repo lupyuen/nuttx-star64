@@ -1269,9 +1269,6 @@ _What are the actual values of Registers A0 and A1?_
 Thanks to our [earlier Crash Dump](https://github.com/lupyuen/nuttx-star64#boot-nuttx-on-star64), we know the actual values of A0 and A1!
 
 ```text
-EPC: 000000004020005c RA: 00000000fff471c6 TVAL: 00000000f1402573
-EPC: ffffffff804ba05c RA: 00000000402011c6 reloc adjusted
-
 SP:  00000000ff733630 GP:  00000000ff735e00 TP:  0000000000000001
 T0:  0000000010000000 T1:  0000000000000033 T2:  7869662e6b637366
 S0:  0000000000000400 S1:  00000000ffff1428 A0:  0000000000000001
