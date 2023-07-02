@@ -1284,6 +1284,8 @@ This says that...
 
 - RAM Address of Device Tree is `0x4600` `0000` (Register A1)
 
+Yep looks correct!
+
 _What about other CSR Instructions in our NuttX Boot Code?_
 
 We change the Machine-Level `m` Registers to Supervisor-Level `s` Registers.
