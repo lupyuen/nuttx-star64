@@ -4,7 +4,9 @@
 
 Read the articles...
 
--   ["Inspecting the RISC-V Linux Images for Star64 SBC"](https://lupyuen.github.io/articles/star64)
+-   ["Booting RISC-V Linux on Star64 SBC (JH7110)"](https://lupyuen.github.io/articles/linux)
+
+-   ["Inspecting the RISC-V Linux Images for Star64 SBC (JH7110)"](https://lupyuen.github.io/articles/star64)
 
 -   ["64-bit RISC-V with Apache NuttX Real-Time Operating System"](https://lupyuen.github.io/articles/riscv)
 
@@ -1185,6 +1187,10 @@ reset not supported yet
 ```
 
 Why does NuttX crash at `4020005c`? See the next section...
+
+![Cody AI Assistant explains our RISC-V Exception](https://lupyuen.github.io/images/star64-exception.jpg)
+
+_[Cody AI Assistant](https://about.sourcegraph.com/cody) explains our RISC-V Exception_
 
 # NuttX Fails To Get Hart ID
 
