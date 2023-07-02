@@ -1264,6 +1264,26 @@ So we'll simply read the Hart ID from Register A0. (And ignore A1)
 
 TODO: Remove `csrr a0, mhartid`
 
+_What are the actual values of Registers A0 and A1?_
+
+Thanks to our [earlier Crash Dump](https://github.com/lupyuen/nuttx-star64#boot-nuttx-on-star64), we know the actual values of A0 and A1!
+
+```text
+EPC: 000000004020005c RA: 00000000fff471c6 TVAL: 00000000f1402573
+EPC: ffffffff804ba05c RA: 00000000402011c6 reloc adjusted
+
+SP:  00000000ff733630 GP:  00000000ff735e00 TP:  0000000000000001
+T0:  0000000010000000 T1:  0000000000000033 T2:  7869662e6b637366
+S0:  0000000000000400 S1:  00000000ffff1428 A0:  0000000000000001
+A1:  0000000046000000 A2:  0000000000000600 A3:  0000000000004000
+```
+
+This says that...
+
+- Hart ID is 1 (Register A0)
+
+- RAM Address of Device Tree is `0x4600` `0000` (Register A1)
+
 _What about other CSR Instructions in our NuttX Boot Code?_
 
 We change the Machine-Level `m` Registers to Supervisor-Level `s` Registers.
