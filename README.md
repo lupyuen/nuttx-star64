@@ -1104,27 +1104,29 @@ Write the Armbian Image to a microSD Card with Balena Etcher.
 We fix the [Missing Device Tree](https://lupyuen.github.io/articles/star64#armbian-image-for-star64)...
 
 ```bash
-sudo chmod go+w /run/media/luppy/armbi_root/boot
-sudo chmod go+w /run/media/luppy/armbi_root/boot/dtb/starfive
+## Fix the Missing Device Tree
+sudo chmod go+w /run/media/$USER/armbi_root/boot
+sudo chmod go+w /run/media/$USER/armbi_root/boot/dtb/starfive
 cp \
-  /boot/dtb/starfive/jh7110-visionfive-v2.dtb \
-  /boot/dtb/starfive/jh7110-star64-pine64.dtb
+  /run/media/$USER/armbi_root/boot/dtb/starfive/jh7110-visionfive-v2.dtb \
+  /run/media/$USER/armbi_root/boot/dtb/starfive/jh7110-star64-pine64.dtb
 ```
 
 Then we delete the sym-link `/boot/Image` and copy the NuttX Binary Image `nuttx.bin` to `/boot/Image`...
 
 ```bash
-## Export the NuttX Binary Image to nuttx.bin
+## We assume that `nuttx` contains the NuttX ELF Image.
+## Export the NuttX Binary Image to `nuttx.bin`
 riscv64-unknown-elf-objcopy \
   -O binary \
   nuttx \
   nuttx.bin
 
-## Delete /boot/Image
-rm /run/media/luppy/armbi_root/boot/Image
+## Delete Armbian Kernel `/boot/Image`
+rm /run/media/$USER/armbi_root/boot/Image
 
-## Copy nuttx.bin to /boot/Image
-cp nuttx.bin /run/media/luppy/armbi_root/boot/Image
+## Copy `nuttx.bin` to Armbian Kernel `/boot/Image`
+cp nuttx.bin /run/media/$USER/armbi_root/boot/Image
 ```
 
 Insert the microSD Card into Star64 and power up.
