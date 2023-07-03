@@ -4,9 +4,9 @@
 
 Read the articles...
 
--   ["Booting RISC-V Linux on Star64 SBC (JH7110)"](https://lupyuen.github.io/articles/linux)
+-   ["Booting RISC-V Linux on Star64 JH7110 SBC"](https://lupyuen.github.io/articles/linux)
 
--   ["Inspecting the RISC-V Linux Images for Star64 SBC (JH7110)"](https://lupyuen.github.io/articles/star64)
+-   ["Inspecting the RISC-V Linux Images for Star64 JH7110 SBC"](https://lupyuen.github.io/articles/star64)
 
 -   ["64-bit RISC-V with Apache NuttX Real-Time Operating System"](https://lupyuen.github.io/articles/riscv)
 
