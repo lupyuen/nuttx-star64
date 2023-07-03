@@ -326,6 +326,8 @@ TODO: Any interesting CSR Instructions?
 
 To access the Serial Console, we connect a [USB Serial Adapter](https://pine64.com/product/serial-console-woodpecker-edition/) to Star64...
 
+![Star64 JH7110 RISC-V SBC with Woodpecker USB Serial Adapter](https://lupyuen.github.io/images/linux-title.jpg)
+
 According to [Star64 Schematic](https://files.pine64.org/doc/star64/Star64_Schematic_V1.1_20230504.pdf), UART0 TX and RX (GPIO 5 and 6) are connected to the Pi GPIO Header (Pins 8 and 10).
 
 Thus we connect these pins...
@@ -338,6 +340,8 @@ Thus we connect these pins...
 
 Set the Voltage Jumper to 3V3. (Instead of 5V)
 
+![Pine64 Woodpecker Serial Adapter](https://lupyuen.github.io/images/star64-uart3.jpg)
+
 On our computer, connect to the USB Serial Port at 115.2 kbps...
 
 ```bash
@@ -347,6 +351,8 @@ screen /dev/ttyUSB0 115200
 Power up Star64. The DIP Switches for GPIO 0 and 1 default to Low and Low, so Star64 should boot from Flash Memory, which has the U-Boot Bootloader inside.
 
 [(DIP Switch Labels are inverted: __"ON"__ actually means __"Low"__)](https://wiki.pine64.org/wiki/STAR64#Prototype_Bringup_Notes)
+
+![DIP Switches for GPIO 0 and 1 are set to Low and Low](https://lupyuen.github.io/images/star64-uart2.jpg)
 
 We'll see this U-Boot Bootloader Log...
 
