@@ -1466,7 +1466,7 @@ Hart ID is now 0, which is correct...
 Starting kernel ...
 clk u5_dw_i2c_clk_core already disabled
 clk u5_dw_i2c_clk_apb already disabled
-123067DEFAGHBCI
+123067DFAGHBCI
 ```
 
 But `qemu_rv_start` hangs. Why?
