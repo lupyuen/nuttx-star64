@@ -1466,7 +1466,7 @@ Hart ID is now 0, which is correct...
 Starting kernel ...
 clk u5_dw_i2c_clk_core already disabled
 clk u5_dw_i2c_clk_apb already disabled
-123067EG
+123067DEFGac
 ```
 
 But `qemu_rv_start` hangs. Why?
@@ -1482,6 +1482,8 @@ But `qemu_rv_start` hangs. Why?
 ```
 
 TODO: Trace `qemu_rv_start`
+
+TODO: Hangs in `u16550_setup`
 
 # TODO
 
