@@ -1564,6 +1564,14 @@ From [mode.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/r
 #endif
 ```
 
+[CONFIG_ARCH_USE_S_MODE](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/Kconfig#L278-L296)
+
+```bash
+tools/configure.sh rv-virt:knsh64
+```
+
+TODO: Use `make` instead of `make -j`
+
 TODO: grep for `csr` in `nuttx.S`
 
 # Hang in UART Transmit
