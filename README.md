@@ -1493,30 +1493,78 @@ From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/
 int up_putc(int ch)
 {
   FAR struct u16550_s *priv = (FAR struct u16550_s *)CONSOLE_DEV.priv;
-  //// irqstate_t flags;
+  irqstate_t flags;
 
   /* All interrupts must be disabled to prevent re-entrancy and to prevent
    * interrupts from firing in the serial driver code.
    */
 
   //// This will hang!
-  //// flags = enter_critical_section();
-
-  /* Check for LF */
-
-  if (ch == '\n')
-    {
-      /* Add CR */
-
-      u16550_putc(priv, '\r');
-    }
-
+  flags = enter_critical_section();
+  ...
   u16550_putc(priv, ch);
-  //// leave_critical_section(flags);
-
+  leave_critical_section(flags);
   return ch;
 }
 ```
+
+Which assembles to...
+
+```text
+int up_putc(int ch)
+{
+  ...
+up_irq_save():
+/Users/Luppy/PinePhone/wip-nuttx/nuttx/include/arch/irq.h:675
+  __asm__ __volatile__
+    40204598:	47a1                	li	a5,8
+    4020459a:	3007b7f3          	csrrc	a5,mstatus,a5
+up_putc():
+/Users/Luppy/PinePhone/wip-nuttx/nuttx/drivers/serial/uart_16550.c:1726
+  flags = enter_critical_section();
+```
+
+But `mstatus` is not accessible at Supervisor Level!
+
+[`enter_critical_section`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/include/nuttx/irq.h#L156-L191)
+
+[`up_irq_save`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/include/irq.h#L660-L689)
+
+```c
+// Disable interrupts and return the previous value of the mstatus register
+static inline irqstate_t up_irq_save(void)
+{
+  irqstate_t flags;
+
+  /* Read mstatus & clear machine interrupt enable (MIE) in mstatus */
+
+  __asm__ __volatile__
+    (
+      "csrrc %0, " __XSTR(CSR_STATUS) ", %1\n"
+      : "=r" (flags)
+      : "r"(STATUS_IE)
+      : "memory"
+    );
+
+  /* Return the previous mstatus value so that it can be restored with
+   * up_irq_restore().
+   */
+
+  return flags;
+}
+```
+
+From [mode.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/include/mode.h#L35-L103):
+
+```c
+#ifdef CONFIG_ARCH_USE_S_MODE
+#  define CSR_STATUS        sstatus          /* Global status register */
+#else
+#  define CSR_STATUS        mstatus          /* Global status register */
+#endif
+```
+
+TODO: grep for `csr` in `nuttx.S`
 
 # Hang in UART Transmit
 
