@@ -1458,7 +1458,30 @@ __For All Hart IDs:__
   /* We shouldn't return from _start */
 ```
 
-TODO: What happens when we run this?
+_What happens when we run this?_
+
+Hart ID is now 0, which is correct...
+
+```text
+Starting kernel ...
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067
+```
+
+But `qemu_rv_start` hangs. Why?
+
+```text
+  /* Print `7` */
+  li  t0, 0x10000000
+  li  t1, 0x37
+  sb  t1, 0(t0)
+
+  /* Jump to qemu_rv_start */
+  jal  x1, qemu_rv_start
+```
+
+TODO: Trace `qemu_rv_start`
 
 # TODO
 
