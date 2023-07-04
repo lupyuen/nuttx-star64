@@ -1217,7 +1217,7 @@ _Why did NuttX crash at `4020005c`?_
 
 Here's our RISC-V Boot Code...
 
-From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_head.S#L92-L103):
+From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ed09c34532ee7c51ac2da816cd6cf0adcce336e6/arch/risc-v/src/qemu-rv/qemu_rv_head.S#L92-L103):
 
 ```text
 nuttx/arch/risc-v/src/chip/qemu_rv_head.S:95
