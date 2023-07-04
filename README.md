@@ -1485,7 +1485,7 @@ TODO: Trace `qemu_rv_start`
 
 # Hang in Enter Critical Section
 
-TODO
+TODO: NuttX hangs when entering Critical Section...
 
 From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1713-L1737):
 
@@ -1524,11 +1524,9 @@ up_putc():
   flags = enter_critical_section();
 ```
 
-But `mstatus` is not accessible at Supervisor Level!
+But `mstatus` is not accessible at Supervisor Level! Let's trace this.
 
-[`enter_critical_section`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/include/nuttx/irq.h#L156-L191)
-
-[`up_irq_save`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/include/irq.h#L660-L689)
+[`enter_critical_section`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/include/nuttx/irq.h#L156-L191) calls [`up_irq_save`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/include/irq.h#L660-L689)...
 
 ```c
 // Disable interrupts and return the previous value of the mstatus register
@@ -1554,7 +1552,7 @@ static inline irqstate_t up_irq_save(void)
 }
 ```
 
-From [mode.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/include/mode.h#L35-L103):
+`CSR_STATUS` is defined in [mode.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/include/mode.h#L35-L103):
 
 ```c
 #ifdef CONFIG_ARCH_USE_S_MODE
@@ -1564,15 +1562,105 @@ From [mode.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/r
 #endif
 ```
 
-[CONFIG_ARCH_USE_S_MODE](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/Kconfig#L278-L296)
+So we need to set [CONFIG_ARCH_USE_S_MODE](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/Kconfig#L278-L296).
+
+Which is defined in Kernel Mode: [`rv-virt:knsh64`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig). So we change Build Config to...
 
 ```bash
 tools/configure.sh rv-virt:knsh64
 ```
 
-TODO: Use `make` instead of `make -j`
+We bypassed M-Mode during init...
 
-TODO: grep for `csr` in `nuttx.S`
+From [qemu_rv_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_start.c#L166-L231)
+
+```c
+void qemu_rv_start(int mhartid)
+{
+  /// Bypass to S-Mode Init
+  qemu_rv_start_s(mhartid); ////
+
+  /// Skip M-Mode Init
+#ifdef TODO ////
+  /* NOTE: still in M-mode */
+
+  if (0 == mhartid)
+    {
+      qemu_rv_clear_bss();
+
+      /* Initialize the per CPU areas */
+
+      riscv_percpu_add_hart(mhartid);
+    }
+
+  /* Disable MMU and enable PMP */
+
+  WRITE_CSR(satp, 0x0);
+  WRITE_CSR(pmpaddr0, 0x3fffffffffffffull);
+  WRITE_CSR(pmpcfg0, 0xf);
+
+  /* Set exception and interrupt delegation for S-mode */
+
+  WRITE_CSR(medeleg, 0xffff);
+  WRITE_CSR(mideleg, 0xffff);
+
+  /* Allow to write satp from S-mode */
+
+  CLEAR_CSR(mstatus, MSTATUS_TVM);
+
+  /* Set mstatus to S-mode and enable SUM */
+
+  CLEAR_CSR(mstatus, ~MSTATUS_MPP_MASK);
+  SET_CSR(mstatus, MSTATUS_MPPS | SSTATUS_SUM);
+
+  /* Set the trap vector for S-mode */
+
+  WRITE_CSR(stvec, (uintptr_t)__trap_vec);
+
+  /* Set the trap vector for M-mode */
+
+  WRITE_CSR(mtvec, (uintptr_t)__trap_vec_m);
+
+  if (0 == mhartid)
+    {
+      /* Only the primary CPU needs to initialize mtimer
+       * before entering to S-mode
+       */
+
+      up_mtimer_initialize();
+    }
+
+  /* Set mepc to the entry */
+
+  WRITE_CSR(mepc, (uintptr_t)qemu_rv_start_s);
+
+  /* Set a0 to mhartid explicitly and enter to S-mode */
+
+  asm volatile (
+      "mv a0, %0 \n"
+      "mret \n"
+      :: "r" (mhartid)
+  );
+#endif //// TODO
+}
+```
+
+grep for `csr` in `nuttx.S` shows that no more M-Mode Registers are used.
+
+Now critical section is OK yay!
+
+```text
+Starting kernel ...
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFAGHBCI
+```
+
+TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
+
+TODO: `riscv_earlyserialinit` hangs
+
+TODO: Use `make` instead of `make -j`
 
 # Hang in UART Transmit
 
