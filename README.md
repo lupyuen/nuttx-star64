@@ -1466,7 +1466,7 @@ Hart ID is now 0, which is correct...
 Starting kernel ...
 clk u5_dw_i2c_clk_core already disabled
 clk u5_dw_i2c_clk_apb already disabled
-123067DEFGac
+123067DEFAGHBCI
 ```
 
 But `qemu_rv_start` hangs. Why?
@@ -1483,7 +1483,55 @@ But `qemu_rv_start` hangs. Why?
 
 TODO: Trace `qemu_rv_start`
 
-TODO: Hangs in `u16550_setup`
+# Hang in Enter Critical Section
+
+TODO
+
+From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1713-L1737):
+
+```c
+int up_putc(int ch)
+{
+  FAR struct u16550_s *priv = (FAR struct u16550_s *)CONSOLE_DEV.priv;
+  //// irqstate_t flags;
+
+  /* All interrupts must be disabled to prevent re-entrancy and to prevent
+   * interrupts from firing in the serial driver code.
+   */
+
+  //// This will hang!
+  //// flags = enter_critical_section();
+
+  /* Check for LF */
+
+  if (ch == '\n')
+    {
+      /* Add CR */
+
+      u16550_putc(priv, '\r');
+    }
+
+  u16550_putc(priv, ch);
+  //// leave_critical_section(flags);
+
+  return ch;
+}
+```
+
+# Hang in UART Transmit
+
+TODO
+
+From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1638-L1642)
+
+```c
+static void u16550_putc(FAR struct u16550_s *priv, int ch)
+{
+  //// This will hang!
+  //// while ((u16550_serialin(priv, UART_LSR_OFFSET) & UART_LSR_THRE) == 0);
+  u16550_serialout(priv, UART_THR_OFFSET, (uart_datawidth_t)ch);
+}
+```
 
 # TODO
 
