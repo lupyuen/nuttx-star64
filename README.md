@@ -1672,11 +1672,18 @@ clk u5_dw_i2c_clk_apb already disabled
 
 TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
 
+TODO: [Build Output](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
+
+TODO: [Files Changed](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/31/files)
+
+# Hang in UART Setup
+
 TODO: `riscv_earlyserialinit` and `u16550_setup` hang
 
 From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L719-L792):
 
 ```c
+//// This will hang!
 #ifdef TODO ////
   /* Set trigger */
 
@@ -1690,6 +1697,7 @@ From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/
   priv->ier = u16550_serialin(priv, UART_IER_OFFSET);
 #endif //// TODO
 ...
+//// This will hang!
 #ifdef TODO ////
   /* Enter DLAB=1 */
 
@@ -1715,10 +1723,6 @@ From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/
 #endif //// TODO
 ```
 
-TODO: [Build Output](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
-
-TODO: [Files Changed](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/31/files)
-
 # Hang in UART Transmit
 
 TODO
@@ -1736,7 +1740,7 @@ static void u16550_putc(FAR struct u16550_s *priv, int ch)
 
 # TODO
 
-TODO: See [mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
+TODO: Any NuttX Boards using OpenSBI? See [mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
 
 TODO: Set CLINT and PLIC Addresses
 
