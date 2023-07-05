@@ -1458,8 +1458,9 @@ __For All Hart IDs:__
   csrw	sie, zero
   /* Previously: csrw	mie, zero */
 
-  la   t0, __trap_vec
-  csrw stvec, t0
+  /* Don't load the Interrupt Vector Table, use OpenSBI for crash logging */
+  /* la   t0, __trap_vec */
+  /* csrw stvec, t0 */
   /* Previously: csrw mtvec, t0 */
 
   /* Jump to qemu_rv_start */
@@ -1467,6 +1468,8 @@ __For All Hart IDs:__
 
   /* We shouldn't return from _start */
 ```
+
+Note that we don't load the Interrupt Vector Table, because we'll use OpenSBI for crash logging. (Like when we hit M-Mode Instructions)
 
 _What happens when we run this?_
 
@@ -1663,7 +1666,7 @@ Now critical section is OK yay!
 Starting kernel ...
 clk u5_dw_i2c_clk_core already disabled
 clk u5_dw_i2c_clk_apb already disabled
-123067DFAGHBCI
+123067DFAGHBCIc
 ```
 
 TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
