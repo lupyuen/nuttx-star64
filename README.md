@@ -1071,6 +1071,16 @@ SECTIONS
   .text :
 ```
 
+Which should match [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig):
+
+```text
+CONFIG_ARCH_PGPOOL_PBASE=0x40600000
+CONFIG_ARCH_PGPOOL_VBASE=0x40600000
+// TODO: Fix CONFIG_RAM_SIZE
+CONFIG_RAM_SIZE=1048576
+CONFIG_RAM_START=0x40200000
+```
+
 RISC-V Disassembly of NuttX Kernel shows that the Start Address is correct...
 
 ```text
@@ -1659,8 +1669,6 @@ clk u5_dw_i2c_clk_apb already disabled
 TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
 
 TODO: `riscv_earlyserialinit` hangs
-
-TODO: Use `make` instead of `make -j`
 
 # Hang in UART Transmit
 
