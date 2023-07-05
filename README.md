@@ -1671,7 +1671,48 @@ clk u5_dw_i2c_clk_apb already disabled
 
 TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
 
-TODO: `riscv_earlyserialinit` hangs
+TODO: `riscv_earlyserialinit` and `u16550_setup` hang
+
+From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L719-L792):
+
+```c
+#ifdef TODO ////
+  /* Set trigger */
+
+  *(volatile uint8_t *)0x10000000 = 'e';////
+  u16550_serialout(priv, UART_FCR_OFFSET,
+                   (UART_FCR_FIFOEN | UART_FCR_RXTRIGGER_8));
+
+  /* Set up the IER */
+
+  *(volatile uint8_t *)0x10000000 = 'f';////
+  priv->ier = u16550_serialin(priv, UART_IER_OFFSET);
+#endif //// TODO
+...
+#ifdef TODO ////
+  /* Enter DLAB=1 */
+
+  *(volatile uint8_t *)0x10000000 = 'g';////
+  u16550_serialout(priv, UART_LCR_OFFSET, (lcr | UART_LCR_DLAB));
+
+  /* Set the BAUD divisor */
+
+  div = u16550_divisor(priv);
+  u16550_serialout(priv, UART_DLM_OFFSET, div >> 8);
+  u16550_serialout(priv, UART_DLL_OFFSET, div & 0xff);
+
+  /* Clear DLAB */
+
+  u16550_serialout(priv, UART_LCR_OFFSET, lcr);
+
+  /* Configure the FIFOs */
+
+  *(volatile uint8_t *)0x10000000 = 'h';////
+  u16550_serialout(priv, UART_FCR_OFFSET,
+                   (UART_FCR_RXTRIGGER_8 | UART_FCR_TXRST | UART_FCR_RXRST |
+                    UART_FCR_FIFOEN));
+#endif //// TODO
+```
 
 # Hang in UART Transmit
 
