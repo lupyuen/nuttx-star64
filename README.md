@@ -4,6 +4,8 @@
 
 Read the articles...
 
+-   ["Apache NuttX RTOS on RISC-V: Star64 JH7110 SBC"](https://lupyuen.github.io/articles/nuttx2)
+
 -   ["Booting RISC-V Linux on Star64 JH7110 SBC"](https://lupyuen.github.io/articles/linux)
 
 -   ["Inspecting the RISC-V Linux Images for Star64 JH7110 SBC"](https://lupyuen.github.io/articles/star64)
