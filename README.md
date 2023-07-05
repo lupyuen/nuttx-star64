@@ -1714,6 +1714,8 @@ From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/
 #endif //// TODO
 ```
 
+TODO: [Build Output](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
+
 # Hang in UART Transmit
 
 TODO
