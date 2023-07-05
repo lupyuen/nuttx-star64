@@ -1206,9 +1206,9 @@ reset not supported yet
 
 Why does NuttX crash at `4020005c`? See the next section...
 
-![Cody AI Assistant explains our RISC-V Exception](https://lupyuen.github.io/images/star64-exception.jpg)
+![Cody AI Assistant tries to explain our RISC-V Exception](https://lupyuen.github.io/images/star64-exception.jpg)
 
-_[Cody AI Assistant](https://about.sourcegraph.com/cody) explains our RISC-V Exception_
+_[Cody AI Assistant](https://about.sourcegraph.com/cody) tries to explain our RISC-V Exception_
 
 # NuttX Fails To Get Hart ID
 
