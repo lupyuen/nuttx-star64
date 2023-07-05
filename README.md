@@ -1666,7 +1666,8 @@ Now critical section is OK yay!
 Starting kernel ...
 clk u5_dw_i2c_clk_core already disabled
 clk u5_dw_i2c_clk_apb already disabled
-123067DFAGHBCIcd
+123067DFAGHBCI[ 1
+301
 ```
 
 TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
