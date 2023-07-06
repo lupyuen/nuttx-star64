@@ -1240,7 +1240,9 @@ nuttx/arch/risc-v/src/chip/qemu_rv_head.S:95
 
 NuttX tries loads the CPU ID or Hardware Thread "Hart" ID from the RISC-V Control and Status Register (CSR). [(Explained here)](https://lupyuen.github.io/articles/riscv#get-cpu-id)
 
-But it fails! Because we don't have sufficient privilege to access the Hart ID.
+But it fails! Because we don't have sufficient privilege to access the Hart ID...
+
+# RISC-V Privilege Levels
 
 RISC-V runs at 3 Privilege Levels...
 
@@ -1265,6 +1267,8 @@ _What about U-Boot Bootloader?_
 U-Boot Bootloader runs at Supervisor Level. And starts NuttX, also at Supervisor Level.
 
 So OpenSBI is the only thing that runs at Machine Level. And can access the Machine-Level Registers.
+
+# Downgrade NuttX to Supervisor Mode
 
 _How to get the Hart ID from OpenSBI?_
 
