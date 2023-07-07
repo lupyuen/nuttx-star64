@@ -1256,6 +1256,8 @@ NuttX runs at Supervisor Level, which [doesn't allow access to Machine-Level CSR
 
 (The `m` in `mhartid` signifies that it's a Machine-Level Register)
 
+![RISC-V Privilege Levels](https://lupyuen.github.io/images/nuttx2-privilege.jpg)
+
 _What runs at Machine Level?_
 
 [OpenSBI](https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/) (Supervisor Binary Interface) is the first thing that boots on Star64. It runs at Machine Level and starts the U-Boot Bootloader.
@@ -1267,6 +1269,14 @@ _What about U-Boot Bootloader?_
 U-Boot Bootloader runs at Supervisor Level. And starts NuttX, also at Supervisor Level.
 
 So OpenSBI is the only thing that runs at Machine Level. And can access the Machine-Level Registers.
+
+_QEMU doesn't have this problem?_
+
+Because QEMU runs everything in (super-powerful) __Machine Mode__!
+
+![NuttX QEMU runs in Machine Mode](https://lupyuen.github.io/images/nuttx2-privilege2.jpg)
+
+NuttX needs to fetch the Hart ID with a different recipe...
 
 # Downgrade NuttX to Supervisor Mode
 
