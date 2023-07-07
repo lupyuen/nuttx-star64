@@ -1246,29 +1246,29 @@ But it fails! Because we don't have sufficient privilege to access the Hart ID..
 
 RISC-V runs at 3 Privilege Levels...
 
-- M: Machine Level (Most powerful)
+- M: Machine Mode (Most powerful)
 
-- S: Supervisor Level (Less powerful)
+- S: Supervisor Mode (Less powerful)
 
-- U: User Level (Least powerful)
+- U: User Mode (Least powerful)
 
-NuttX runs at Supervisor Level, which [doesn't allow access to Machine-Level CSR Registers](https://five-embeddev.com/riscv-isa-manual/latest/machine.html).  (Including [Hart ID](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#hart-id-register-mhartid))
+NuttX runs at Supervisor Mode, which [doesn't allow access to Machine-Mode CSR Registers](https://five-embeddev.com/riscv-isa-manual/latest/machine.html).  (Including [Hart ID](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#hart-id-register-mhartid))
 
-(The `m` in `mhartid` signifies that it's a Machine-Level Register)
+(The `m` in `mhartid` signifies that it's a Machine-Mode Register)
 
 ![RISC-V Privilege Levels](https://lupyuen.github.io/images/nuttx2-privilege.jpg)
 
-_What runs at Machine Level?_
+_What runs in Machine Mode?_
 
-[OpenSBI](https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/) (Supervisor Binary Interface) is the first thing that boots on Star64. It runs at Machine Level and starts the U-Boot Bootloader.
+[OpenSBI](https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/) (Supervisor Binary Interface) is the first thing that boots on Star64. It runs at Machine Mode and starts the U-Boot Bootloader.
 
 [(See the RISC-V SBI Spec)](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/riscv-sbi.pdf)
 
 _What about U-Boot Bootloader?_
 
-U-Boot Bootloader runs at Supervisor Level. And starts NuttX, also at Supervisor Level.
+U-Boot Bootloader runs in Supervisor Mode. And starts NuttX, also in Supervisor Mode.
 
-So OpenSBI is the only thing that runs at Machine Level. And can access the Machine-Level Registers.
+So OpenSBI is the only thing that runs in Machine Mode. And can access the Machine-Level Registers.
 
 _QEMU doesn't have this problem?_
 
