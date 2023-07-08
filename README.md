@@ -1758,11 +1758,15 @@ static void u16550_putc(FAR struct u16550_s *priv, int ch)
 
 TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
 
+`litex` boots from OpenSBI to NuttX, but doesn't callback to OpenSBI:
+
 [litex_shead.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_shead.S#L56)
 
 [litex_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_start.c#L50)
 
 [litex/arty_a7/configs/knsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/litex/arty_a7/configs/knsh/defconfig#L34)
+
+`mpfs` runs a copy of OpenSBI inside NuttX:
 
 [mpfs_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_start.c#L52)
 
@@ -1770,7 +1774,7 @@ TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
 
 [mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
 
-[riscv_exception_common.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/common/riscv_exception_common.S#L77)
+TODO: RISC-V Exceptions [riscv_exception_common.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/common/riscv_exception_common.S#L77)
 
 TODO: Set CLINT and PLIC Addresses
 
