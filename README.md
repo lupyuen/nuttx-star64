@@ -1756,7 +1756,13 @@ static void u16550_putc(FAR struct u16550_s *priv, int ch)
 
 # TODO
 
-TODO: Any NuttX Boards using OpenSBI? See [mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
+TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
+
+[litex_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_start.c#L50)
+
+[mpfs_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_start.c#L52)
+
+[mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
 
 TODO: Set CLINT and PLIC Addresses
 
