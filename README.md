@@ -1768,6 +1768,8 @@ TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
 
 [mpfs_opensbi_prepare_hart](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
 
+[riscv_exception_common.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/common/riscv_exception_common.S#L77)
+
 TODO: Set CLINT and PLIC Addresses
 
 From [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
