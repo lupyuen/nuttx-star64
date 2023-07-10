@@ -1893,32 +1893,58 @@ bootcmd_dhcp=devtype=dhcp; if dhcp ${scriptaddr} ${boot_script_dhcp}; then sourc
 Cleaned up...
 
 ```text
-devtype=dhcp;
+devtype=dhcp
 
-if dhcp ${scriptaddr} ${boot_script_dhcp};
-  then source ${scriptaddr};
-fi;
+if dhcp ${scriptaddr} ${boot_script_dhcp}
+  then source ${scriptaddr}
+fi
 
-setenv efi_fdtfile ${fdtfile};
-setenv efi_old_vci ${bootp_vci};
-setenv efi_old_arch ${bootp_arch};
-setenv bootp_vci PXEClient:Arch:00027:UNDI:003000;
-setenv bootp_arch 0x1b;
+setenv efi_fdtfile ${fdtfile}
+setenv efi_old_vci ${bootp_vci}
+setenv efi_old_arch ${bootp_arch}
+setenv bootp_vci PXEClient:Arch:00027:UNDI:003000
+setenv bootp_arch 0x1b
 
-if dhcp ${kernel_addr_r};
-  then tftpboot ${fdt_addr_r} dtb/${efi_fdtfile};
+if dhcp ${kernel_addr_r}
+  then tftpboot ${fdt_addr_r} dtb/${efi_fdtfile}
 
-  if fdt addr ${fdt_addr_r};
-    then bootefi ${kernel_addr_r} ${fdt_addr_r};
-    else bootefi ${kernel_addr_r} ${fdtcontroladdr};
-  fi;
-fi;
+  if fdt addr ${fdt_addr_r}
+    then bootefi ${kernel_addr_r} ${fdt_addr_r}
+    else bootefi ${kernel_addr_r} ${fdtcontroladdr}
+  fi
+fi
 
-setenv bootp_vci ${efi_old_vci};
-setenv bootp_arch ${efi_old_arch};
-setenv efi_fdtfile;
-setenv efi_old_arch;
-setenv efi_old_vci;
+setenv bootp_vci ${efi_old_vci}
+setenv bootp_arch ${efi_old_arch}
+setenv efi_fdtfile
+setenv efi_old_arch
+setenv efi_old_vci
+```
+
+TODO: What is `dhcp` command?
+
+TODO: What is `tftpboot` command?
+
+Assume [DHCP/TFTP](https://www.emcraft.com/som/using-dhcp) is not used.
+
+```text
+set serverip <host_pc_ip_address>
+dhcp
+tftp ${kernel_addr} ${serverip}:Image
+tftp ${fdt_addr} ${serverip}:jh7110-star64-pine64.dtb
+booti ${kernel_addr} - ${fdt_addr}
+```
+
+Save to Environment:
+
+```text
+set serverip <host_pc_ip_address>
+saveenv
+
+set origbootcmd "$bootcmd"
+set autoload no
+set bootcmd "dhcp; tftp ${kernel_addr} ${serverip}:Image; tftp ${fdt_addr} ${serverip}:jh7110-star64-pine64.dtb; booti ${kernel_addr} - ${fdt_addr}"
+saveenv
 ```
 
 https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
@@ -1939,6 +1965,12 @@ Reboot the Juno; it should now boot via TFTP.
 This is a persistent change, i.e. the Juno will boot via TFTP on every power up. To revert back to the default boot behaviour:
 
 VExpress64# set bootcmd "$origbootcmd"
+```
+
+`booti` is...
+
+```text
+booti     - boot Linux kernel 'Image' format from memory
 ```
 
 https://rechtzeit.wordpress.com/2013/01/16/tftp-boot-using-u-boot/
