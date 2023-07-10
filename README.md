@@ -1844,19 +1844,72 @@ $ curl -v tftp://x.x.x.x/a.txt
 * set timeouts for state 0; Total  300000, retry 6 maxtry 50
 ```
 
-https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
-
 `bootcmd` is now...
 
 ```text
 bootcmd=run load_vf2_env;run importbootenv;run load_distro_uenv;run boot2;run distro_bootcmd
-bootcmd_dhcp=devtype=dhcp; if dhcp ${scriptaddr} ${boot_script_dhcp}; then source ${scriptaddr}; fi;setenv efi_fdtfile ${fdtfile}; setenv efi_old_vci ${bootp_vci};setenv efi_old_arch ${bootp_arch};setenv bootp_vci PXEClient:Arch:00027:UNDI:003000;setenv bootp_arch 0x1b;if dhcp ${kernel_addr_r}; then tftpboot ${fdt_addr_r} dtb/${efi_fdtfile};if fdt addr ${fdt_addr_r}; then bootefi ${kernel_addr_r} ${fdt_addr_r}; else bootefi ${kernel_addr_r} ${fdtcontroladdr};fi;fi;setenv bootp_vci ${efi_old_vci};setenv bootp_arch ${efi_old_arch};setenv efi_fdtfile;setenv efi_old_arch;setenv efi_old_vci;
-bootcmd_distro=run fdt_loaddtb; run fdt_sizecheck; run set_fdt_distro; sysboot mmc ${fatbootpart} fat c0000000 ${bootdir}/${boot_syslinux_conf}; 
+
+load_vf2_env=fatload mmc ${bootpart} ${loadaddr} ${testenv}
+
+importbootenv=echo Importing environment from mmc${devnum} ...; env import -t ${loadaddr} ${filesize}
+
+load_distro_uenv=fatload mmc ${fatbootpart} ${distroloadaddr} ${bootdir}/${bootenv}; env import ${distroloadaddr} 17c; 
+
+boot2 not defined, comes from `boot/vf2_uEnv.txt`
+```
+
+`bootcmd` calls `distro_bootcmd`, which runs `bootcmd_dhcp`...
+
+```text
+distro_bootcmd=for target in ${boot_targets}; do run bootcmd_${target}; done
+
+boot_targets=mmc0 dhcp 
+
+Other boot_targets:
+
 bootcmd_mmc0=devnum=0; run mmc_boot
 
-distro_bootcmd=for target in ${boot_targets}; do run bootcmd_${target}; done
-boot_targets=mmc0 dhcp 
+bootcmd_distro=run fdt_loaddtb; run fdt_sizecheck; run set_fdt_distro; sysboot mmc ${fatbootpart} fat c0000000 ${bootdir}/${boot_syslinux_conf}; 
 ```
+
+`bootcmd_dhcp` is...
+
+```text
+bootcmd_dhcp=devtype=dhcp; if dhcp ${scriptaddr} ${boot_script_dhcp}; then source ${scriptaddr}; fi;setenv efi_fdtfile ${fdtfile}; setenv efi_old_vci ${bootp_vci};setenv efi_old_arch ${bootp_arch};setenv bootp_vci PXEClient:Arch:00027:UNDI:003000;setenv bootp_arch 0x1b;if dhcp ${kernel_addr_r}; then tftpboot ${fdt_addr_r} dtb/${efi_fdtfile};if fdt addr ${fdt_addr_r}; then bootefi ${kernel_addr_r} ${fdt_addr_r}; else bootefi ${kernel_addr_r} ${fdtcontroladdr};fi;fi;setenv bootp_vci ${efi_old_vci};setenv bootp_arch ${efi_old_arch};setenv efi_fdtfile;setenv efi_old_arch;setenv efi_old_vci;
+```
+
+Cleaned up...
+
+```text
+devtype=dhcp;
+
+if dhcp ${scriptaddr} ${boot_script_dhcp};
+  then source ${scriptaddr};
+fi;
+
+setenv efi_fdtfile ${fdtfile};
+setenv efi_old_vci ${bootp_vci};
+setenv efi_old_arch ${bootp_arch};
+setenv bootp_vci PXEClient:Arch:00027:UNDI:003000;
+setenv bootp_arch 0x1b;
+
+if dhcp ${kernel_addr_r};
+  then tftpboot ${fdt_addr_r} dtb/${efi_fdtfile};
+
+  if fdt addr ${fdt_addr_r};
+    then bootefi ${kernel_addr_r} ${fdt_addr_r};
+    else bootefi ${kernel_addr_r} ${fdtcontroladdr};
+  fi;
+fi;
+
+setenv bootp_vci ${efi_old_vci};
+setenv bootp_arch ${efi_old_arch};
+setenv efi_fdtfile;
+setenv efi_old_arch;
+setenv efi_old_vci;
+```
+
+https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
 
 ```text
 Save your host PC's IP address to the `serverip' environment variable:
