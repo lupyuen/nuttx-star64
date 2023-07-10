@@ -1799,12 +1799,97 @@ TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-
 
 TODO: We really should configure U-Boot Bootloader to load the Kernel Image over the network via TFTP. Because testing NuttX by swapping microSD Card is getting so tiresome.
 
+https://crates.io/crates/tftp_server
+
+```bash
+git clone https://github.com/DarinM223/tftp-server
+cd tftp-server
+cargo build --example server
+sudo RUST_LOG=tftp_server=info ./target/debug/examples/server -p 69 -d /tmp/a
+```
+
 https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
+
+`bootcmd` is now...
+
+```text
+bootcmd=run load_vf2_env;run importbootenv;run load_distro_uenv;run boot2;run distro_bootcmd
+bootcmd_dhcp=devtype=dhcp; if dhcp ${scriptaddr} ${boot_script_dhcp}; then source ${scriptaddr}; fi;setenv efi_fdtfile ${fdtfile}; setenv efi_old_vci ${bootp_vci};setenv efi_old_arch ${bootp_arch};setenv bootp_vci PXEClient:Arch:00027:UNDI:003000;setenv bootp_arch 0x1b;if dhcp ${kernel_addr_r}; then tftpboot ${fdt_addr_r} dtb/${efi_fdtfile};if fdt addr ${fdt_addr_r}; then bootefi ${kernel_addr_r} ${fdt_addr_r}; else bootefi ${kernel_addr_r} ${fdtcontroladdr};fi;fi;setenv bootp_vci ${efi_old_vci};setenv bootp_arch ${efi_old_arch};setenv efi_fdtfile;setenv efi_old_arch;setenv efi_old_vci;
+bootcmd_distro=run fdt_loaddtb; run fdt_sizecheck; run set_fdt_distro; sysboot mmc ${fatbootpart} fat c0000000 ${bootdir}/${boot_syslinux_conf}; 
+bootcmd_mmc0=devnum=0; run mmc_boot
+
+distro_bootcmd=for target in ${boot_targets}; do run bootcmd_${target}; done
+boot_targets=mmc0 dhcp 
+```
+
+```text
+Save your host PC's IP address to the `serverip' environment variable:
+
+VExpress64# set serverip <host_pc_ip_address>
+VExpress64# saveenv
+Next modify U-Boot's boot command to boot via TFTP:
+
+VExpress64# set origbootcmd "$bootcmd"
+VExpress64# set autoload no
+VExpress64# set bootcmd "dhcp; tftp ${kernel_addr} ${serverip}:Image; tftp ${fdt_addr} ${serverip}:juno/juno.dtb; booti ${kernel_addr} - ${fdt_addr}"
+VExpress64# saveenv
+Reboot the Juno; it should now boot via TFTP.
+
+This is a persistent change, i.e. the Juno will boot via TFTP on every power up. To revert back to the default boot behaviour:
+
+VExpress64# set bootcmd "$origbootcmd"
+```
 
 https://rechtzeit.wordpress.com/2013/01/16/tftp-boot-using-u-boot/
 
-https://u-boot.readthedocs.io/en/latest/usage/index.html
+```text
+U-Boot# setenv autoload no
+U-Boot# dhcp
+link up on port 0, speed 100, full duplex
+BOOTP broadcast 1
+DHCP client bound to address 192.168.1.11
 
-https://crates.io/crates/tftp_server
+———————————————————————————————————-
+Next will be configuring the server-ip [our host machine’s IP], kernel’s command line and the load address
+———————————————————————————————————-
+
+U-Boot# setenv serverip 192.168.1.4
+U-Boot# setenv bootfile uImage
+U-Boot# setenv bootargs console=ttyO0,115200 root=/dev/mmcblk0p2 rw rootwait ip=dhcp
+U-Boot# tftp 0x80200000 uImage
+link up on port 0, speed 100, full duplex
+Using cpsw device
+TFTP from server 192.168.1.4; our IP address is 192.168.1.11
+Filename 'uImage'.
+Load address: 0x80200000
+Loading: #################################################################
+#####################################################T ############
+##########################################T #######################
+###################################T ########
+146.5 KiB/s
+done
+Bytes transferred = 3484264 (352a68 hex)
+U-Boot# bootm 0x80200000
+## Booting kernel from Legacy Image at 80200000 ...
+Image Name: Angstrom/3.2.28/beaglebone
+Image Type: ARM Linux Kernel Image (uncompressed)
+Data Size: 3484200 Bytes = 3.3 MiB
+Load Address: 80008000
+Entry Point: 80008000
+Verifying Checksum ... OK
+Loading Kernel Image ... OK
+OK
+
+Starting kernel ...
+
+Uncompressing Linux... done, booting the kernel.
+[ 0.000000] Initializing cgroup subsys cpu
+[ 0.000000] Linux version 3.2.28 (koen@Angstrom-F16-vm-rpm) (gcc version 4.5.4 20120305 (prerelease) (GCC) ) #1 Tue Sep 11 13:08:30 CEST 2012
+[ 0.000000] CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=50c53c7d
+[ 0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[ 0.000000] Machine: am335xevm
+```
+
+https://u-boot.readthedocs.io/en/latest/usage/index.html
 
 https://www.techradar.com/reviews/ikea-tradfri-wireless-control-outlet
