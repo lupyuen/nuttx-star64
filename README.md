@@ -1856,6 +1856,40 @@ $ curl -v tftp://192.168.x.x/a.txt
 * set timeouts for state 0; Total  300000, retry 6 maxtry 50
 ```
 
+https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
+
+```bash
+set serverip 192.168.x.x
+dhcp
+tftp ${kernel_addr} ${serverip}:Image
+tftp ${fdt_addr} ${serverip}:jh7110-star64-pine64.dtb
+booti ${kernel_addr} - ${fdt_addr}
+```
+
+Save to Environment:
+
+```bash
+set serverip 192.168.x.x
+saveenv
+
+set origbootcmd "$bootcmd"
+set autoload no
+set bootcmd "dhcp; tftp ${kernel_addr} ${serverip}:Image; tftp ${fdt_addr} ${serverip}:jh7110-star64-pine64.dtb; booti ${kernel_addr} - ${fdt_addr}"
+saveenv
+```
+
+This is a persistent change, i.e. the device will boot via TFTP on every power up. To revert back to the default boot behaviour:
+
+```bash
+set bootcmd "$origbootcmd"
+```
+
+`booti` is...
+
+```text
+booti     - boot Linux kernel 'Image' format from memory
+```
+
 `bootcmd` is now...
 
 ```text
@@ -1892,7 +1926,7 @@ bootcmd_dhcp=devtype=dhcp; if dhcp ${scriptaddr} ${boot_script_dhcp}; then sourc
 
 Cleaned up...
 
-```text
+```bash
 devtype=dhcp
 
 if dhcp ${scriptaddr} ${boot_script_dhcp}
@@ -1924,40 +1958,6 @@ setenv efi_old_vci
 TODO: What is `dhcp` command? Assume [DHCP/TFTP](https://www.emcraft.com/som/using-dhcp) is not used.
 
 TODO: What is `tftpboot` command?
-
-https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
-
-```text
-set serverip 192.168.x.x
-dhcp
-tftp ${kernel_addr} ${serverip}:Image
-tftp ${fdt_addr} ${serverip}:jh7110-star64-pine64.dtb
-booti ${kernel_addr} - ${fdt_addr}
-```
-
-Save to Environment:
-
-```text
-set serverip 192.168.x.x
-saveenv
-
-set origbootcmd "$bootcmd"
-set autoload no
-set bootcmd "dhcp; tftp ${kernel_addr} ${serverip}:Image; tftp ${fdt_addr} ${serverip}:jh7110-star64-pine64.dtb; booti ${kernel_addr} - ${fdt_addr}"
-saveenv
-```
-
-This is a persistent change, i.e. the Juno will boot via TFTP on every power up. To revert back to the default boot behaviour:
-
-```text
-VExpress64# set bootcmd "$origbootcmd"
-```
-
-`booti` is...
-
-```text
-booti     - boot Linux kernel 'Image' format from memory
-```
 
 https://rechtzeit.wordpress.com/2013/01/16/tftp-boot-using-u-boot/
 
