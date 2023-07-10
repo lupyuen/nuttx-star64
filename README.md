@@ -1799,6 +1799,13 @@ TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-
 
 TODO: We really should configure U-Boot Bootloader to load the Kernel Image over the network via TFTP. Because testing NuttX by swapping microSD Card is getting so tiresome.
 
+https://crates.io/crates/tftpd
+
+```bash
+cargo install tftpd
+sudo tftpd -i 0.0.0.0 -p 69 -d "/tmp"
+```
+
 https://crates.io/crates/tftp_server
 
 ```bash
@@ -1828,13 +1835,31 @@ curl -v tftp://127.0.0.1/a.txt
 Output:
 
 ```text
+→ curl -v tftp://127.0.0.1/a.txt
+
 *   Trying 127.0.0.1...
 * Connected to 127.0.0.1 () port 69 (#0)
 * set timeouts for state 0; Total 300, retry 6 maxtry 50
-Test123
+* got option=(tsize) value=(8)
+* tsize parsed from OACK (8)
+* got option=(blksize) value=(512)
+* blksize parsed from OACK (512) requested (512)
+* got option=(timeout) value=(6)
 * Connected for receive
 * set timeouts for state 1; Total 3600, retry 72 maxtry 50
+Test123
 * Closing connection 0
+```
+
+Fail:
+
+```text
+$ curl -v tftp://x.x.x.x/a.txt
+*   Trying x.x.x.x:69...
+* getpeername() failed with errno 107: Transport endpoint is not connected
+* Connected to x.x.x.x () port 69 (#0)
+* getpeername() failed with errno 107: Transport endpoint is not connected
+* set timeouts for state 0; Total  300000, retry 6 maxtry 50
 ```
 
 https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
