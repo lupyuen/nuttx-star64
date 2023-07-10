@@ -1805,7 +1805,36 @@ https://crates.io/crates/tftp_server
 git clone https://github.com/DarinM223/tftp-server
 cd tftp-server
 cargo build --example server
-sudo RUST_LOG=tftp_server=info ./target/debug/examples/server -p 69 -d /tmp/a
+sudo RUST_LOG=tftp_server=info ./target/debug/examples/server -p 69 -d /tmp
+```
+
+Output:
+
+```text
+Server created at address 127.0.0.1:69
+INFO:<unknown>: Received RRQ packet with filename a.txt and mode octet
+INFO:<unknown>: Created connection with token: Token(2)
+INFO:<unknown>: Received ACK with block number 1
+INFO:<unknown>: Closing connection with token Token(2)
+```
+
+Test:
+
+```bash
+echo Test123 >/tmp/a.txt
+curl -v tftp://127.0.0.1/a.txt
+```
+
+Output:
+
+```text
+*   Trying 127.0.0.1...
+* Connected to 127.0.0.1 () port 69 (#0)
+* set timeouts for state 0; Total 300, retry 6 maxtry 50
+Test123
+* Connected for receive
+* set timeouts for state 1; Total 3600, retry 72 maxtry 50
+* Closing connection 0
 ```
 
 https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
