@@ -1799,7 +1799,7 @@ TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-
 
 TODO: We really should configure U-Boot Bootloader to load the Kernel Image over the network via TFTP. Because testing NuttX by swapping microSD Card is getting so tiresome.
 
-https://crates.io/crates/tftpd
+TFTP Server: https://crates.io/crates/tftpd
 
 ```bash
 cargo install tftpd
