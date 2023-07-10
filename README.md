@@ -1798,3 +1798,13 @@ TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-
 ```
 
 TODO: We really should configure U-Boot Bootloader to load the Kernel Image over the network via TFTP. Because testing NuttX by swapping microSD Card is getting so tiresome.
+
+https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
+
+https://rechtzeit.wordpress.com/2013/01/16/tftp-boot-using-u-boot/
+
+https://u-boot.readthedocs.io/en/latest/usage/index.html
+
+https://crates.io/crates/tftp_server
+
+https://www.techradar.com/reviews/ikea-tradfri-wireless-control-outlet
