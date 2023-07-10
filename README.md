@@ -1804,6 +1804,17 @@ TFTP Server: https://crates.io/crates/tftpd
 ```bash
 cargo install tftpd
 sudo tftpd -i 0.0.0.0 -p 69 -d "/tmp"
+## `sudo` because port 69 is a privileged low port
+```
+
+Output:
+
+```text
+Running TFTP Server on 0.0.0.0:69 in /tmp
+Sending a.txt to 127.0.0.1:57125
+Sent a.txt to 127.0.0.1:57125
+Sending a.txt to 192.168.x.x:33499
+Sent a.txt to 192.168.x.x:33499
 ```
 
 Test:
@@ -1811,15 +1822,16 @@ Test:
 ```bash
 echo Test123 >/tmp/a.txt
 curl -v tftp://127.0.0.1/a.txt
+curl -v tftp://192.168.x.x/a.txt
 ```
 
 Output:
 
 ```text
-$ curl -v tftp://x.x.x.x/a.txt
-*   Trying x.x.x.x:69...
+$ curl -v tftp://192.168.x.x/a.txt
+*   Trying 192.168.x.x:69...
 * getpeername() failed with errno 107: Transport endpoint is not connected
-* Connected to x.x.x.x () port 69 (#0)
+* Connected to 192.168.x.x () port 69 (#0)
 * getpeername() failed with errno 107: Transport endpoint is not connected
 * set timeouts for state 0; Total  300000, retry 6 maxtry 50
 * got option=(tsize) value=(8)
@@ -1836,10 +1848,10 @@ Test123
 Fail:
 
 ```text
-$ curl -v tftp://x.x.x.x/a.txt
-*   Trying x.x.x.x:69...
+$ curl -v tftp://192.168.x.x/a.txt
+*   Trying 192.168.x.x:69...
 * getpeername() failed with errno 107: Transport endpoint is not connected
-* Connected to x.x.x.x () port 69 (#0)
+* Connected to 192.168.x.x () port 69 (#0)
 * getpeername() failed with errno 107: Transport endpoint is not connected
 * set timeouts for state 0; Total  300000, retry 6 maxtry 50
 ```
