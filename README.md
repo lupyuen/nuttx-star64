@@ -1803,14 +1803,15 @@ TFTP Server: https://crates.io/crates/tftpd
 
 ```bash
 cargo install tftpd
-sudo tftpd -i 0.0.0.0 -p 69 -d "/tmp"
+mkdir $HOME/tftproot
+sudo tftpd -i 0.0.0.0 -p 69 -d "$HOME/tftproot"
 ## `sudo` because port 69 is a privileged low port
 ```
 
 Output:
 
 ```text
-Running TFTP Server on 0.0.0.0:69 in /tmp
+Running TFTP Server on 0.0.0.0:69 in $HOME/tftproot
 Sending a.txt to 127.0.0.1:57125
 Sent a.txt to 127.0.0.1:57125
 Sending a.txt to 192.168.x.x:33499
@@ -1820,7 +1821,7 @@ Sent a.txt to 192.168.x.x:33499
 Test:
 
 ```bash
-echo Test123 >/tmp/a.txt
+echo Test123 >$HOME/tftproot/a.txt
 curl -v tftp://127.0.0.1/a.txt
 curl -v tftp://192.168.x.x/a.txt
 ```
@@ -1854,6 +1855,20 @@ $ curl -v tftp://192.168.x.x/a.txt
 * Connected to 192.168.x.x () port 69 (#0)
 * getpeername() failed with errno 107: Transport endpoint is not connected
 * set timeouts for state 0; Total  300000, retry 6 maxtry 50
+```
+
+Copy DTB and Image:
+
+```bash
+scp \
+  'pinebook:/run/media/$USER/armbi_root/boot/dtb/starfive/jh7110-visionfive-v2.dtb' \
+  .
+cp \
+  jh7110-visionfive-v2.dtb \
+  jh7110-star64-pine64.dtb
+
+cp nuttx.bin $HOME/tftproot/Image
+cp jh7110-star64-pine64.dtb $HOME/tftproot
 ```
 
 https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
