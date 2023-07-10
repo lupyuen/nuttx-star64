@@ -1806,25 +1806,6 @@ cargo install tftpd
 sudo tftpd -i 0.0.0.0 -p 69 -d "/tmp"
 ```
 
-https://crates.io/crates/tftp_server
-
-```bash
-git clone https://github.com/DarinM223/tftp-server
-cd tftp-server
-cargo build --example server
-sudo RUST_LOG=tftp_server=info ./target/debug/examples/server -p 69 -d /tmp
-```
-
-Output:
-
-```text
-Server created at address 127.0.0.1:69
-INFO:<unknown>: Received RRQ packet with filename a.txt and mode octet
-INFO:<unknown>: Created connection with token: Token(2)
-INFO:<unknown>: Received ACK with block number 1
-INFO:<unknown>: Closing connection with token Token(2)
-```
-
 Test:
 
 ```bash
@@ -1835,18 +1816,19 @@ curl -v tftp://127.0.0.1/a.txt
 Output:
 
 ```text
-→ curl -v tftp://127.0.0.1/a.txt
-
-*   Trying 127.0.0.1...
-* Connected to 127.0.0.1 () port 69 (#0)
-* set timeouts for state 0; Total 300, retry 6 maxtry 50
+$ curl -v tftp://x.x.x.x/a.txt
+*   Trying x.x.x.x:69...
+* getpeername() failed with errno 107: Transport endpoint is not connected
+* Connected to x.x.x.x () port 69 (#0)
+* getpeername() failed with errno 107: Transport endpoint is not connected
+* set timeouts for state 0; Total  300000, retry 6 maxtry 50
 * got option=(tsize) value=(8)
 * tsize parsed from OACK (8)
 * got option=(blksize) value=(512)
 * blksize parsed from OACK (512) requested (512)
 * got option=(timeout) value=(6)
 * Connected for receive
-* set timeouts for state 1; Total 3600, retry 72 maxtry 50
+* set timeouts for state 1; Total  0, retry 72 maxtry 50
 Test123
 * Closing connection 0
 ```
