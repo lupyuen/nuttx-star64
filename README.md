@@ -1921,14 +1921,14 @@ setenv efi_old_arch
 setenv efi_old_vci
 ```
 
-TODO: What is `dhcp` command?
+TODO: What is `dhcp` command? Assume [DHCP/TFTP](https://www.emcraft.com/som/using-dhcp) is not used.
 
 TODO: What is `tftpboot` command?
 
-Assume [DHCP/TFTP](https://www.emcraft.com/som/using-dhcp) is not used.
+https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
 
 ```text
-set serverip <host_pc_ip_address>
+set serverip 192.168.x.x
 dhcp
 tftp ${kernel_addr} ${serverip}:Image
 tftp ${fdt_addr} ${serverip}:jh7110-star64-pine64.dtb
@@ -1938,7 +1938,7 @@ booti ${kernel_addr} - ${fdt_addr}
 Save to Environment:
 
 ```text
-set serverip <host_pc_ip_address>
+set serverip 192.168.x.x
 saveenv
 
 set origbootcmd "$bootcmd"
@@ -1947,23 +1947,9 @@ set bootcmd "dhcp; tftp ${kernel_addr} ${serverip}:Image; tftp ${fdt_addr} ${ser
 saveenv
 ```
 
-https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
-
-```text
-Save your host PC's IP address to the `serverip' environment variable:
-
-VExpress64# set serverip <host_pc_ip_address>
-VExpress64# saveenv
-Next modify U-Boot's boot command to boot via TFTP:
-
-VExpress64# set origbootcmd "$bootcmd"
-VExpress64# set autoload no
-VExpress64# set bootcmd "dhcp; tftp ${kernel_addr} ${serverip}:Image; tftp ${fdt_addr} ${serverip}:juno/juno.dtb; booti ${kernel_addr} - ${fdt_addr}"
-VExpress64# saveenv
-Reboot the Juno; it should now boot via TFTP.
-
 This is a persistent change, i.e. the Juno will boot via TFTP on every power up. To revert back to the default boot behaviour:
 
+```text
 VExpress64# set bootcmd "$origbootcmd"
 ```
 
