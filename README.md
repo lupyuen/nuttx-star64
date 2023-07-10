@@ -1867,6 +1867,7 @@ cp \
   jh7110-visionfive-v2.dtb \
   jh7110-star64-pine64.dtb
 
+## Copy NuttX Binary Image and Device Tree to TFTP Folder
 cp nuttx.bin $HOME/tftproot/Image
 cp jh7110-star64-pine64.dtb $HOME/tftproot
 ```
