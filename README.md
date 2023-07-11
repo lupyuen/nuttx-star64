@@ -1952,9 +1952,7 @@ clk u5_dw_i2c_clk_apb already disabled
 
 ## Configure U-Boot for TFTP
 
-TODO
-
-Save to Environment:
+Let's configure U-Boot so that it will boot from TFTP every time we power up!
 
 ```bash
 ## Remember the TFTP Server IP
@@ -1975,13 +1973,13 @@ run bootcmd_tftp
 ## Remember the Original Boot Targets
 setenv orig_boot_targets "$boot_targets"
 printenv boot_targets
-## Should show `orig_boot_targets=mmc0 dhcp`
+## Should show `mmc0 dhcp`
 saveenv
 
 ## Add TFTP to the Boot Targets
 setenv boot_targets "$boot_targets tftp"
 printenv boot_targets
-## Should show `boot_targets=mmc0 dhcp  tftp`
+## Should show `mmc0 dhcp  tftp`
 saveenv
 ```
 
@@ -2000,45 +1998,18 @@ then
 fi
 ```
 
-This is a persistent change, i.e. the device will boot via TFTP on every power up. To revert back to the default boot behaviour:
+[(From here)](https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot) This is a persistent change, i.e. the device will boot via TFTP on every power up. To revert back to the default boot behaviour:
 
 ```bash
-setenv boot_targets "orig_boot_targets"
+setenv boot_targets "$orig_boot_targets"
+printenv boot_targets
+## Should show `mmc0 dhcp`
 saveenv
 ```
 
 ## U-Boot Commands for Network Boot
 
-TODO
-
-[`autoload`](https://u-boot.readthedocs.io/en/latest/usage/environment.html) is...
-
-```text
-autoload
-if set to “no” (any string beginning with ‘n’), “bootp” and “dhcp” will just load perform a lookup of the configuration from the BOOTP server, but not try to load any image.
-```
-
-`booti` is...
-
-```text
-StarFive # help booti
-booti - boot Linux kernel 'Image' format from memory
-
-Usage:
-booti [addr [initrd[:size]] [fdt]]
-    - boot Linux flat or compressed 'Image' stored at 'addr'
-        The argument 'initrd' is optional and specifies the address
-        of an initrd in memory. The optional parameter ':size' allows
-        specifying the size of a RAW initrd.
-        Currently only booting from gz, bz2, lzma and lz4 compression
-        types are supported. In order to boot from any of these compressed
-        images, user have to set kernel_comp_addr_r and kernel_comp_size environment
-        variables beforehand.
-        Since booting a Linux kernel requires a flat device-tree, a
-        third argument providing the address of the device-tree blob
-        is required. To boot a kernel with a device-tree blob but
-        without an initrd image, use a '-' for the initrd argument.
-```
+_How does it work?_
 
 `bootcmd` is now...
 
@@ -2054,14 +2025,12 @@ load_distro_uenv=fatload mmc ${fatbootpart} ${distroloadaddr} ${bootdir}/${boote
 boot2 not defined, comes from `boot/vf2_uEnv.txt`
 ```
 
-`bootcmd` calls `distro_bootcmd`, which runs `bootcmd_dhcp`...
+`bootcmd` calls `distro_bootcmd`, which runs `bootcmd_mmc0` and `bootcmd_dhcp`...
 
 ```text
 distro_bootcmd=for target in ${boot_targets}; do run bootcmd_${target}; done
 
 boot_targets=mmc0 dhcp 
-
-## Other boot_targets:
 
 bootcmd_mmc0=devnum=0; run mmc_boot
 
@@ -2074,7 +2043,7 @@ bootcmd_distro=run fdt_loaddtb; run fdt_sizecheck; run set_fdt_distro; sysboot m
 bootcmd_dhcp=devtype=dhcp; if dhcp ${scriptaddr} ${boot_script_dhcp}; then source ${scriptaddr}; fi;setenv efi_fdtfile ${fdtfile}; setenv efi_old_vci ${bootp_vci};setenv efi_old_arch ${bootp_arch};setenv bootp_vci PXEClient:Arch:00027:UNDI:003000;setenv bootp_arch 0x1b;if dhcp ${kernel_addr_r}; then tftpboot ${fdt_addr_r} dtb/${efi_fdtfile};if fdt addr ${fdt_addr_r}; then bootefi ${kernel_addr_r} ${fdt_addr_r}; else bootefi ${kernel_addr_r} ${fdtcontroladdr};fi;fi;setenv bootp_vci ${efi_old_vci};setenv bootp_arch ${efi_old_arch};setenv efi_fdtfile;setenv efi_old_arch;setenv efi_old_vci;
 ```
 
-Cleaned up...
+Which expands to...
 
 ```bash
 devtype=dhcp
@@ -2105,7 +2074,7 @@ setenv efi_old_arch
 setenv efi_old_vci
 ```
 
-TODO: What is `dhcp` command? Assume [DHCP/TFTP](https://www.emcraft.com/som/using-dhcp) is not used.
+`dhcp` command is...
 
 ```text
 dhcp - boot image via network using DHCP/TFTP protocol
@@ -2114,7 +2083,9 @@ Usage:
 dhcp [loadAddress] [[hostIPaddr:]bootfilename]
 ```
 
-TODO: What is `tftpboot` command?
+(Assume [DHCP/TFTP](https://www.emcraft.com/som/using-dhcp) is not used)
+
+`tftpboot` command is...
 
 ```text
 tftpboot - boot image via network using TFTP protocol
@@ -2123,7 +2094,7 @@ Usage:
 tftpboot [loadAddress] [[hostIPaddr:]bootfilename]
 ```
 
-TODO: What is `fdt` command?
+`fdt` command is...
 
 ```text
 fdt - flattened device tree utility commands
@@ -2154,7 +2125,28 @@ fdt chosen [<start> <end>]          - Add/update the /chosen branch in the tree
 NOTE: Dereference aliases by omitting the leading '/', e.g. fdt print ethernet0.
 ```
 
-TODO: What is `bootefi` command?
+`booti` command is...
+
+```text
+booti - boot Linux kernel 'Image' format from memory
+
+Usage:
+booti [addr [initrd[:size]] [fdt]]
+    - boot Linux flat or compressed 'Image' stored at 'addr'
+        The argument 'initrd' is optional and specifies the address
+        of an initrd in memory. The optional parameter ':size' allows
+        specifying the size of a RAW initrd.
+        Currently only booting from gz, bz2, lzma and lz4 compression
+        types are supported. In order to boot from any of these compressed
+        images, user have to set kernel_comp_addr_r and kernel_comp_size environment
+        variables beforehand.
+        Since booting a Linux kernel requires a flat device-tree, a
+        third argument providing the address of the device-tree blob
+        is required. To boot a kernel with a device-tree blob but
+        without an initrd image, use a '-' for the initrd argument.
+```
+
+`bootefi` command is...
 
 ```text
 bootefi - Boots an EFI payload from memory
@@ -2179,6 +2171,13 @@ Card did not respond to voltage select! : -110
 Card did not respond to voltage select! : -110
 No EFI system partition
 No UEFI binary known at 0x40200000
+```
+
+[`autoload`](https://u-boot.readthedocs.io/en/latest/usage/environment.html) setting is...
+
+```text
+autoload:
+if set to “no” (any string beginning with ‘n’), “bootp” and “dhcp” will just load perform a lookup of the configuration from the BOOTP server, but not try to load any image.
 ```
 
 # TODO
