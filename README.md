@@ -1886,7 +1886,40 @@ curl -v tftp://192.168.x.x/jh7110-star64-pine64.dtb
 
 ## Test U-Boot with TFTP
 
-Now we boot Star64 JH7110 SBC and test the TFTP Commands...
+Now we boot Star64 JH7110 SBC and test the TFTP Commands.
+
+Connect Star64 SBC to the Ethernet wired network and power up.
+
+Star64 fails to boot over the network (because we don't have a DHCP+TFTP Combo Server), but that's OK...
+
+```text
+ethernet@16030000 Waiting for PHY auto negotiation to complete....... done
+BOOTP broadcast 1
+*** Unhandled DHCP Option in OFFER/ACK: 43
+*** Unhandled DHCP Option in OFFER/ACK: 43
+DHCP client bound to address 192.168.x.x (351 ms)
+Using ethernet@16030000 device
+TFTP from server 192.168.x.x; our IP address is 192.168.x.x
+Filename 'boot.scr.uimg'.
+Load address: 0x43900000
+Loading: *
+TFTP server died; starting again
+BOOTP broadcast 1
+*** Unhandled DHCP Option in OFFER/ACK: 43
+*** Unhandled DHCP Option in OFFER/ACK: 43
+DHCP client bound to address 192.168.x.x (576 ms)
+Using ethernet@16030000 device
+TFTP from server 192.168.x.x; our IP address is 192.168.x.x
+Filename 'boot.scr.uimg'.
+Load address: 0x40200000
+Loading: *
+TFTP server died; starting again
+StarFive #
+```
+
+[(Source)](https://github.com/lupyuen/nuttx-star64#u-boot-bootloader-log-for-tftp)
+
+Run these commands...
 
 ```bash
 ## Set the TFTP Server IP
@@ -1917,10 +1950,10 @@ Using ethernet@16030000 device
 TFTP from server 192.168.x.x; our IP address is 192.168.x.x
 Filename 'Image'.
 Load address: 0x40200000
-Loading: *�#############################################################T ####
-�[8C #################################################################
-�[8C #############
-�[8C 221.7 KiB/s
+Loading: #############################################################T ####
+#################################################################
+#############
+221.7 KiB/s
 done
 Bytes transferred = 2097832 (2002a8 hex)
 
@@ -1929,8 +1962,8 @@ Using ethernet@16030000 device
 TFTP from server 192.168.x.x; our IP address is 192.168.x.x
 Filename 'jh7110-star64-pine64.dtb'.
 Load address: 0x46000000
-Loading: *�####
-�[8C 374 KiB/s
+Loading: ####
+374 KiB/s
 done
 Bytes transferred = 50235 (c43b hex)
 
@@ -1985,13 +2018,20 @@ saveenv
 
 `bootcmd_tftp` expands to...
 
-```text
+```bash
+## Load the NuttX Image from TFTP Server
 if tftpboot ${kernel_addr_r} ${tftp_server}:Image ;
 then
+
+  ## Load the Device Tree from TFTP Server
   if tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb ;
   then
+
+    ## Set the RAM Address of Device Tree
     if fdt addr ${fdt_addr_r} ;
     then
+
+      ## Boot the NuttX Image with the Device Tree
       booti ${kernel_addr_r} - ${fdt_addr_r} ;
     fi ;
   fi ;
@@ -2048,25 +2088,38 @@ Which expands to...
 ```bash
 devtype=dhcp
 
+## Load the Boot Script from DHCP+TFTP Server
 if dhcp ${scriptaddr} ${boot_script_dhcp}
-  then source ${scriptaddr}
+then
+  source ${scriptaddr}
 fi
 
+## Set the EFI Variables
 setenv efi_fdtfile ${fdtfile}
 setenv efi_old_vci ${bootp_vci}
 setenv efi_old_arch ${bootp_arch}
 setenv bootp_vci PXEClient:Arch:00027:UNDI:003000
 setenv bootp_arch 0x1b
 
+## Load the Kernel Image from DHCP+TFTP Server...
 if dhcp ${kernel_addr_r}
-  then tftpboot ${fdt_addr_r} dtb/${efi_fdtfile}
+then
 
+  ## Load the Device Tree from the DHCP+TFTP Server
+  tftpboot ${fdt_addr_r} dtb/${efi_fdtfile}
+
+  ## Set the RAM Address of Device Tree
   if fdt addr ${fdt_addr_r}
-    then bootefi ${kernel_addr_r} ${fdt_addr_r}
-    else bootefi ${kernel_addr_r} ${fdtcontroladdr}
+  then
+    ## Boot the EFI Kernel Image
+    bootefi ${kernel_addr_r} ${fdt_addr_r}
+  else
+    ## Boot the EFI Kernel Image
+    bootefi ${kernel_addr_r} ${fdtcontroladdr}
   fi
 fi
 
+## Unset the EFI Variables
 setenv bootp_vci ${efi_old_vci}
 setenv bootp_arch ${efi_old_arch}
 setenv efi_fdtfile
