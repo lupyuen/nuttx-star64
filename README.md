@@ -1884,6 +1884,8 @@ cp \
   jh7110-star64-pine64.dtb
 
 ## Copy NuttX Binary Image and Device Tree to TFTP Folder
+## `nuttx.bin` comes from here:
+## https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1
 cp nuttx.bin $HOME/tftproot/Image
 cp jh7110-star64-pine64.dtb $HOME/tftproot
 
