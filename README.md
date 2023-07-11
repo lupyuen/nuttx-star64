@@ -1941,15 +1941,22 @@ Run these commands...
 setenv tftp_server 192.168.x.x
 
 ## Load the NuttX Image from TFTP Server
+## kernel_addr_r=0x40200000
+## tftp_server=192.168.x.x
 tftpboot ${kernel_addr_r} ${tftp_server}:Image
 
 ## Load the Device Tree from TFTP Server
+## fdt_addr_r=0x46000000
+## tftp_server=192.168.x.x
 tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb
 
 ## Set the RAM Address of Device Tree
+## fdt_addr_r=0x46000000
 fdt addr ${fdt_addr_r}
 
 ## Boot the NuttX Image with the Device Tree
+## kernel_addr_r=0x40200000
+## fdt_addr_r=0x46000000
 booti ${kernel_addr_r} - ${fdt_addr_r}
 ```
 
@@ -2007,12 +2014,14 @@ Let's configure U-Boot so that it will boot from TFTP every time we power up!
 setenv tftp_server 192.168.x.x
 ## Check that it's correct
 printenv tftp_server
+## Save it for future reboots
 saveenv
 
 ## Add the Boot Command for TFTP
 setenv bootcmd_tftp 'if tftpboot ${kernel_addr_r} ${tftp_server}:Image ; then if tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb ; then if fdt addr ${fdt_addr_r} ; then booti ${kernel_addr_r} - ${fdt_addr_r} ; fi ; fi ; fi'
 ## Check that it's correct
 printenv bootcmd_tftp
+## Save it for future reboots
 saveenv
 
 ## Test the Boot Command for TFTP
@@ -2020,14 +2029,16 @@ run bootcmd_tftp
 
 ## Remember the Original Boot Targets
 setenv orig_boot_targets "$boot_targets"
-printenv boot_targets
 ## Should show `mmc0 dhcp`
+printenv boot_targets
+## Save it for future reboots
 saveenv
 
 ## Add TFTP to the Boot Targets
 setenv boot_targets "$boot_targets tftp"
-printenv boot_targets
 ## Should show `mmc0 dhcp  tftp`
+printenv boot_targets
+## Save it for future reboots
 saveenv
 ```
 
@@ -2035,18 +2046,24 @@ saveenv
 
 ```bash
 ## Load the NuttX Image from TFTP Server
+## kernel_addr_r=0x40200000
+## tftp_server=192.168.x.x
 if tftpboot ${kernel_addr_r} ${tftp_server}:Image ;
 then
 
   ## Load the Device Tree from TFTP Server
+  ## fdt_addr_r=0x46000000
   if tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb ;
   then
 
     ## Set the RAM Address of Device Tree
+    ## fdt_addr_r=0x46000000
     if fdt addr ${fdt_addr_r} ;
     then
 
       ## Boot the NuttX Image with the Device Tree
+      ## kernel_addr_r=0x40200000
+      ## fdt_addr_r=0x46000000
       booti ${kernel_addr_r} - ${fdt_addr_r} ;
     fi ;
   fi ;
@@ -2056,9 +2073,11 @@ fi
 [(From here)](https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot) This is a persistent change, i.e. the device will boot via TFTP on every power up. To revert back to the default boot behaviour:
 
 ```bash
+## Restore the Boot Targets
 setenv boot_targets "$orig_boot_targets"
-printenv boot_targets
 ## Should show `mmc0 dhcp`
+printenv boot_targets
+## Save it for future reboots
 saveenv
 ```
 
@@ -2104,12 +2123,15 @@ Which expands to...
 devtype=dhcp
 
 ## Load the Boot Script from DHCP+TFTP Server
+## scriptaddr=0x43900000
+## boot_script_dhcp=boot.scr.uimg
 if dhcp ${scriptaddr} ${boot_script_dhcp}
 then
   source ${scriptaddr}
 fi
 
 ## Set the EFI Variables
+## fdtfile=starfive/starfive_visionfive2.dtb
 setenv efi_fdtfile ${fdtfile}
 setenv efi_old_vci ${bootp_vci}
 setenv efi_old_arch ${bootp_arch}
@@ -2117,19 +2139,27 @@ setenv bootp_vci PXEClient:Arch:00027:UNDI:003000
 setenv bootp_arch 0x1b
 
 ## Load the Kernel Image from DHCP+TFTP Server...
+## kernel_addr_r=0x40200000
 if dhcp ${kernel_addr_r}
 then
 
   ## Load the Device Tree from the DHCP+TFTP Server
+  ## fdt_addr_r=0x46000000
+  ## efi_fdtfile=starfive/starfive_visionfive2.dtb
   tftpboot ${fdt_addr_r} dtb/${efi_fdtfile}
 
   ## Set the RAM Address of Device Tree
+  ## fdt_addr_r=0x46000000
   if fdt addr ${fdt_addr_r}
   then
+
     ## Boot the EFI Kernel Image
+    ## fdt_addr_r=0x46000000
     bootefi ${kernel_addr_r} ${fdt_addr_r}
   else
+
     ## Boot the EFI Kernel Image
+    ## fdtcontroladdr=fffc6aa0
     bootefi ${kernel_addr_r} ${fdtcontroladdr}
   fi
 fi
