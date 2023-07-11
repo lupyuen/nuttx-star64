@@ -1710,6 +1710,22 @@ T4:  000000004600f43a T5:  000000004600d000 T6:  000000004600cfff
 Code: 879b 0277 d7b3 00f6 f793 1ff7 078e 95be (b023 0105)
 ```
 
+Which fails at...
+
+```text
+nuttx/arch/risc-v/src/common/riscv_mmu.c:101
+  lntable[index] = (paddr | mmuflags);
+    40200620:	1ff7f793          	andi	a5,a5,511
+    40200624:	078e                	slli	a5,a5,0x3
+    40200626:	95be                	add	a1,a1,a5
+    40200628:	0105b023          	sd	a6,0(a1)  /* Fails Here */
+mmu_invalidate_tlb_by_vaddr():
+nuttx/arch/risc-v/src/common/riscv_mmu.h:237
+  __asm__ __volatile__
+    4020062c:	12d00073          	sfence.vma	zero,a3
+    40200630:	8082                	ret
+```
+
 TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
 
 TODO: [Build Output](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
