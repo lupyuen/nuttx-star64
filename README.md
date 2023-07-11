@@ -1858,23 +1858,45 @@ setenv serverip 192.168.x.x
 saveenv
 
 ## Add the Boot Command for TFTP
-setenv bootcmd_tftp "tftpboot ${kernel_addr_r} ${serverip}:Image ; tftpboot ${fdt_addr_r} ${serverip}:jh7110-star64-pine64.dtb ; fdt addr ${fdt_addr_r} ; booti ${kernel_addr_r} - ${fdt_addr_r}"
+setenv bootcmd_tftp 'if tftpboot ${kernel_addr_r} ${serverip}:Image ; then if tftpboot ${fdt_addr_r} ${serverip}:jh7110-star64-pine64.dtb ; then if fdt addr ${fdt_addr_r} ; then booti ${kernel_addr_r} - ${fdt_addr_r} ; fi ; fi ; fi'
 saveenv
+
+## Test the Boot Command for TFTP
 run bootcmd_tftp
 
 ## Remember the Original Boot Targets
 setenv orig_boot_targets "$boot_targets"
+printenv boot_targets
+## Should show `orig_boot_targets=mmc0 dhcp`
 saveenv
 
 ## Add TFTP to the Boot Targets
-setenv boot_targets "mmc0 dhcp tftp"
+setenv boot_targets "$boot_targets tftp"
+printenv boot_targets
+## Should show `boot_targets=mmc0 dhcp  tftp`
 saveenv
+```
+
+`bootcmd_tftp` expands to...
+
+```text
+if tftpboot ${kernel_addr_r} ${serverip}:Image ;
+then
+  if tftpboot ${fdt_addr_r} ${serverip}:jh7110-star64-pine64.dtb ;
+  then
+    if fdt addr ${fdt_addr_r} ;
+    then
+      booti ${kernel_addr_r} - ${fdt_addr_r} ;
+    fi ;
+  fi ;
+fi
 ```
 
 This is a persistent change, i.e. the device will boot via TFTP on every power up. To revert back to the default boot behaviour:
 
 ```bash
-set bootcmd "$origbootcmd"
+setenv boot_targets "orig_boot_targets"
+saveenv
 ```
 
 [`autoload`](https://u-boot.readthedocs.io/en/latest/usage/environment.html) is...
