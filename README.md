@@ -2087,6 +2087,49 @@ bootefi bootmgr [fdt address]
     exposed as EFI configuration table.
 ```
 
+# TODO
+
+TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
+
+`litex` boots from OpenSBI to NuttX, but doesn't callback to OpenSBI:
+
+[litex_shead.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_shead.S#L56)
+
+[litex_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_start.c#L50)
+
+[litex/arty_a7/configs/knsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/litex/arty_a7/configs/knsh/defconfig#L34)
+
+`mpfs` runs a copy of OpenSBI inside NuttX:
+
+[mpfs_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_start.c#L52)
+
+[mpfs_shead.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_shead.S#L62)
+
+[mpfs_opensbi.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi.c#L602)
+
+[mpfs_opensbi_utils.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
+
+[mpfs_ihc_sbi.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_ihc_sbi.c#L570)
+
+TODO: RISC-V Exceptions [riscv_exception_common.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/common/riscv_exception_common.S#L77)
+
+TODO: Set CLINT and PLIC Addresses
+
+From [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
+
+```text
+0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
+0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
+```
+
+TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33):
+
+```c
+#define QEMU_RV_CLINT_BASE   0x02000000
+#define QEMU_RV_ACLINT_BASE  0x02f00000
+#define QEMU_RV_PLIC_BASE    0x0c000000
+```
+
 # U-Boot Bootloader Log for TFTP
 
 ```text
@@ -2488,45 +2531,173 @@ clk u5_dw_i2c_clk_apb already disabled
 Script done on 2023-07-10 12:43:47+08:00 [COMMAND_EXIT_CODE="0"]
 ```
 
-# TODO
-
-TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
-
-`litex` boots from OpenSBI to NuttX, but doesn't callback to OpenSBI:
-
-[litex_shead.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_shead.S#L56)
-
-[litex_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_start.c#L50)
-
-[litex/arty_a7/configs/knsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/litex/arty_a7/configs/knsh/defconfig#L34)
-
-`mpfs` runs a copy of OpenSBI inside NuttX:
-
-[mpfs_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_start.c#L52)
-
-[mpfs_shead.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_shead.S#L62)
-
-[mpfs_opensbi.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi.c#L602)
-
-[mpfs_opensbi_utils.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
-
-[mpfs_ihc_sbi.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_ihc_sbi.c#L570)
-
-TODO: RISC-V Exceptions [riscv_exception_common.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/common/riscv_exception_common.S#L77)
-
-TODO: Set CLINT and PLIC Addresses
-
-From [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
+# U-Boot Bootloader Log for Auto Network Boot
 
 ```text
-0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
-0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
-```
+U-Boot SPL 2021.10 (Jan 19 2023 - 04:09:41 +0800)
+DDR version: dc2e84f0.
+Trying to boot from SPI
 
-TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33):
+OpenSBI v1.2
+   ____                    _____ ____ _____
+  / __ \                  / ____|  _ \_   _|
+ | |  | |_ __   ___ _ __ | (___ | |_) || |
+ | |  | | '_ \ / _ \ '_ \ \___ \|  _ < | |
+ | |__| | |_) |  __/ | | |____) | |_) || |_
+  \____/| .__/ \___|_| |_|_____/|____/_____|
+        | |
+        |_|
 
-```c
-#define QEMU_RV_CLINT_BASE   0x02000000
-#define QEMU_RV_ACLINT_BASE  0x02f00000
-#define QEMU_RV_PLIC_BASE    0x0c000000
+Platform Name             : StarFive VisionFive V2
+Platform Features         : medeleg
+Platform HART Count       : 5
+Platform IPI Device       : aclint-mswi
+Platform Timer Device     : aclint-mtimer @ 4000000Hz
+Platform Console Device   : uart8250
+Platform HSM Device       : jh7110-hsm
+Platform PMU Device       : ---
+Platform Reboot Device    : pm-reset
+Platform Shutdown Device  : pm-reset
+Firmware Base             : 0x40000000
+Firmware Size             : 288 KB
+Runtime SBI Version       : 1.0
+
+Domain0 Name              : root
+Domain0 Boot HART         : 1
+Domain0 HARTs             : 0*,1*,2*,3*,4*
+Domain0 Region00          : 0x0000000002000000-0x000000000200ffff (I)
+Domain0 Region01          : 0x0000000040000000-0x000000004007ffff ()
+Domain0 Region02          : 0x0000000000000000-0xffffffffffffffff (R,W,X)
+Domain0 Next Address      : 0x0000000040200000
+Domain0 Next Arg1         : 0x0000000042200000
+Domain0 Next Mode         : S-mode
+Domain0 SysReset          : yes
+
+Boot HART ID              : 1
+Boot HART Domain          : root
+Boot HART Priv Version    : v1.11
+Boot HART Base ISA        : rv64imafdcbx
+Boot HART ISA Extensions  : none
+Boot HART PMP Count       : 8
+Boot HART PMP Granularity : 4096
+Boot HART PMP Address Bits: 34
+Boot HART MHPM Count      : 2
+Boot HART MIDELEG         : 0x0000000000000222
+Boot HART MEDELEG         : 0x000000000000b109
+
+
+U-Boot 2021.10 (Jan 19 2023 - 04:09:41 +0800), Build: jenkins-github_visionfive2-6
+
+CPU:   rv64imacu
+Model: StarFive VisionFive V2
+DRAM:  8 GiB
+MMC:   sdio0@16010000: 0, sdio1@16020000: 1
+Loading Environment from SPIFlash... SF: Detected gd25lq128 with page size 256 Bytes, erase size 4 KiB, total 16 MiB
+OK
+StarFive EEPROM format v2
+
+--------EEPROM INFO--------
+Vendor : PINE64
+Product full SN: STAR64V1-2310-D008E000-00000003
+data version: 0x2
+PCB revision: 0xc1
+BOM revision: A
+Ethernet MAC0 address: 6c:cf:39:00:75:5d
+Ethernet MAC1 address: 6c:cf:39:00:75:5e
+--------EEPROM INFO--------
+
+In:    serial@10000000
+Out:   serial@10000000
+Err:   serial@10000000
+Model: StarFive VisionFive V2
+Net:   eth0: ethernet@16030000, eth1: ethernet@16040000
+Card did not respond to voltage select! : -110
+Card did not respond to voltage select! : -110
+bootmode flash device 0
+Card did not respond to voltage select! : -110
+Hit any key to stop autoboot:  2  1  0 
+Card did not respond to voltage select! : -110
+Couldn't find partition mmc 0:3
+Can't set block device
+Importing environment from mmc0 ...
+Card did not respond to voltage select! : -110
+Couldn't find partition mmc 1:2
+Can't set block device
+## Warning: defaulting to text format
+## Error: "boot2" not defined
+Card did not respond to voltage select! : -110
+ethernet@16030000 Waiting for PHY auto negotiation to complete....... done
+BOOTP broadcast 1
+*** Unhandled DHCP Option in OFFER/ACK: 43
+*** Unhandled DHCP Option in OFFER/ACK: 43
+DHCP client bound to address 192.168.x.x (550 ms)
+Using ethernet@16030000 device
+TFTP from server 192.168.x.x; our IP address is 192.168.x.x
+Filename 'boot.scr.uimg'.
+Load address: 0x43900000
+Loading: *
+TFTP server died; starting again
+BOOTP broadcast 1
+*** Unhandled DHCP Option in OFFER/ACK: 43
+*** Unhandled DHCP Option in OFFER/ACK: 43
+DHCP client bound to address 192.168.x.x (547 ms)
+Using ethernet@16030000 device
+TFTP from server 192.168.x.x; our IP address is 192.168.x.x
+Filename 'boot.scr.uimg'.
+Load address: 0x40200000
+Loading: *
+TFTP server died; starting again
+Using ethernet@16030000 device
+TFTP from server 192.168.x.x; our IP address is 192.168.x.x
+Filename 'Image'.
+Load address: 0x40200000
+Loading: *#################################################################
+[8C ###########################################################T ######T 
+[8C #############
+[8C 147.5 KiB/s
+done
+Bytes transferred = 2097832 (2002a8 hex)
+Using ethernet@16030000 device
+TFTP from server 192.168.x.x; our IP address is 192.168.x.x
+Filename 'jh7110-star64-pine64.dtb'.
+Load address: 0x46000000
+Loading: *#T ###
+[8C 8.8 KiB/s
+done
+Bytes transferred = 50235 (c43b hex)
+## Flattened Device Tree blob at 46000000
+   Booting using the fdt blob at 0x46000000
+   Using Device Tree in place at 0000000046000000, end 000000004600f43a
+
+Starting kernel ...
+
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFAGHBCUnhandled exception: Store/AMO access fault
+EPC: 0000000040200628 RA: 00000000402004ba TVAL: ffffff8000008000
+EPC: ffffffff804ba628 RA: ffffffff804ba4ba reloc adjusted
+
+SP:  0000000040406a30 GP:  00000000ff735e00 TP:  0000000000000001
+T0:  0000000010000000 T1:  0000000000000037 T2:  ffffffffffffffff
+S0:  0000000040400000 S1:  0000000000000200 A0:  0000000000000003
+A1:  0000080000008000 A2:  0000000010100000 A3:  0000000040400000
+A4:  0000000000000026 A5:  0000000000000000 A6:  00000000101000e7
+A7:  0000000000000000 S2:  0000080000008000 S3:  0000000040600000
+S4:  0000000040400000 S5:  0000000000000000 S6:  0000000000000026
+S7:  00fffffffffff000 S8:  0000000040404000 S9:  0000000000001000
+S10: 0000000040400ab0 S11: 0000000000200000 T3:  0000000000000023
+T4:  000000004600f43a T5:  000000004600d000 T6:  000000004600cfff
+
+Code: 879b 0277 d7b3 00f6 f793 1ff7 078e 95be (b023 0105)
+
+
+resetting ...
+reset not supported yet
+### ERROR ### Please RESET the board ###
+[7mReally kill this window [y/n][27m[K
+                                                                             
+[?1l>[66;1H
+[?1049l[23;0;0t[screen is terminating]
+
+Script done on 2023-07-11 14:36:01+08:00 [COMMAND_EXIT_CODE="0"]
 ```
