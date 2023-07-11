@@ -1829,6 +1829,8 @@ curl -v tftp://127.0.0.1/a.txt
 curl -v tftp://192.168.x.x/a.txt
 ```
 
+(`localhost` won't work because of IPv6, I think)
+
 We should see...
 
 ```text
@@ -1859,6 +1861,17 @@ $ curl -v tftp://192.168.x.x/a.txt
 * getpeername() failed with errno 107: Transport endpoint is not connected
 * set timeouts for state 0; Total  300000, retry 6 maxtry 50
 ```
+
+In the olden days we would actually do this...
+
+```text
+$ tftp 127.0.0.1
+tftp> get a.txt
+Received 8 bytes in 0.0 seconds
+tftp> quit
+```
+
+Just like FTP!
 
 ## Copy NuttX Image to TFTP Server
 
