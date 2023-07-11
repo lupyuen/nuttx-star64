@@ -1796,9 +1796,11 @@ static void u16550_putc(FAR struct u16550_s *priv, int ch)
 
 # Boot from Network with U-Boot and TFTP
 
-TODO: We really should configure U-Boot Bootloader to load the Kernel Image over the network via TFTP. Because testing NuttX by swapping microSD Card is getting so tiresome.
+We really should configure U-Boot Bootloader to load the Kernel Image over the network via TFTP. Because testing NuttX by swapping microSD Card is getting so tiresome.
 
-TFTP Server: https://crates.io/crates/tftpd
+## Setup TFTP Server
+
+Let's set up a TFTP Server with [tftpd](https://crates.io/crates/tftpd)...
 
 ```bash
 cargo install tftpd
@@ -1807,7 +1809,9 @@ sudo tftpd -i 0.0.0.0 -p 69 -d "$HOME/tftproot"
 ## `sudo` because port 69 is a privileged low port
 ```
 
-Output:
+([`tftp_server`](https://crates.io/crates/tftp_server) won't work, it only supports localhost)
+
+We should see...
 
 ```text
 Running TFTP Server on 0.0.0.0:69 in $HOME/tftproot
@@ -1817,7 +1821,7 @@ Sending a.txt to 192.168.x.x:33499
 Sent a.txt to 192.168.x.x:33499
 ```
 
-Test:
+Let's test the TFTP Server...
 
 ```bash
 echo Test123 >$HOME/tftproot/a.txt
@@ -1825,7 +1829,7 @@ curl -v tftp://127.0.0.1/a.txt
 curl -v tftp://192.168.x.x/a.txt
 ```
 
-Output:
+We should see...
 
 ```text
 $ curl -v tftp://192.168.x.x/a.txt
@@ -1845,7 +1849,7 @@ Test123
 * Closing connection 0
 ```
 
-Fail:
+If it fails...
 
 ```text
 $ curl -v tftp://192.168.x.x/a.txt
@@ -1855,6 +1859,10 @@ $ curl -v tftp://192.168.x.x/a.txt
 * getpeername() failed with errno 107: Transport endpoint is not connected
 * set timeouts for state 0; Total  300000, retry 6 maxtry 50
 ```
+
+## Copy NuttX Image to TFTP Server
+
+TODO
 
 Copy DTB and Image:
 
@@ -1880,7 +1888,9 @@ curl -v tftp://192.168.x.x/jh7110-star64-pine64.dtb
 ## Warning: <FILE>" to save to a file.
 ```
 
-https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
+## Test U-Boot with TFTP Server
+
+TODO
 
 ```bash
 setenv tftp_server 192.168.x.x
@@ -1889,6 +1899,12 @@ tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb
 fdt addr ${fdt_addr_r}
 booti ${kernel_addr_r} - ${fdt_addr_r}
 ```
+
+[(Inspired by this article)](https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot)
+
+## Configure U-Boot for TFTP Server
+
+TODO
 
 Save to Environment:
 
