@@ -1686,6 +1686,30 @@ clk u5_dw_i2c_clk_apb already disabled
 301
 ```
 
+Sometimes...
+
+```text
+Starting kernel ...
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFAGHBCUnhandled exception: Store/AMO access fault
+EPC: 0000000040200628 RA: 00000000402004ba TVAL: ffffff8000008000
+EPC: ffffffff804ba628 RA: ffffffff804ba4ba reloc adjusted
+
+SP:  0000000040406a30 GP:  00000000ff735e00 TP:  0000000000000001
+T0:  0000000010000000 T1:  0000000000000037 T2:  ffffffffffffffff
+S0:  0000000040400000 S1:  0000000000000200 A0:  0000000000000003
+A1:  0000080000008000 A2:  0000000010100000 A3:  0000000040400000
+A4:  0000000000000026 A5:  0000000000000000 A6:  00000000101000e7
+A7:  0000000000000000 S2:  0000080000008000 S3:  0000000040600000
+S4:  0000000040400000 S5:  0000000000000000 S6:  0000000000000026
+S7:  00fffffffffff000 S8:  0000000040404000 S9:  0000000000001000
+S10: 0000000040400ab0 S11: 0000000000200000 T3:  0000000000000023
+T4:  000000004600f43a T5:  000000004600d000 T6:  000000004600cfff
+
+Code: 879b 0277 d7b3 00f6 f793 1ff7 078e 95be (b023 0105)
+```
+
 TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
 
 TODO: [Build Output](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
@@ -1843,9 +1867,9 @@ curl -v tftp://192.168.x.x/jh7110-star64-pine64.dtb
 https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot
 
 ```bash
-setenv serverip 192.168.x.x
-tftpboot ${kernel_addr_r} ${serverip}:Image
-tftpboot ${fdt_addr_r} ${serverip}:jh7110-star64-pine64.dtb
+setenv tftp_server 192.168.x.x
+tftpboot ${kernel_addr_r} ${tftp_server}:Image
+tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb
 fdt addr ${fdt_addr_r}
 booti ${kernel_addr_r} - ${fdt_addr_r}
 ```
@@ -1854,11 +1878,15 @@ Save to Environment:
 
 ```bash
 ## Remember the TFTP Server IP
-setenv serverip 192.168.x.x
+setenv tftp_server 192.168.x.x
+## Check that it's correct
+printenv tftp_server
 saveenv
 
 ## Add the Boot Command for TFTP
-setenv bootcmd_tftp 'if tftpboot ${kernel_addr_r} ${serverip}:Image ; then if tftpboot ${fdt_addr_r} ${serverip}:jh7110-star64-pine64.dtb ; then if fdt addr ${fdt_addr_r} ; then booti ${kernel_addr_r} - ${fdt_addr_r} ; fi ; fi ; fi'
+setenv bootcmd_tftp 'if tftpboot ${kernel_addr_r} ${tftp_server}:Image ; then if tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb ; then if fdt addr ${fdt_addr_r} ; then booti ${kernel_addr_r} - ${fdt_addr_r} ; fi ; fi ; fi'
+## Check that it's correct
+printenv bootcmd_tftp
 saveenv
 
 ## Test the Boot Command for TFTP
@@ -1880,9 +1908,9 @@ saveenv
 `bootcmd_tftp` expands to...
 
 ```text
-if tftpboot ${kernel_addr_r} ${serverip}:Image ;
+if tftpboot ${kernel_addr_r} ${tftp_server}:Image ;
 then
-  if tftpboot ${fdt_addr_r} ${serverip}:jh7110-star64-pine64.dtb ;
+  if tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb ;
   then
     if fdt addr ${fdt_addr_r} ;
     then
@@ -2224,8 +2252,8 @@ tftpboot [loadAddress] [[hostIPaddr:]bootfilename]
 StarFive # help tftp
 Unknown command 'tftp' - try 'help' without arguments for list of all known commands
 
-StarFive # setenv serverip 192.168.x.x
-StarFive # echo $serverip
+StarFive # setenv tftp_server 192.168.x.x
+StarFive # echo $tftp_server
 192.168.x.x
 StarFive # dhcp
 BOOTP broadcast 1
@@ -2244,9 +2272,9 @@ StarFive # echp o ${kernel_addr_r}
 0x40200000
 StarFive # echo ${fdt_addr_r}
 0x46000000
-StarFive # echo ${serverip}
+StarFive # echo ${tftp_server}
 192.168.x.x
-StarFive # tftpboot ${kernel_addr_r} ${serverip}:Image
+StarFive # tftpboot ${kernel_addr_r} ${tftp_server}:Image
 Using ethernet@16030000 device
 TFTP from server 192.168.x.x; our IP address is 192.168.x.x
 Filename 'Image'.
@@ -2257,7 +2285,7 @@ Loading: *###########T ####################################################T ##
 [8C 106.4 KiB/s
 done
 Bytes transferred = 2097832 (2002a8 hex)
-StarFive # tftpboot ${fdt_addr_r} ${serverip}:jh7110-star64-pine64.dtb
+StarFive # tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb
 Using ethernet@16030000 device
 TFTP from server 192.168.x.x; our IP address is 192.168.x.x
 Filename 'jh7110-star64-pine64.dtb'.
@@ -2396,8 +2424,8 @@ Filename 'boot.scr.uimg'.
 Load address: 0x40200000
 Loading: *
 TFTP server died; starting again
-StarFive # setenv serverip 192.168.x.x
-StarFive # tftpboot ${kernel_addr_r} ${serverip}:Image
+StarFive # setenv tftp_server 192.168.x.x
+StarFive # tftpboot ${kernel_addr_r} ${tftp_server}:Image
 Using ethernet@16030000 device
 TFTP from server 192.168.x.x; our IP address is 192.168.x.x
 Filename 'Image'.
@@ -2408,7 +2436,7 @@ Loading: *#############################################################T ####
 [8C 221.7 KiB/s
 done
 Bytes transferred = 2097832 (2002a8 hex)
-StarFive # tftpboot ${fdt_addr_r} ${serverip}:jh7110-star64-pine64.dtb
+StarFive # tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb
 Using ethernet@16030000 device
 TFTP from server 192.168.x.x; our IP address is 192.168.x.x
 Filename 'jh7110-star64-pine64.dtb'.
