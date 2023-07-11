@@ -1754,48 +1754,7 @@ static void u16550_putc(FAR struct u16550_s *priv, int ch)
 }
 ```
 
-# TODO
-
-TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
-
-`litex` boots from OpenSBI to NuttX, but doesn't callback to OpenSBI:
-
-[litex_shead.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_shead.S#L56)
-
-[litex_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_start.c#L50)
-
-[litex/arty_a7/configs/knsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/litex/arty_a7/configs/knsh/defconfig#L34)
-
-`mpfs` runs a copy of OpenSBI inside NuttX:
-
-[mpfs_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_start.c#L52)
-
-[mpfs_shead.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_shead.S#L62)
-
-[mpfs_opensbi.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi.c#L602)
-
-[mpfs_opensbi_utils.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
-
-[mpfs_ihc_sbi.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_ihc_sbi.c#L570)
-
-TODO: RISC-V Exceptions [riscv_exception_common.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/common/riscv_exception_common.S#L77)
-
-TODO: Set CLINT and PLIC Addresses
-
-From [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
-
-```text
-0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
-0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
-```
-
-TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33):
-
-```c
-#define QEMU_RV_CLINT_BASE   0x02000000
-#define QEMU_RV_ACLINT_BASE  0x02f00000
-#define QEMU_RV_PLIC_BASE    0x0c000000
-```
+# Boot from Network with U-Boot and TFTP
 
 TODO: We really should configure U-Boot Bootloader to load the Kernel Image over the network via TFTP. Because testing NuttX by swapping microSD Card is getting so tiresome.
 
@@ -1894,12 +1853,21 @@ booti ${kernel_addr_r} - ${fdt_addr_r}
 Save to Environment:
 
 ```bash
+## Remember the TFTP Server IP
 setenv serverip 192.168.x.x
 saveenv
 
-setenv origbootcmd "$bootcmd"
-setenv autoload no
-setenv bootcmd "dhcp; tftpboot ${kernel_addr_r} ${serverip}:Image; tftpboot ${fdt_addr_r} ${serverip}:jh7110-star64-pine64.dtb; booti ${kernel_addr_r} - ${fdt_addr_r}"
+## Add the Boot Command for TFTP
+setenv bootcmd_tftp "tftpboot ${kernel_addr_r} ${serverip}:Image ; tftpboot ${fdt_addr_r} ${serverip}:jh7110-star64-pine64.dtb ; fdt addr ${fdt_addr_r} ; booti ${kernel_addr_r} - ${fdt_addr_r}"
+run bootcmd_tftp
+saveenv
+
+## Remember the Original Boot Targets
+setenv orig_boot_targets "$boot_targets"
+saveenv
+
+## Add TFTP to the Boot Targets
+setenv boot_targets "mmc0 dhcp tftp"
 saveenv
 ```
 
@@ -1907,6 +1875,13 @@ This is a persistent change, i.e. the device will boot via TFTP on every power u
 
 ```bash
 set bootcmd "$origbootcmd"
+```
+
+[`autoload`](https://u-boot.readthedocs.io/en/latest/usage/environment.html) is...
+
+```text
+autoload
+if set to “no” (any string beginning with ‘n’), “bootp” and “dhcp” will just load perform a lookup of the configuration from the BOOTP server, but not try to load any image.
 ```
 
 `booti` is...
@@ -1952,7 +1927,7 @@ distro_bootcmd=for target in ${boot_targets}; do run bootcmd_${target}; done
 
 boot_targets=mmc0 dhcp 
 
-Other boot_targets:
+## Other boot_targets:
 
 bootcmd_mmc0=devnum=0; run mmc_boot
 
@@ -2013,6 +1988,10 @@ tftpboot - boot image via network using TFTP protocol
 Usage:
 tftpboot [loadAddress] [[hostIPaddr:]bootfilename]
 ```
+
+TODO: What is `fdt` command?
+
+TODO: What is `bootefi` command?
 
 # U-Boot Bootloader Log for TFTP
 
@@ -2413,4 +2392,47 @@ clk u5_dw_i2c_clk_apb already disabled
 [?1049l[23;0;0t[screen is terminating]
 
 Script done on 2023-07-10 12:43:47+08:00 [COMMAND_EXIT_CODE="0"]
+```
+
+# TODO
+
+TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
+
+`litex` boots from OpenSBI to NuttX, but doesn't callback to OpenSBI:
+
+[litex_shead.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_shead.S#L56)
+
+[litex_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_start.c#L50)
+
+[litex/arty_a7/configs/knsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/litex/arty_a7/configs/knsh/defconfig#L34)
+
+`mpfs` runs a copy of OpenSBI inside NuttX:
+
+[mpfs_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_start.c#L52)
+
+[mpfs_shead.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_shead.S#L62)
+
+[mpfs_opensbi.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi.c#L602)
+
+[mpfs_opensbi_utils.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
+
+[mpfs_ihc_sbi.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_ihc_sbi.c#L570)
+
+TODO: RISC-V Exceptions [riscv_exception_common.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/common/riscv_exception_common.S#L77)
+
+TODO: Set CLINT and PLIC Addresses
+
+From [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
+
+```text
+0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
+0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
+```
+
+TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33):
+
+```c
+#define QEMU_RV_CLINT_BASE   0x02000000
+#define QEMU_RV_ACLINT_BASE  0x02f00000
+#define QEMU_RV_PLIC_BASE    0x0c000000
 ```
