@@ -1800,7 +1800,7 @@ We really should configure U-Boot Bootloader to load the Kernel Image over the n
 
 ## Setup TFTP Server
 
-Let's set up a TFTP Server with [`tftpd``](https://crates.io/crates/tftpd)...
+Let's set up a TFTP Server with [`tftpd`](https://crates.io/crates/tftpd)...
 
 ```bash
 cargo install tftpd
