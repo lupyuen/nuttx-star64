@@ -1862,16 +1862,12 @@ $ curl -v tftp://192.168.x.x/a.txt
 
 ## Copy NuttX Image to TFTP Server
 
-TODO
-
-Copy DTB and Image:
+Next we copy the NuttX Image and Device Tree to the TFTP Folder...
 
 ```bash
-scp \
-  'pinebook:/run/media/$USER/armbi_root/boot/dtb/starfive/jh7110-visionfive-v2.dtb' \
-  .
+## Copy the Device Tree from Armbian microSD
 cp \
-  jh7110-visionfive-v2.dtb \
+  /run/media/$USER/armbi_root/boot/dtb/starfive/jh7110-visionfive-v2.dtb \
   jh7110-star64-pine64.dtb
 
 ## Copy NuttX Binary Image and Device Tree to TFTP Folder
@@ -1888,21 +1884,37 @@ curl -v tftp://192.168.x.x/jh7110-star64-pine64.dtb
 ## Warning: <FILE>" to save to a file.
 ```
 
-## Test U-Boot with TFTP Server
+## Test U-Boot with TFTP
 
-TODO
+Now we boot Star64 JH7110 SBC and test the TFTP Commands...
 
 ```bash
+## Set the TFTP Server IP
 setenv tftp_server 192.168.x.x
+
+## Load the NuttX Image from TFTP Server
 tftpboot ${kernel_addr_r} ${tftp_server}:Image
+
+## Load the Device Tree from TFTP Server
 tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb
+
+## Set the RAM Address of Device Tree
 fdt addr ${fdt_addr_r}
+
+## Boot the NuttX Image with the Device Tree
 booti ${kernel_addr_r} - ${fdt_addr_r}
 ```
 
 [(Inspired by this article)](https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot)
 
-## Configure U-Boot for TFTP Server
+We should see...
+
+```text
+```
+
+[(Source)](https://github.com/lupyuen/nuttx-star64#u-boot-bootloader-log-for-tftp)
+
+## Configure U-Boot for TFTP
 
 TODO
 
@@ -2119,6 +2131,16 @@ bootefi bootmgr [fdt address]
     exposed as EFI configuration table.
 ```
 
+Doesn't work for NuttX...
+
+```text
+StarFive # bootefi ${kernel_addr_r} ${fdt_addr_r}
+Card did not respond to voltage select! : -110
+Card did not respond to voltage select! : -110
+No EFI system partition
+No UEFI binary known at 0x40200000
+```
+
 # TODO
 
 TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
@@ -2165,224 +2187,9 @@ TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-
 # U-Boot Bootloader Log for TFTP
 
 ```text
-Script started on 2023-07-10 12:17:54+08:00 [COMMAND="screen /dev/ttyUSB0 115200" TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="77" LINES="66"]
-[!p[?3;4l[4l>[?1049h[22;0;0t[4l[?1h=[0m(B[1;66r[H[2J[H[2J
 U-Boot SPL 2021.10 (Jan 19 2023 - 04:09:41 +0800)
 DDR version: dc2e84f0.
 Trying to boot from SPI
-
-OpenSBI v1.2
-   ____                    _____ ____ _____
-  / __ \                  / ____|  _ \_   _|
- | |  | |_ __   ___ _ __ | (___ | |_) || |
- | |  | | '_ \ / _ \ '_ \ \___ \|  _ < | |
- | |__| | |_) |  __/ | | |____) | |_) || |_
-  \____/| .__/ \___|_| |_|_____/|____/_____|
-        | |
-        |_|
-
-Platform Name             : StarFive VisionFive V2
-Platform Features         : medeleg
-Platform HART Count       : 5
-Platform IPI Device       : aclint-mswi
-Platform Timer Device     : aclint-mtimer @ 4000000Hz
-Platform Console Device   : uart8250
-Platform HSM Device       : jh7110-hsm
-Platform PMU Device       : ---
-Platform Reboot Device    : pm-reset
-Platform Shutdown Device  : pm-reset
-Firmware Base             : 0x40000000
-Firmware Size             : 288 KB
-Runtime SBI Version       : 1.0
-
-Domain0 Name              : root
-Domain0 Boot HART         : 1
-Domain0 HARTs             : 0*,1*,2*,3*,4*
-Domain0 Region00          : 0x0000000002000000-0x000000000200ffff (I)
-Domain0 Region01          : 0x0000000040000000-0x000000004007ffff ()
-Domain0 Region02          : 0x0000000000000000-0xffffffffffffffff (R,W,X)
-Domain0 Next Address      : 0x0000000040200000
-Domain0 Next Arg1         : 0x0000000042200000
-Domain0 Next Mode         : S-mode
-Domain0 SysReset          : yes
-
-Boot HART ID              : 1
-Boot HART Domain          : root
-Boot HART Priv Version    : v1.11
-Boot HART Base ISA        : rv64imafdcbx
-Boot HART ISA Extensions  : none
-Boot HART PMP Count       : 8
-Boot HART PMP Granularity : 4096
-Boot HART PMP Address Bits: 34
-Boot HART MHPM Count      : 2
-Boot HART MIDELEG         : 0x0000000000000222
-Boot HART MEDELEG         : 0x000000000000b109
-
-
-U-Boot 2021.10 (Jan 19 2023 - 04:09:41 +0800), Build: jenkins-github_visionfive2-6
-
-CPU:   rv64imacu
-Model: StarFive VisionFive V2
-DRAM:  8 GiB
-MMC:   sdio0@16010000: 0, sdio1@16020000: 1
-Loading Environment from SPIFlash... SF: Detected gd25lq128 with page size 256 Bytes, erase size 4 KiB, total 16 MiB
-*** Warning - bad CRC, using default environment
-
-StarFive EEPROM format v2
-
---------EEPROM INFO--------
-Vendor : PINE64
-Product full SN: STAR64V1-2310-D008E000-00000003
-data version: 0x2
-PCB revision: 0xc1
-BOM revision: A
-Ethernet MAC0 address: 6c:cf:39:00:75:5d
-Ethernet MAC1 address: 6c:cf:39:00:75:5e
---------EEPROM INFO--------
-
-In:    serial@10000000
-Out:   serial@10000000
-Err:   serial@10000000
-Model: StarFive VisionFive V2
-Net:   eth0: ethernet@16030000, eth1: ethernet@16040000
-Card did not respond to voltage select! : -110
-Card did not respond to voltage select! : -110
-bootmode flash device 0
-Card did not respond to voltage select! : -110
-Hit any key to stop autoboot:  2  1  0 
-Card did not respond to voltage select! : -110
-Couldn't find partition mmc 0:3
-Can't set block device
-Importing environment from mmc0 ...
-## Warning: Input data exceeds 1048576 bytes - truncated
-## Info: input data size = 1048578 = 0x100002
-Card did not respond to voltage select! : -110
-Couldn't find partition mmc 1:2
-Can't set block device
-## Warning: defaulting to text format
-## Error: "boot2" not defined
-Card did not respond to voltage select! : -110
-ethernet@16030000 Waiting for PHY auto negotiation to complete....... done
-BOOTP broadcast 1
-BOOTP broadcast 2
-*** Unhandled DHCP Option in OFFER/ACK: 43
-*** Unhandled DHCP Option in OFFER/ACK: 43
-DHCP client bound to address 192.168.x.x (534 ms)
-Using ethernet@16030000 device
-TFTP from server 192.168.x.x; our IP address is 192.168.x.x
-Filename 'boot.scr.uimg'.
-Load address: 0x43900000
-Loading: *
-TFTP server died; starting again
-BOOTP broadcast 1
-*** Unhandled DHCP Option in OFFER/ACK: 43
-*** Unhandled DHCP Option in OFFER/ACK: 43
-DHCP client bound to address 192.168.x.x (561 ms)
-Using ethernet@16030000 device
-TFTP from server 192.168.x.x; our IP address is 192.168.x.x
-Filename 'boot.scr.uimg'.
-Load address: 0x40200000
-Loading: *
-TFTP server died; starting again
-StarFive # set set rverip 192.168.x.x
-Unknown command 'set' - try 'help'
-StarFive # dhcp
-BOOTP broadcast 1
-*** Unhandled DHCP Option in OFFER/ACK: 43
-*** Unhandled DHCP Option in OFFER/ACK: 43
-DHCP client bound to address 192.168.x.x (537 ms)
-Using ethernet@16030000 device
-TFTP from server 192.168.x.x; our IP address is 192.168.x.x
-Filename 'boot.scr.uimg'.
-Load address: 0xa0000000
-Loading: *
-TFTP server died; starting again
-StarFive # dhcp h -h
-BOOTP broadcast 1
-*** Unhandled DHCP Option in OFFER/ACK: 43
-*** Unhandled DHCP Option in OFFER/ACK: 43
-DHCP client bound to address 192.168.x.x (551 ms)
-Using ethernet@16030000 device
-TFTP from server 192.168.x.x; our IP address is 192.168.x.x
-Filename '-h'.
-Load address: 0xa0000000
-Loading: *
-TFTP server died; starting again
-StarFive # dhcp    help hdcp
-Unknown command 'hdcp' - try 'help' without arguments for list of all known commands
-
-StarFive # help hdcp
-Unknown command 'hdcp' - try 'help' without arguments for list of all known commands
-
-StarFive # help dhcp
-dhcp - boot image via network using DHCP/TFTP protocol
-
-Usage:
-dhcp [loadAddress] [[hostIPaddr:]bootfilename]
-StarFive # help tftpboot
-tftpboot - boot image via network using TFTP protocol
-
-Usage:
-tftpboot [loadAddress] [[hostIPaddr:]bootfilename]
-StarFive # help tftp
-Unknown command 'tftp' - try 'help' without arguments for list of all known commands
-
-StarFive # setenv tftp_server 192.168.x.x
-StarFive # echo $tftp_server
-192.168.x.x
-StarFive # dhcp
-BOOTP broadcast 1
-*** Unhandled DHCP Option in OFFER/ACK: 43
-*** Unhandled DHCP Option in OFFER/ACK: 43
-DHCP client bound to address 192.168.x.x (539 ms)
-Using ethernet@16030000 device
-TFTP from server 192.168.x.x; our IP address is 192.168.x.x
-Filename '-h'.
-Load address: 0xa0000000
-Loading: *
-TFTP server died; starting again
-StarFive # echo ${kernel_addr}
-
-StarFive # echp o ${kernel_addr_r}
-0x40200000
-StarFive # echo ${fdt_addr_r}
-0x46000000
-StarFive # echo ${tftp_server}
-192.168.x.x
-StarFive # tftpboot ${kernel_addr_r} ${tftp_server}:Image
-Using ethernet@16030000 device
-TFTP from server 192.168.x.x; our IP address is 192.168.x.x
-Filename 'Image'.
-Load address: 0x40200000
-Loading: *###########T ####################################################T ##
-[8C #########################T ########################################
-[8C #############
-[8C 106.4 KiB/s
-done
-Bytes transferred = 2097832 (2002a8 hex)
-StarFive # tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb
-Using ethernet@16030000 device
-TFTP from server 192.168.x.x; our IP address is 192.168.x.x
-Filename 'jh7110-star64-pine64.dtb'.
-Load address: 0x46000000
-Loading: *
-TFTP server died; starting again
-StarFive # booti ${kernel_addr_r}
-Device tree not found or missing FDT support
-### ERROR ### Please RESET the board ###
-[7mReally kill this window [y/n][27m[K
-                                                                             
-[?1l>[66;1H
-[?1049l[23;0;0t[screen is terminating]
-
-Script done on 2023-07-10 12:29:47+08:00 [COMMAND_EXIT_CODE="0"]
-
-Script started on 2023-07-10 12:39:38+08:00 [COMMAND="screen /dev/ttyUSB0 115200" TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="77" LINES="66"]
-[!p[?3;4l[4l>[?1049h[22;0;0t[4l[?1h=[0m(B[1;66r[H[2J[H[2J
-U-Boot SPL 2021.10 (Jan 19 2023 - 04:09:41 +0800)
-DDR version: dc2e84f0.
-Trying to boot from SPI
-U�
 U-Boot SPL 2021.10 (Jan 19 2023 - 04:09:41 +0800)
 DDR version: dc2e84f0.
 Trying to boot from SPI
@@ -2499,7 +2306,9 @@ Filename 'boot.scr.uimg'.
 Load address: 0x40200000
 Loading: *
 TFTP server died; starting again
+
 StarFive # setenv tftp_server 192.168.x.x
+
 StarFive # tftpboot ${kernel_addr_r} ${tftp_server}:Image
 Using ethernet@16030000 device
 TFTP from server 192.168.x.x; our IP address is 192.168.x.x
@@ -2511,6 +2320,7 @@ Loading: *#############################################################T ####
 [8C 221.7 KiB/s
 done
 Bytes transferred = 2097832 (2002a8 hex)
+
 StarFive # tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb
 Using ethernet@16030000 device
 TFTP from server 192.168.x.x; our IP address is 192.168.x.x
@@ -2520,31 +2330,8 @@ Loading: *####
 [8C 374 KiB/s
 done
 Bytes transferred = 50235 (c43b hex)
-StarFive # fdt addr ${fdt_addr_r}
-StarFive # bootefi ${kernel_addr_r} ${fdt_addr_r}
-[H[66;77H
-Card did not respond to voltage select! : -110
-Card did not respond to voltage select! : -110
-No EFI system partition
-No UEFI binary known at 0x40200000
-StarFive # 
-StarFive # h help booti
-booti - boot Linux kernel 'Image' format from memory
 
-Usage:
-booti [addr [initrd[:size]] [fdt]]
-    - boot Linux flat or compressed 'Image' stored at 'addr'
-[8CThe argument 'initrd' is optional and specifies the address
-[8Cof an initrd in memory. The optional parameter ':size' allows
-[8Cspecifying the size of a RAW initrd.
-[8CCurrently only booting from gz, bz2, lzma and lz4 compression
-[8Ctypes are supported. In order to boot from any of these compressed
-[8Cimages, user have to set kernel_comp_addr_r and kernel_comp_size environment
-[8Cvariables beforehand.
-[8CSince booting a Linux kernel requires a flat device-tree, a
-[8Cthird argument providing the address of the device-tree blob
-[8Cis required. To boot a kernel with a device-tree blob but
-[8Cwithout an initrd image, use a '-' for the initrd argument.
+StarFive # fdt addr ${fdt_addr_r}
 
 StarFive # booti ${kernel_addr_r} - ${fdt_addr_r}
 ## Flattened Device Tree blob at 46000000
@@ -2556,11 +2343,6 @@ Starting kernel ...
 clk u5_dw_i2c_clk_core already disabled
 clk u5_dw_i2c_clk_apb already disabled
 123067DFAGHBC
-[7mReally kill this window [y/n][27m[K
-123067DFAGHBC                                                                [66;14H[?1l>[66;1H
-[?1049l[23;0;0t[screen is terminating]
-
-Script done on 2023-07-10 12:43:47+08:00 [COMMAND_EXIT_CODE="0"]
 ```
 
 # U-Boot Bootloader Log for Auto Network Boot
@@ -2726,10 +2508,4 @@ Code: 879b 0277 d7b3 00f6 f793 1ff7 078e 95be (b023 0105)
 resetting ...
 reset not supported yet
 ### ERROR ### Please RESET the board ###
-[7mReally kill this window [y/n][27m[K
-                                                                             
-[?1l>[66;1H
-[?1049l[23;0;0t[screen is terminating]
-
-Script done on 2023-07-11 14:36:01+08:00 [COMMAND_EXIT_CODE="0"]
 ```
