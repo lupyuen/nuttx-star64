@@ -1910,6 +1910,42 @@ booti ${kernel_addr_r} - ${fdt_addr_r}
 We should see...
 
 ```text
+StarFive # setenv tftp_server 192.168.x.x
+
+StarFive # tftpboot ${kernel_addr_r} ${tftp_server}:Image
+Using ethernet@16030000 device
+TFTP from server 192.168.x.x; our IP address is 192.168.x.x
+Filename 'Image'.
+Load address: 0x40200000
+Loading: *�#############################################################T ####
+�[8C #################################################################
+�[8C #############
+�[8C 221.7 KiB/s
+done
+Bytes transferred = 2097832 (2002a8 hex)
+
+StarFive # tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb
+Using ethernet@16030000 device
+TFTP from server 192.168.x.x; our IP address is 192.168.x.x
+Filename 'jh7110-star64-pine64.dtb'.
+Load address: 0x46000000
+Loading: *�####
+�[8C 374 KiB/s
+done
+Bytes transferred = 50235 (c43b hex)
+
+StarFive # fdt addr ${fdt_addr_r}
+
+StarFive # booti ${kernel_addr_r} - ${fdt_addr_r}
+## Flattened Device Tree blob at 46000000
+   Booting using the fdt blob at 0x46000000
+   Using Device Tree in place at 0000000046000000, end 000000004600f43a
+
+Starting kernel ...
+
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFAGHBC
 ```
 
 [(Source)](https://github.com/lupyuen/nuttx-star64#u-boot-bootloader-log-for-tftp)
@@ -1970,6 +2006,10 @@ This is a persistent change, i.e. the device will boot via TFTP on every power u
 setenv boot_targets "orig_boot_targets"
 saveenv
 ```
+
+## U-Boot Commands for Network Boot
+
+TODO
 
 [`autoload`](https://u-boot.readthedocs.io/en/latest/usage/environment.html) is...
 
