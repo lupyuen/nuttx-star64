@@ -1796,11 +1796,11 @@ static void u16550_putc(FAR struct u16550_s *priv, int ch)
 
 # Boot from Network with U-Boot and TFTP
 
-We really should configure U-Boot Bootloader to load the Kernel Image over the network via TFTP. Because testing NuttX by swapping microSD Card is getting so tiresome.
+We really should configure U-Boot Bootloader to load the Kernel Image over the network via [TFTP over UDP](https://en.wikipedia.org/wiki/Trivial_File_Transfer_Protocol). Because testing NuttX by swapping microSD Card is getting so tiresome.
 
 ## Setup TFTP Server
 
-Let's set up a TFTP Server with [tftpd](https://crates.io/crates/tftpd)...
+Let's set up a TFTP Server with [`tftpd``](https://crates.io/crates/tftpd)...
 
 ```bash
 cargo install tftpd
@@ -1890,7 +1890,7 @@ Now we boot Star64 JH7110 SBC and test the TFTP Commands.
 
 Connect Star64 SBC to the Ethernet wired network and power up.
 
-Star64 fails to boot over the network (because we don't have a DHCP+TFTP Combo Server), but that's OK...
+Star64 fails to boot over the network (because we don't have a [BOOTP Server](https://en.wikipedia.org/wiki/Bootstrap_Protocol) or DHCP+TFTP Combo Server), but that's OK...
 
 ```text
 ethernet@16030000 Waiting for PHY auto negotiation to complete....... done
