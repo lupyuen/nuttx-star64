@@ -1510,289 +1510,7 @@ But `qemu_rv_start` hangs. Why?
   jal  x1, qemu_rv_start
 ```
 
-TODO: Trace `qemu_rv_start`
-
-# Hang in Enter Critical Section
-
-TODO: NuttX hangs when entering Critical Section...
-
-From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1713-L1737):
-
-```c
-int up_putc(int ch)
-{
-  FAR struct u16550_s *priv = (FAR struct u16550_s *)CONSOLE_DEV.priv;
-  irqstate_t flags;
-
-  /* All interrupts must be disabled to prevent re-entrancy and to prevent
-   * interrupts from firing in the serial driver code.
-   */
-
-  //// This will hang!
-  flags = enter_critical_section();
-  ...
-  u16550_putc(priv, ch);
-  leave_critical_section(flags);
-  return ch;
-}
-```
-
-Which assembles to...
-
-```text
-int up_putc(int ch)
-{
-  ...
-up_irq_save():
-/Users/Luppy/PinePhone/wip-nuttx/nuttx/include/arch/irq.h:675
-  __asm__ __volatile__
-    40204598:	47a1                	li	a5,8
-    4020459a:	3007b7f3          	csrrc	a5,mstatus,a5
-up_putc():
-/Users/Luppy/PinePhone/wip-nuttx/nuttx/drivers/serial/uart_16550.c:1726
-  flags = enter_critical_section();
-```
-
-But `mstatus` is not accessible at Supervisor Level! Let's trace this.
-
-[`enter_critical_section`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/include/nuttx/irq.h#L156-L191) calls [`up_irq_save`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/include/irq.h#L660-L689)...
-
-```c
-// Disable interrupts and return the previous value of the mstatus register
-static inline irqstate_t up_irq_save(void)
-{
-  irqstate_t flags;
-
-  /* Read mstatus & clear machine interrupt enable (MIE) in mstatus */
-
-  __asm__ __volatile__
-    (
-      "csrrc %0, " __XSTR(CSR_STATUS) ", %1\n"
-      : "=r" (flags)
-      : "r"(STATUS_IE)
-      : "memory"
-    );
-
-  /* Return the previous mstatus value so that it can be restored with
-   * up_irq_restore().
-   */
-
-  return flags;
-}
-```
-
-`CSR_STATUS` is defined in [mode.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/include/mode.h#L35-L103):
-
-```c
-#ifdef CONFIG_ARCH_USE_S_MODE
-#  define CSR_STATUS        sstatus          /* Global status register */
-#else
-#  define CSR_STATUS        mstatus          /* Global status register */
-#endif
-```
-
-So we need to set [CONFIG_ARCH_USE_S_MODE](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/Kconfig#L278-L296).
-
-Which is defined in Kernel Mode: [`rv-virt:knsh64`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig). So we change Build Config to...
-
-```bash
-tools/configure.sh rv-virt:knsh64
-```
-
-We bypassed M-Mode during init...
-
-From [qemu_rv_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_start.c#L166-L231)
-
-```c
-void qemu_rv_start(int mhartid)
-{
-  /// Bypass to S-Mode Init
-  qemu_rv_start_s(mhartid); ////
-
-  /// Skip M-Mode Init
-#ifdef TODO ////
-  /* NOTE: still in M-mode */
-
-  if (0 == mhartid)
-    {
-      qemu_rv_clear_bss();
-
-      /* Initialize the per CPU areas */
-
-      riscv_percpu_add_hart(mhartid);
-    }
-
-  /* Disable MMU and enable PMP */
-
-  WRITE_CSR(satp, 0x0);
-  WRITE_CSR(pmpaddr0, 0x3fffffffffffffull);
-  WRITE_CSR(pmpcfg0, 0xf);
-
-  /* Set exception and interrupt delegation for S-mode */
-
-  WRITE_CSR(medeleg, 0xffff);
-  WRITE_CSR(mideleg, 0xffff);
-
-  /* Allow to write satp from S-mode */
-
-  CLEAR_CSR(mstatus, MSTATUS_TVM);
-
-  /* Set mstatus to S-mode and enable SUM */
-
-  CLEAR_CSR(mstatus, ~MSTATUS_MPP_MASK);
-  SET_CSR(mstatus, MSTATUS_MPPS | SSTATUS_SUM);
-
-  /* Set the trap vector for S-mode */
-
-  WRITE_CSR(stvec, (uintptr_t)__trap_vec);
-
-  /* Set the trap vector for M-mode */
-
-  WRITE_CSR(mtvec, (uintptr_t)__trap_vec_m);
-
-  if (0 == mhartid)
-    {
-      /* Only the primary CPU needs to initialize mtimer
-       * before entering to S-mode
-       */
-
-      up_mtimer_initialize();
-    }
-
-  /* Set mepc to the entry */
-
-  WRITE_CSR(mepc, (uintptr_t)qemu_rv_start_s);
-
-  /* Set a0 to mhartid explicitly and enter to S-mode */
-
-  asm volatile (
-      "mv a0, %0 \n"
-      "mret \n"
-      :: "r" (mhartid)
-  );
-#endif //// TODO
-}
-```
-
-grep for `csr` in `nuttx.S` shows that no more M-Mode Registers are used.
-
-Now critical section is OK yay!
-
-```text
-Starting kernel ...
-clk u5_dw_i2c_clk_core already disabled
-clk u5_dw_i2c_clk_apb already disabled
-123067DFAGHBCI[ 1
-301
-```
-
-Sometimes...
-
-```text
-Starting kernel ...
-clk u5_dw_i2c_clk_core already disabled
-clk u5_dw_i2c_clk_apb already disabled
-123067DFAGHBCUnhandled exception: Store/AMO access fault
-EPC: 0000000040200628 RA: 00000000402004ba TVAL: ffffff8000008000
-EPC: ffffffff804ba628 RA: ffffffff804ba4ba reloc adjusted
-
-SP:  0000000040406a30 GP:  00000000ff735e00 TP:  0000000000000001
-T0:  0000000010000000 T1:  0000000000000037 T2:  ffffffffffffffff
-S0:  0000000040400000 S1:  0000000000000200 A0:  0000000000000003
-A1:  0000080000008000 A2:  0000000010100000 A3:  0000000040400000
-A4:  0000000000000026 A5:  0000000000000000 A6:  00000000101000e7
-A7:  0000000000000000 S2:  0000080000008000 S3:  0000000040600000
-S4:  0000000040400000 S5:  0000000000000000 S6:  0000000000000026
-S7:  00fffffffffff000 S8:  0000000040404000 S9:  0000000000001000
-S10: 0000000040400ab0 S11: 0000000000200000 T3:  0000000000000023
-T4:  000000004600f43a T5:  000000004600d000 T6:  000000004600cfff
-
-Code: 879b 0277 d7b3 00f6 f793 1ff7 078e 95be (b023 0105)
-```
-
-Which fails at...
-
-```text
-nuttx/arch/risc-v/src/common/riscv_mmu.c:101
-  lntable[index] = (paddr | mmuflags);
-    40200620:	1ff7f793          	andi	a5,a5,511
-    40200624:	078e                	slli	a5,a5,0x3
-    40200626:	95be                	add	a1,a1,a5
-    40200628:	0105b023          	sd	a6,0(a1)  /* Fails Here */
-mmu_invalidate_tlb_by_vaddr():
-nuttx/arch/risc-v/src/common/riscv_mmu.h:237
-  __asm__ __volatile__
-    4020062c:	12d00073          	sfence.vma	zero,a3
-    40200630:	8082                	ret
-```
-
-TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
-
-TODO: [Build Output](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
-
-TODO: [Files Changed](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/31/files)
-
-# Hang in UART Setup
-
-TODO: `riscv_earlyserialinit` and `u16550_setup` hang
-
-From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L719-L792):
-
-```c
-//// This will hang!
-#ifdef TODO ////
-  /* Set trigger */
-
-  *(volatile uint8_t *)0x10000000 = 'e';////
-  u16550_serialout(priv, UART_FCR_OFFSET,
-                   (UART_FCR_FIFOEN | UART_FCR_RXTRIGGER_8));
-
-  /* Set up the IER */
-
-  *(volatile uint8_t *)0x10000000 = 'f';////
-  priv->ier = u16550_serialin(priv, UART_IER_OFFSET);
-#endif //// TODO
-...
-//// This will hang!
-#ifdef TODO ////
-  /* Enter DLAB=1 */
-
-  *(volatile uint8_t *)0x10000000 = 'g';////
-  u16550_serialout(priv, UART_LCR_OFFSET, (lcr | UART_LCR_DLAB));
-
-  /* Set the BAUD divisor */
-
-  div = u16550_divisor(priv);
-  u16550_serialout(priv, UART_DLM_OFFSET, div >> 8);
-  u16550_serialout(priv, UART_DLL_OFFSET, div & 0xff);
-
-  /* Clear DLAB */
-
-  u16550_serialout(priv, UART_LCR_OFFSET, lcr);
-
-  /* Configure the FIFOs */
-
-  *(volatile uint8_t *)0x10000000 = 'h';////
-  u16550_serialout(priv, UART_FCR_OFFSET,
-                   (UART_FCR_RXTRIGGER_8 | UART_FCR_TXRST | UART_FCR_RXRST |
-                    UART_FCR_FIFOEN));
-#endif //// TODO
-```
-
-# Hang in UART Transmit
-
-TODO
-
-From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1638-L1642)
-
-```c
-static void u16550_putc(FAR struct u16550_s *priv, int ch)
-{
-  //// This will hang!
-  //// while ((u16550_serialin(priv, UART_LSR_OFFSET) & UART_LSR_THRE) == 0);
-  u16550_serialout(priv, UART_THR_OFFSET, (uart_datawidth_t)ch);
-}
-```
+Let's trace `qemu_rv_start`...
 
 # Boot from Network with U-Boot and TFTP
 
@@ -2276,6 +1994,290 @@ No UEFI binary known at 0x40200000
 ```text
 autoload:
 if set to “no” (any string beginning with ‘n’), “bootp” and “dhcp” will just load perform a lookup of the configuration from the BOOTP server, but not try to load any image.
+```
+
+# Hang in Enter Critical Section
+
+TODO: NuttX hangs when entering Critical Section...
+
+From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1713-L1737):
+
+```c
+int up_putc(int ch)
+{
+  FAR struct u16550_s *priv = (FAR struct u16550_s *)CONSOLE_DEV.priv;
+  irqstate_t flags;
+
+  /* All interrupts must be disabled to prevent re-entrancy and to prevent
+   * interrupts from firing in the serial driver code.
+   */
+
+  //// This will hang!
+  flags = enter_critical_section();
+  ...
+  u16550_putc(priv, ch);
+  leave_critical_section(flags);
+  return ch;
+}
+```
+
+Which assembles to...
+
+```text
+int up_putc(int ch)
+{
+  ...
+up_irq_save():
+/Users/Luppy/PinePhone/wip-nuttx/nuttx/include/arch/irq.h:675
+  __asm__ __volatile__
+    40204598:	47a1                	li	a5,8
+    4020459a:	3007b7f3          	csrrc	a5,mstatus,a5
+up_putc():
+/Users/Luppy/PinePhone/wip-nuttx/nuttx/drivers/serial/uart_16550.c:1726
+  flags = enter_critical_section();
+```
+
+But `mstatus` is not accessible at Supervisor Level! Let's trace this.
+
+[`enter_critical_section`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/include/nuttx/irq.h#L156-L191) calls [`up_irq_save`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/include/irq.h#L660-L689)...
+
+```c
+// Disable interrupts and return the previous value of the mstatus register
+static inline irqstate_t up_irq_save(void)
+{
+  irqstate_t flags;
+
+  /* Read mstatus & clear machine interrupt enable (MIE) in mstatus */
+
+  __asm__ __volatile__
+    (
+      "csrrc %0, " __XSTR(CSR_STATUS) ", %1\n"
+      : "=r" (flags)
+      : "r"(STATUS_IE)
+      : "memory"
+    );
+
+  /* Return the previous mstatus value so that it can be restored with
+   * up_irq_restore().
+   */
+
+  return flags;
+}
+```
+
+`CSR_STATUS` is defined in [mode.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/include/mode.h#L35-L103):
+
+```c
+#ifdef CONFIG_ARCH_USE_S_MODE
+#  define CSR_STATUS        sstatus          /* Global status register */
+#else
+#  define CSR_STATUS        mstatus          /* Global status register */
+#endif
+```
+
+So we need to set [CONFIG_ARCH_USE_S_MODE](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/Kconfig#L278-L296).
+
+Which is defined in Kernel Mode: [`rv-virt:knsh64`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig). So we change Build Config to...
+
+```bash
+tools/configure.sh rv-virt:knsh64
+```
+
+We bypassed M-Mode during init...
+
+From [qemu_rv_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_start.c#L166-L231)
+
+```c
+void qemu_rv_start(int mhartid)
+{
+  /// Bypass to S-Mode Init
+  qemu_rv_start_s(mhartid); ////
+
+  /// Skip M-Mode Init
+#ifdef TODO ////
+  /* NOTE: still in M-mode */
+
+  if (0 == mhartid)
+    {
+      qemu_rv_clear_bss();
+
+      /* Initialize the per CPU areas */
+
+      riscv_percpu_add_hart(mhartid);
+    }
+
+  /* Disable MMU and enable PMP */
+
+  WRITE_CSR(satp, 0x0);
+  WRITE_CSR(pmpaddr0, 0x3fffffffffffffull);
+  WRITE_CSR(pmpcfg0, 0xf);
+
+  /* Set exception and interrupt delegation for S-mode */
+
+  WRITE_CSR(medeleg, 0xffff);
+  WRITE_CSR(mideleg, 0xffff);
+
+  /* Allow to write satp from S-mode */
+
+  CLEAR_CSR(mstatus, MSTATUS_TVM);
+
+  /* Set mstatus to S-mode and enable SUM */
+
+  CLEAR_CSR(mstatus, ~MSTATUS_MPP_MASK);
+  SET_CSR(mstatus, MSTATUS_MPPS | SSTATUS_SUM);
+
+  /* Set the trap vector for S-mode */
+
+  WRITE_CSR(stvec, (uintptr_t)__trap_vec);
+
+  /* Set the trap vector for M-mode */
+
+  WRITE_CSR(mtvec, (uintptr_t)__trap_vec_m);
+
+  if (0 == mhartid)
+    {
+      /* Only the primary CPU needs to initialize mtimer
+       * before entering to S-mode
+       */
+
+      up_mtimer_initialize();
+    }
+
+  /* Set mepc to the entry */
+
+  WRITE_CSR(mepc, (uintptr_t)qemu_rv_start_s);
+
+  /* Set a0 to mhartid explicitly and enter to S-mode */
+
+  asm volatile (
+      "mv a0, %0 \n"
+      "mret \n"
+      :: "r" (mhartid)
+  );
+#endif //// TODO
+}
+```
+
+grep for `csr` in `nuttx.S` shows that no more M-Mode Registers are used.
+
+Now critical section is OK yay!
+
+```text
+Starting kernel ...
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFAGHBCI[ 1
+301
+```
+
+Sometimes...
+
+```text
+Starting kernel ...
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFAGHBCUnhandled exception: Store/AMO access fault
+EPC: 0000000040200628 RA: 00000000402004ba TVAL: ffffff8000008000
+EPC: ffffffff804ba628 RA: ffffffff804ba4ba reloc adjusted
+
+SP:  0000000040406a30 GP:  00000000ff735e00 TP:  0000000000000001
+T0:  0000000010000000 T1:  0000000000000037 T2:  ffffffffffffffff
+S0:  0000000040400000 S1:  0000000000000200 A0:  0000000000000003
+A1:  0000080000008000 A2:  0000000010100000 A3:  0000000040400000
+A4:  0000000000000026 A5:  0000000000000000 A6:  00000000101000e7
+A7:  0000000000000000 S2:  0000080000008000 S3:  0000000040600000
+S4:  0000000040400000 S5:  0000000000000000 S6:  0000000000000026
+S7:  00fffffffffff000 S8:  0000000040404000 S9:  0000000000001000
+S10: 0000000040400ab0 S11: 0000000000200000 T3:  0000000000000023
+T4:  000000004600f43a T5:  000000004600d000 T6:  000000004600cfff
+
+Code: 879b 0277 d7b3 00f6 f793 1ff7 078e 95be (b023 0105)
+```
+
+Which fails at...
+
+```text
+nuttx/arch/risc-v/src/common/riscv_mmu.c:101
+  lntable[index] = (paddr | mmuflags);
+    40200620:	1ff7f793          	andi	a5,a5,511
+    40200624:	078e                	slli	a5,a5,0x3
+    40200626:	95be                	add	a1,a1,a5
+    40200628:	0105b023          	sd	a6,0(a1)  /* Fails Here */
+mmu_invalidate_tlb_by_vaddr():
+nuttx/arch/risc-v/src/common/riscv_mmu.h:237
+  __asm__ __volatile__
+    4020062c:	12d00073          	sfence.vma	zero,a3
+    40200630:	8082                	ret
+```
+
+- [See the __Build Steps__](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
+
+- [See the __Modified Files__](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/31/files)
+
+- [See the __Build Outputs__](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
+
+TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
+
+# Hang in UART Setup
+
+TODO: `riscv_earlyserialinit` and `u16550_setup` hang
+
+From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L719-L792):
+
+```c
+//// This will hang!
+#ifdef TODO ////
+  /* Set trigger */
+
+  *(volatile uint8_t *)0x10000000 = 'e';////
+  u16550_serialout(priv, UART_FCR_OFFSET,
+                   (UART_FCR_FIFOEN | UART_FCR_RXTRIGGER_8));
+
+  /* Set up the IER */
+
+  *(volatile uint8_t *)0x10000000 = 'f';////
+  priv->ier = u16550_serialin(priv, UART_IER_OFFSET);
+#endif //// TODO
+...
+//// This will hang!
+#ifdef TODO ////
+  /* Enter DLAB=1 */
+
+  *(volatile uint8_t *)0x10000000 = 'g';////
+  u16550_serialout(priv, UART_LCR_OFFSET, (lcr | UART_LCR_DLAB));
+
+  /* Set the BAUD divisor */
+
+  div = u16550_divisor(priv);
+  u16550_serialout(priv, UART_DLM_OFFSET, div >> 8);
+  u16550_serialout(priv, UART_DLL_OFFSET, div & 0xff);
+
+  /* Clear DLAB */
+
+  u16550_serialout(priv, UART_LCR_OFFSET, lcr);
+
+  /* Configure the FIFOs */
+
+  *(volatile uint8_t *)0x10000000 = 'h';////
+  u16550_serialout(priv, UART_FCR_OFFSET,
+                   (UART_FCR_RXTRIGGER_8 | UART_FCR_TXRST | UART_FCR_RXRST |
+                    UART_FCR_FIFOEN));
+#endif //// TODO
+```
+
+# Hang in UART Transmit
+
+TODO
+
+From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1638-L1642)
+
+```c
+static void u16550_putc(FAR struct u16550_s *priv, int ch)
+{
+  //// This will hang!
+  //// while ((u16550_serialin(priv, UART_LSR_OFFSET) & UART_LSR_THRE) == 0);
+  u16550_serialout(priv, UART_THR_OFFSET, (uart_datawidth_t)ch);
+}
 ```
 
 # TODO
