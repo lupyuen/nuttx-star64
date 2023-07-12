@@ -1516,9 +1516,13 @@ Let's trace `qemu_rv_start`...
 
 We really should configure U-Boot Bootloader to load the Kernel Image over the network via [TFTP over UDP](https://en.wikipedia.org/wiki/Trivial_File_Transfer_Protocol). Because testing NuttX by swapping microSD Card is getting so tiresome.
 
+Here's how...
+
+![Boot from Network with U-Boot and TFTP](https://lupyuen.github.io/images/tftp-flow.jpg)
+
 ## Setup TFTP Server
 
-Let's set up a TFTP Server with [`tftpd`](https://crates.io/crates/tftpd)...
+First we set up a TFTP Server with [`tftpd`](https://crates.io/crates/tftpd)...
 
 ```bash
 cargo install tftpd
