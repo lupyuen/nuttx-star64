@@ -1613,11 +1613,11 @@ cp \
 cp nuttx.bin $HOME/tftproot/Image
 cp jh7110-star64-pine64.dtb $HOME/tftproot
 
-## Test NuttX Binary Image and Device Tree over FTP
+## Test NuttX Binary Image and Device Tree over TFTP
 curl -v tftp://192.168.x.x/Image
 curl -v tftp://192.168.x.x/jh7110-star64-pine64.dtb
 
-## Show see
+## We should see...
 ## Warning: Binary output can mess up your terminal. Use "--output -" to tell 
 ## Warning: curl to output it to your terminal anyway, or consider "--output 
 ## Warning: <FILE>" to save to a file.
