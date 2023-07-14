@@ -2089,7 +2089,7 @@ Which is defined in Kernel Mode: [`rv-virt:knsh64`](https://github.com/lupyuen2/
 tools/configure.sh rv-virt:knsh64
 ```
 
-We bypassed M-Mode during init...
+And we bypassed M-Mode during init...
 
 From [qemu_rv_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_start.c#L166-L231)
 
@@ -2163,11 +2163,11 @@ nuttx/arch/risc-v/src/common/riscv_mmu.h:237
     40200630:	8082                	ret
 ```
 
-TODO: Trace this
+TODO: Trace this Store/AMO Access Fault
 
 # Hang in UART Transmit
 
-UART Transmit Hangs while waiting for UART Transmit Ready...
+When printing to UART Port, the UART Transmit hangs while waiting for UART Transmit Ready...
 
 From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1638-L1642)
 
@@ -2226,7 +2226,9 @@ config 16550_ADDRWIDTH
 		Note: 0 means auto detect address size (uintptr_t)
 ```
 
-But according to [JH7110 Linux Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html)...
+_But is CONFIG_16550_REGINCR correct for Star64 JH7110?_
+
+Let's check the official Linux Driver. According to [JH7110 Linux Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html)...
 
 ```text
 reg = <0x0 0x10000000 0x0 0xl0000>;
@@ -2250,9 +2252,11 @@ static void dw8250_serial_out(struct uart_port *p, int offset, int value)
 }
 ```
 
-We see that the UART Offset is shifted by 2 (`regshift`). Which means multiply the UART Offset by 4.
+We see that the UART Offset is shifted by 2 (`regshift`). Which means we multiply the UART Offset by 4.
 
 Thus `CONFIG_16550_REGINCR` should be 4, not 1!
+
+_How to fix CONFIG_16550_REGINCR?_
 
 We fix the NuttX Configuration: Device Drivers > Serial Driver Support > 16550 UART Chip support > Address increment between 16550 registers
 
@@ -2270,6 +2274,10 @@ clk u5_dw_i2c_clk_core already disabled
 clk u5_dw_i2c_clk_apb already disabled
 123067DFm45DTpAqGaclbHm45DTpBqm45DTpCqI
 ```
+
+NuttX now hangs somewhere in `nx_start`
+
+TODO: Trace `nx_start`
 
 # Hang in UART Setup
 
@@ -2318,7 +2326,7 @@ From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/
 #endif //// TODO
 ```
 
-TODO: See previous section
+See previous section for the `CONFIG_16550_REGINCR`` fix.
 
 # TODO
 
