@@ -2319,7 +2319,20 @@ That means `CONFIG_16550_REGINCR` should be 4?
 
 Device Drivers > Serial Driver Support > 16550 UART Chip support > Address increment between 16550 registers
 
-Change from 1 to 4
+Change from 1 to 4: [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig#L11)
+
+```text
+CONFIG_16550_REGINCR=4
+```
+
+Now we see this yay!
+
+```text
+Starting kernel ...
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFm45DTpAqGaclbHm45DTpBqm45DTpCqI
+```
 
 # Hang in UART Setup
 
