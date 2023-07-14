@@ -2004,7 +2004,7 @@ if set to “no” (any string beginning with ‘n’), “bootp” and “dhcp�
 
 # Hang in Enter Critical Section
 
-TODO: NuttX hangs when entering Critical Section...
+NuttX on Star64 JH7110 hangs when entering Critical Section...
 
 From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1713-L1737):
 
@@ -2100,89 +2100,30 @@ void qemu_rv_start(int mhartid)
   qemu_rv_start_s(mhartid); ////
 
   /// Skip M-Mode Init
-#ifdef TODO ////
-  /* NOTE: still in M-mode */
-
-  if (0 == mhartid)
-    {
-      qemu_rv_clear_bss();
-
-      /* Initialize the per CPU areas */
-
-      riscv_percpu_add_hart(mhartid);
-    }
-
-  /* Disable MMU and enable PMP */
-
-  WRITE_CSR(satp, 0x0);
-  WRITE_CSR(pmpaddr0, 0x3fffffffffffffull);
-  WRITE_CSR(pmpcfg0, 0xf);
-
-  /* Set exception and interrupt delegation for S-mode */
-
-  WRITE_CSR(medeleg, 0xffff);
-  WRITE_CSR(mideleg, 0xffff);
-
-  /* Allow to write satp from S-mode */
-
-  CLEAR_CSR(mstatus, MSTATUS_TVM);
-
-  /* Set mstatus to S-mode and enable SUM */
-
-  CLEAR_CSR(mstatus, ~MSTATUS_MPP_MASK);
-  SET_CSR(mstatus, MSTATUS_MPPS | SSTATUS_SUM);
-
-  /* Set the trap vector for S-mode */
-
-  WRITE_CSR(stvec, (uintptr_t)__trap_vec);
-
-  /* Set the trap vector for M-mode */
-
-  WRITE_CSR(mtvec, (uintptr_t)__trap_vec_m);
-
-  if (0 == mhartid)
-    {
-      /* Only the primary CPU needs to initialize mtimer
-       * before entering to S-mode
-       */
-
-      up_mtimer_initialize();
-    }
-
-  /* Set mepc to the entry */
-
-  WRITE_CSR(mepc, (uintptr_t)qemu_rv_start_s);
-
-  /* Set a0 to mhartid explicitly and enter to S-mode */
-
-  asm volatile (
-      "mv a0, %0 \n"
-      "mret \n"
-      :: "r" (mhartid)
-  );
-#endif //// TODO
+  ...
 }
 ```
 
 grep for `csr` in `nuttx.S` shows that no more M-Mode Registers are used.
 
-Now critical section is OK yay!
+Now Critical Section is OK yay!
 
 ```text
 Starting kernel ...
 clk u5_dw_i2c_clk_core already disabled
 clk u5_dw_i2c_clk_apb already disabled
-123067DFAGHBCI[ 1
-301
-```
-
-or
-
-```text
 123067DFAGHBCIcd
 ```
 
-Sometimes...
+- [See the __Build Steps__](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
+
+- [See the __Modified Files__](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/31/files)
+
+- [See the __Build Outputs__](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
+
+TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
+
+Sometimes we see this...
 
 ```text
 Starting kernel ...
@@ -2222,17 +2163,11 @@ nuttx/arch/risc-v/src/common/riscv_mmu.h:237
     40200630:	8082                	ret
 ```
 
-- [See the __Build Steps__](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
-
-- [See the __Modified Files__](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/31/files)
-
-- [See the __Build Outputs__](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
-
-TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
+TODO: Trace this
 
 # Hang in UART Transmit
 
-TODO: UART Transmit Hangs...
+UART Transmit Hangs while waiting for UART Transmit Ready...
 
 From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1638-L1642)
 
@@ -2245,19 +2180,19 @@ static void u16550_putc(FAR struct u16550_s *priv, int ch)
 }
 ```
 
-[u16550_serialin](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/drivers/serial/uart_16550.c#L596-L611) is...
+Where [`u16550_serialin`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/drivers/serial/uart_16550.c#L596-L611) is defined as...
 
 ```c
 *((FAR volatile uart_datawidth_t *)priv->uartbase + offset);
 ```
 
-[UART_THR_OFFSET](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/include/nuttx/serial/uart_16550.h#L197) is...
+And [`UART_THR_OFFSET`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/include/nuttx/serial/uart_16550.h#L197) is...
 
 ```c
 #define UART_LSR_OFFSET        (CONFIG_16550_REGINCR*UART_LSR_INCR)
 ```
 
-TODO: Check these settings: 
+`CONFIG_16550_REGINCR` is 1...
 
 ```text
 → grep 16550 .config
@@ -2266,7 +2201,7 @@ CONFIG_16550_REGWIDTH=8
 CONFIG_16550_ADDRWIDTH=0
 ```
 
-From [Kconfig-16550](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/drivers/serial/Kconfig-16550#L501-L520):
+As defined according to the Default Config for 16550: [Kconfig-16550](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/drivers/serial/Kconfig-16550#L501-L520):
 
 ```text
 config 16550_REGINCR
@@ -2291,7 +2226,7 @@ config 16550_ADDRWIDTH
 		Note: 0 means auto detect address size (uintptr_t)
 ```
 
-According to [JH7110 Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html)...
+But according to [JH7110 Linux Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html)...
 
 ```text
 reg = <0x0 0x10000000 0x0 0xl0000>;
@@ -2299,7 +2234,9 @@ reg-io-width = <4>;
 reg-shift = <2>;
 ```
 
-From 8250 Linux Driver: [8250_dw.c](https://github.com/torvalds/linux/blob/master/drivers/tty/serial/8250/8250_dw.c#L159-L169)
+`reg-shift` is 2.
+
+And from the Linux 8250 Driver: [8250_dw.c](https://github.com/torvalds/linux/blob/master/drivers/tty/serial/8250/8250_dw.c#L159-L169)
 
 ```text
 static void dw8250_serial_out(struct uart_port *p, int offset, int value)
@@ -2313,19 +2250,19 @@ static void dw8250_serial_out(struct uart_port *p, int offset, int value)
 }
 ```
 
-So offset is shifted by 2 (regshift), which means multiply offset by 4.
+We see that the UART Offset is shifted by 2 (`regshift`). Which means multiply the UART Offset by 4.
 
-That means `CONFIG_16550_REGINCR` should be 4?
+Thus `CONFIG_16550_REGINCR` should be 4, not 1!
 
-Device Drivers > Serial Driver Support > 16550 UART Chip support > Address increment between 16550 registers
+We fix the NuttX Configuration: Device Drivers > Serial Driver Support > 16550 UART Chip support > Address increment between 16550 registers
 
-Change from 1 to 4: [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig#L11)
+And change it from 1 to 4: [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig#L11)
 
 ```text
 CONFIG_16550_REGINCR=4
 ```
 
-Now we see this yay!
+Now UART Transmit doesn't hang yay!
 
 ```text
 Starting kernel ...
@@ -2380,6 +2317,8 @@ From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/
                     UART_FCR_FIFOEN));
 #endif //// TODO
 ```
+
+TODO: See previous section
 
 # TODO
 
