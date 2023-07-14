@@ -2230,6 +2230,62 @@ nuttx/arch/risc-v/src/common/riscv_mmu.h:237
 
 TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
 
+# Hang in UART Transmit
+
+TODO: UART Transmit Hangs...
+
+From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1638-L1642)
+
+```c
+static void u16550_putc(FAR struct u16550_s *priv, int ch)
+{
+  //// This will hang!
+  //// while ((u16550_serialin(priv, UART_LSR_OFFSET) & UART_LSR_THRE) == 0);
+  u16550_serialout(priv, UART_THR_OFFSET, (uart_datawidth_t)ch);
+}
+```
+
+TODO: Check these settings: 
+
+```text
+CONFIG_16550_REGINCR=1
+CONFIG_16550_REGWIDTH=8
+CONFIG_16550_ADDRWIDTH=0
+```
+
+From [Kconfig-16550](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/drivers/serial/Kconfig-16550#L501-L520):
+
+```text
+config 16550_REGINCR
+	int "Address increment between 16550 registers"
+	default 1
+	---help---
+		The address increment between 16550 registers.  Options are 1, 2, or 4.
+		Default: 1
+
+config 16550_REGWIDTH
+	int "Bit width of 16550 registers"
+	default 8
+	---help---
+		The bit width of registers.  Options are 8, 16, or 32. Default: 8
+
+config 16550_ADDRWIDTH
+	int "Address width of 16550 registers"
+	default 8
+	---help---
+		The bit width of registers.  Options are 0, 8, 16, or 32.
+		Default: 8
+		Note: 0 means auto detect address size (uintptr_t)
+```
+
+According to [JH7110 Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html)...
+
+```text
+reg = <0x0 0x10000000 0x0 0xl0000>;
+reg-io-width = <4>;
+reg-shift = <2>;
+```
+
 # Hang in UART Setup
 
 TODO: `riscv_earlyserialinit` and `u16550_setup` hang
@@ -2275,21 +2331,6 @@ From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/
                    (UART_FCR_RXTRIGGER_8 | UART_FCR_TXRST | UART_FCR_RXRST |
                     UART_FCR_FIFOEN));
 #endif //// TODO
-```
-
-# Hang in UART Transmit
-
-TODO
-
-From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1638-L1642)
-
-```c
-static void u16550_putc(FAR struct u16550_s *priv, int ch)
-{
-  //// This will hang!
-  //// while ((u16550_serialin(priv, UART_LSR_OFFSET) & UART_LSR_THRE) == 0);
-  u16550_serialout(priv, UART_THR_OFFSET, (uart_datawidth_t)ch);
-}
 ```
 
 # TODO
