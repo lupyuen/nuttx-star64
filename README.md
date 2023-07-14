@@ -2240,14 +2240,27 @@ From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/
 static void u16550_putc(FAR struct u16550_s *priv, int ch)
 {
   //// This will hang!
-  //// while ((u16550_serialin(priv, UART_LSR_OFFSET) & UART_LSR_THRE) == 0);
+  while ((u16550_serialin(priv, UART_LSR_OFFSET) & UART_LSR_THRE) == 0);
   u16550_serialout(priv, UART_THR_OFFSET, (uart_datawidth_t)ch);
 }
+```
+
+[u16550_serialin](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/drivers/serial/uart_16550.c#L596-L611) is...
+
+```c
+*((FAR volatile uart_datawidth_t *)priv->uartbase + offset);
+```
+
+[UART_THR_OFFSET](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/include/nuttx/serial/uart_16550.h#L197) is...
+
+```c
+#define UART_LSR_OFFSET        (CONFIG_16550_REGINCR*UART_LSR_INCR)
 ```
 
 TODO: Check these settings: 
 
 ```text
+→ grep 16550 .config
 CONFIG_16550_REGINCR=1
 CONFIG_16550_REGWIDTH=8
 CONFIG_16550_ADDRWIDTH=0
@@ -2285,6 +2298,28 @@ reg = <0x0 0x10000000 0x0 0xl0000>;
 reg-io-width = <4>;
 reg-shift = <2>;
 ```
+
+From 8250 Linux Driver: [8250_dw.c](https://github.com/torvalds/linux/blob/master/drivers/tty/serial/8250/8250_dw.c#L159-L169)
+
+```text
+static void dw8250_serial_out(struct uart_port *p, int offset, int value)
+{
+	struct dw8250_data *d = to_dw8250_data(p->private_data);
+
+	writeb(value, p->membase + (offset << p->regshift));
+
+	if (offset == UART_LCR && !d->uart_16550_compatible)
+		dw8250_check_lcr(p, value);
+}
+```
+
+So offset is shifted by 2 (regshift), which means multiply offset by 4.
+
+That means `CONFIG_16550_REGINCR` should be 4?
+
+Device Drivers > Serial Driver Support > 16550 UART Chip support > Address increment between 16550 registers
+
+Change from 1 to 4
 
 # Hang in UART Setup
 
