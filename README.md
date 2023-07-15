@@ -2356,7 +2356,7 @@ void qemu_rv_start(int mhartid)
 }
 ```
 
-TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
+When we restore Supervisor Mode Initialisation: `satp`, `stvec`...
 
 ```text
 123067DFHBCqemu_rv_kernel_mappings: map I/O regions
