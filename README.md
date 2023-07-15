@@ -2375,9 +2375,9 @@ elf_init: filename: /system/bin/init loadinfo: 0x404069e8
 
 TODO: What is `/system/bin/init`? It is present?
 
-[See the QEMU Kernel Run Log](https://gist.github.com/lupyuen/19c0393167644280ec5c8deb3f15dcd9)
+[Compare with QEMU Kernel Mode Run Log](https://gist.github.com/lupyuen/19c0393167644280ec5c8deb3f15dcd9)
 
-[See the QEMU Kernel Build Log](https://gist.github.com/lupyuen/dce0cdbbf4a4bdf9c79e617b3fe1b679)
+[See the QEMU Kernel Mode Build Log](https://gist.github.com/lupyuen/dce0cdbbf4a4bdf9c79e617b3fe1b679)
 
 # TODO
 
