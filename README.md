@@ -2343,6 +2343,14 @@ See previous section for the `CONFIG_16550_REGINCR`` fix.
 
 # TODO
 
+```text
+123067DFAGaclbHBCInx_start: Entry
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+nx_start_application: Starting init task: /system/bin/init
+```
+
 TODO: Disable: Device Drivers > System Logging > Prepend timestamp to syslog message
 
 TODO: Enable: Build Setup > Debug Options > Scheduler Debug Features > Scheduler Error, Warnings and Info Output
