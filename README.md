@@ -2343,7 +2343,7 @@ See previous section for the `CONFIG_16550_REGINCR`` fix.
 
 # Enable Scheduler Logging
 
-Scheduler Logging in NuttX seems to be changed recently. To enable Scheduler Logging...
+Scheduler Logging in NuttX seems to have changed recently. To enable Scheduler Logging...
 
 - `make menuconfig`
 
