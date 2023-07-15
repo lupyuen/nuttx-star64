@@ -2099,7 +2099,7 @@ Which is defined in Kernel Mode: [`rv-virt:knsh64`](https://github.com/lupyuen2/
 tools/configure.sh rv-virt:knsh64
 ```
 
-And we bypassed M-Mode during init...
+And we bypassed Machine Mode Initialisation during startup...
 
 From [qemu_rv_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_start.c#L166-L231)
 
@@ -2136,7 +2136,9 @@ clk u5_dw_i2c_clk_apb already disabled
 
 - [See the __Build Outputs__](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/star64-0.0.1)
 
-TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
+_What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?_
+
+We'll handle them in a while.
 
 Sometimes we see this...
 
@@ -2331,6 +2333,30 @@ TODO: What is `/system/bin/init`? It is present?
 [Compare with QEMU Kernel Mode Run Log](https://gist.github.com/lupyuen/19c0393167644280ec5c8deb3f15dcd9)
 
 [See the QEMU Kernel Mode Build Log](https://gist.github.com/lupyuen/dce0cdbbf4a4bdf9c79e617b3fe1b679)
+
+# Initialise RISC-V Supervisor Mode
+
+TODO: We bypassed Machine Mode Initialisation during startup...
+
+From [qemu_rv_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_start.c#L166-L231)
+
+```c
+void qemu_rv_start(int mhartid)
+{
+  // Clear BSS
+  DEBUGASSERT(mhartid == 0);
+  if (0 == mhartid) { qemu_rv_clear_bss(); }
+
+  // Bypass to S-Mode Init
+  qemu_rv_start_s(mhartid);
+
+  // Skip M-Mode Init
+  // TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
+  ...
+}
+```
+
+TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
 
 # TODO
 
