@@ -2101,18 +2101,20 @@ tools/configure.sh rv-virt:knsh64
 
 And we bypassed M-Mode during init...
 
-From [qemu_rv_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/qemu_rv_start.c#L166-L231)
+From [qemu_rv_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_start.c#L166-L231)
 
 ```c
 void qemu_rv_start(int mhartid)
 {
-  /// TODO: qemu_rv_clear_bss
+  // Clear BSS
+  DEBUGASSERT(mhartid == 0);
+  if (0 == mhartid) { qemu_rv_clear_bss(); }
 
-  /// Bypass to S-Mode Init
+  // Bypass to S-Mode Init
   qemu_rv_start_s(mhartid);
 
-  /// Skip M-Mode Init
-  /// TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
+  // Skip M-Mode Init
+  // TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
   ...
 }
 ```
@@ -2290,56 +2292,7 @@ clk u5_dw_i2c_clk_apb already disabled
 
 NuttX now hangs somewhere in `nx_start`
 
-TODO: Trace `nx_start`
-
-# Hang in UART Setup
-
-TODO: `riscv_earlyserialinit` and `u16550_setup` hang
-
-From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L719-L792):
-
-```c
-//// This will hang!
-#ifdef TODO ////
-  /* Set trigger */
-
-  *(volatile uint8_t *)0x10000000 = 'e';////
-  u16550_serialout(priv, UART_FCR_OFFSET,
-                   (UART_FCR_FIFOEN | UART_FCR_RXTRIGGER_8));
-
-  /* Set up the IER */
-
-  *(volatile uint8_t *)0x10000000 = 'f';////
-  priv->ier = u16550_serialin(priv, UART_IER_OFFSET);
-#endif //// TODO
-...
-//// This will hang!
-#ifdef TODO ////
-  /* Enter DLAB=1 */
-
-  *(volatile uint8_t *)0x10000000 = 'g';////
-  u16550_serialout(priv, UART_LCR_OFFSET, (lcr | UART_LCR_DLAB));
-
-  /* Set the BAUD divisor */
-
-  div = u16550_divisor(priv);
-  u16550_serialout(priv, UART_DLM_OFFSET, div >> 8);
-  u16550_serialout(priv, UART_DLL_OFFSET, div & 0xff);
-
-  /* Clear DLAB */
-
-  u16550_serialout(priv, UART_LCR_OFFSET, lcr);
-
-  /* Configure the FIFOs */
-
-  *(volatile uint8_t *)0x10000000 = 'h';////
-  u16550_serialout(priv, UART_FCR_OFFSET,
-                   (UART_FCR_RXTRIGGER_8 | UART_FCR_TXRST | UART_FCR_RXRST |
-                    UART_FCR_FIFOEN));
-#endif //// TODO
-```
-
-See previous section for the `CONFIG_16550_REGINCR`` fix.
+Let's log the NuttX Scheduler...
 
 # Enable Scheduler Logging
 
