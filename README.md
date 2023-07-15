@@ -2106,10 +2106,13 @@ From [qemu_rv_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star
 ```c
 void qemu_rv_start(int mhartid)
 {
+  /// TODO: qemu_rv_clear_bss
+
   /// Bypass to S-Mode Init
-  qemu_rv_start_s(mhartid); ////
+  qemu_rv_start_s(mhartid);
 
   /// Skip M-Mode Init
+  /// TODO: What about `satp`, `stvec`, `pmpaddr0`, `pmpcfg0`?
   ...
 }
 ```
@@ -2339,6 +2342,10 @@ From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/
 See previous section for the `CONFIG_16550_REGINCR`` fix.
 
 # TODO
+
+TODO: Disable: Device Drivers > System Logging > Prepend timestamp to syslog message
+
+TODO: Enable: Build Setup > Debug Options > Scheduler Debug Features > Scheduler Error, Warnings and Info Output
 
 TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
 
