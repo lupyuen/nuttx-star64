@@ -2341,7 +2341,17 @@ From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/
 
 See previous section for the `CONFIG_16550_REGINCR`` fix.
 
-# TODO
+# Enable Scheduler Logging
+
+Scheduler Logging in NuttX seems to be changed recently. To enable Scheduler Logging...
+
+- `make menuconfig`
+
+- Disable this setting: Device Drivers > System Logging > Prepend timestamp to syslog message
+
+- Enable these settings: Build Setup > Debug Options > Scheduler Debug Features > Scheduler Error, Warnings and Info Output
+
+After enabling Scheduler Logging, we see...
 
 ```text
 123067DFAGaclbHBCInx_start: Entry
@@ -2351,9 +2361,7 @@ work_start_lowpri: Starting low-priority kernel worker thread(s)
 nx_start_application: Starting init task: /system/bin/init
 ```
 
-TODO: Disable: Device Drivers > System Logging > Prepend timestamp to syslog message
-
-TODO: Enable: Build Setup > Debug Options > Scheduler Debug Features > Scheduler Error, Warnings and Info Output
+# TODO
 
 TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
 
