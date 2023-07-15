@@ -2361,6 +2361,8 @@ work_start_lowpri: Starting low-priority kernel worker thread(s)
 nx_start_application: Starting init task: /system/bin/init
 ```
 
+TODO: What is `/system/bin/init`? It is present?
+
 # TODO
 
 TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
