@@ -2434,6 +2434,8 @@ dump_task:       0     0   0 FIFO     Kthread N-- Running            00000000000
 dump_task:       1     1 100 RR       Kthread --- Waiting Unlock     0000000000000000 0x4040a060      1952       264    13.5%    lpwork 0x404013e0
 ```
 
+TODO: up_mtimer_initialize
+
 # TODO
 
 TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
