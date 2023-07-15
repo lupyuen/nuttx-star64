@@ -2351,14 +2351,26 @@ Scheduler Logging in NuttX seems to be changed recently. To enable Scheduler Log
 
 - Enable these settings: Build Setup > Debug Options > Scheduler Debug Features > Scheduler Error, Warnings and Info Output
 
-After enabling Scheduler Logging, we see...
+- Also enable: Build Setup > Debug Options > Binary Loader Debug Features > Binary Loader Error, Warnings and Info Output
+
+After enabling Scheduler Logging and Binary Loader Logging, we see...
 
 ```text
-123067DFAGaclbHBCInx_start: Entry
+123067DFAGaclbHBCqemu_rv_kernel_mappings: map I/O regions
+qemu_rv_kernel_mappings: map kernel text
+qemu_rv_kernel_mappings: map kernel data
+qemu_rv_kernel_mappings: connect the L1 and L2 page tables
+qemu_rv_kernel_mappings: map the page pool
+qemu_rv_mm_init: mmu_enable: satp=1077956608
+Inx_start: Entry
+elf_initialize: Registering ELF
 uart_register: Registering /dev/console
 uart_register: Registering /dev/ttyS0
 work_start_lowpri: Starting low-priority kernel worker thread(s)
 nx_start_application: Starting init task: /system/bin/init
+load_absmodule: Loading /system/bin/init
+elf_loadbinary: Loading file: /system/bin/init
+elf_init: filename: /system/bin/init loadinfo: 0x404069e8
 ```
 
 TODO: What is `/system/bin/init`? It is present?
