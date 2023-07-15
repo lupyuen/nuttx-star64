@@ -2434,6 +2434,42 @@ dump_task:       0     0   0 FIFO     Kthread N-- Running            00000000000
 dump_task:       1     1 100 RR       Kthread --- Waiting Unlock     0000000000000000 0x4040a060      1952       264    13.5%    lpwork 0x404013e0
 ```
 
+`mcause` is 3, "Machine Software Interrupt".
+
+Exception Program Counter `0x4020` `0434` is in RISC-V Semihosting `smh_call`...
+
+```text
+0000000040200430 <smh_call>:
+smh_call():
+/Users/Luppy/PinePhone/wip-nuttx/nuttx/arch/risc-v/src/common/riscv_semihost.S:37
+  .global smh_call
+  .type smh_call @function
+
+smh_call:
+
+  slli zero, zero, 0x1f
+    40200430:	01f01013          	slli	zero,zero,0x1f
+/Users/Luppy/PinePhone/wip-nuttx/nuttx/arch/risc-v/src/common/riscv_semihost.S:38
+  ebreak
+    //// Crashes here (Trigger semihosting breakpoint)
+    40200434:	00100073          	ebreak
+/Users/Luppy/PinePhone/wip-nuttx/nuttx/arch/risc-v/src/common/riscv_semihost.S:39
+  srai zero, zero, 0x7
+    40200438:	40705013          	srai	zero,zero,0x7
+/Users/Luppy/PinePhone/wip-nuttx/nuttx/arch/risc-v/src/common/riscv_semihost.S:40
+  ret
+    4020043c:	00008067          	ret
+    40200440:	0000                	unimp
+```
+
+TODO: Who calls `smh_call`?
+
+```text
+host_call: nbr=0x1, parm=0x40406778, size=24
+```
+
+[host_call](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/common/riscv_hostfs.c#L35-L73) says that the Semihosting Call is for HOST_OPEN. (Open a file)
+
 TODO: up_mtimer_initialize
 
 # TODO
