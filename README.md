@@ -2328,7 +2328,9 @@ elf_loadbinary: Loading file: /system/bin/init
 elf_init: filename: /system/bin/init loadinfo: 0x404069e8
 ```
 
-TODO: What is `/system/bin/init`? It is present?
+_What is `/system/bin/init`?_
+
+We'll find out in a while...
 
 [Compare with QEMU Kernel Mode Run Log](https://gist.github.com/lupyuen/19c0393167644280ec5c8deb3f15dcd9)
 
@@ -2336,9 +2338,7 @@ TODO: What is `/system/bin/init`? It is present?
 
 # Initialise RISC-V Supervisor Mode
 
-TODO: up_mtimer_initialize
-
-TODO: We bypassed Machine Mode Initialisation during startup...
+Earlier we bypassed the Machine Mode and Supervisor Mode Initialisation during NuttX startup...
 
 From [qemu_rv_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_start.c#L166-L231)
 
@@ -2358,7 +2358,84 @@ void qemu_rv_start(int mhartid)
 }
 ```
 
-When we restore Supervisor Mode Initialisation: `satp`, `stvec`...
+Now we restored the Supervisor Mode Initialisation, commenting out the Machine Mode Initialisation...
+
+From [qemu_rv_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_start.c#L165-L233):
+
+```c
+void qemu_rv_start(int mhartid)
+{
+  DEBUGASSERT(mhartid == 0); ////
+
+  /* NOTE: still in M-mode */
+
+  if (0 == mhartid)
+    {
+      qemu_rv_clear_bss();
+
+      /* Initialize the per CPU areas */
+
+      riscv_percpu_add_hart(mhartid);
+    }
+
+  /* Disable MMU and enable PMP */
+
+  WRITE_CSR(satp, 0x0);
+  ////WRITE_CSR(pmpaddr0, 0x3fffffffffffffull);
+  ////WRITE_CSR(pmpcfg0, 0xf);
+
+  /* Set exception and interrupt delegation for S-mode */
+
+  ////WRITE_CSR(medeleg, 0xffff);
+  ////WRITE_CSR(mideleg, 0xffff);
+
+  /* Allow to write satp from S-mode */
+
+  ////CLEAR_CSR(mstatus, MSTATUS_TVM);
+
+  /* Set mstatus to S-mode and enable SUM */
+
+  ////CLEAR_CSR(mstatus, ~MSTATUS_MPP_MASK);
+  ////SET_CSR(mstatus, MSTATUS_MPPS | SSTATUS_SUM);
+
+  /* Set the trap vector for S-mode */
+
+  WRITE_CSR(stvec, (uintptr_t)__trap_vec);
+
+  /* Set the trap vector for M-mode */
+
+  ////WRITE_CSR(mtvec, (uintptr_t)__trap_vec_m);
+
+  if (0 == mhartid)
+    {
+      /* Only the primary CPU needs to initialize mtimer
+       * before entering to S-mode
+       */
+
+      //// TODO
+      ////up_mtimer_initialize();
+    }
+
+  /* Set mepc to the entry */
+
+  ////WRITE_CSR(mepc, (uintptr_t)qemu_rv_start_s);
+
+  /* Set a0 to mhartid explicitly and enter to S-mode */
+
+  ////asm volatile (
+  ////    "mv a0, %0 \n"
+  ////    "mret \n"
+  ////    :: "r" (mhartid)
+  ////);
+
+  //// Jump to S-Mode Init ourselves
+  qemu_rv_start_s(mhartid); ////
+}
+```
+
+TODO: Check `up_mtimer_initialize`
+
+Now NuttX boots further!
 
 ```text
 123067DFHBCqemu_rv_kernel_mappings: map I/O regions
@@ -2435,6 +2512,12 @@ dump_tasks:   ----   --- --- -------- ------- --- ------- ---------- -------- 0x
 dump_task:       0     0   0 FIFO     Kthread N-- Running            0000000000000000 0x40406030      3024      1448    47.8%    Idle Task
 dump_task:       1     1 100 RR       Kthread --- Waiting Unlock     0000000000000000 0x4040a060      1952       264    13.5%    lpwork 0x404013e0
 ```
+
+But NuttX crashes. Let's find out why...
+
+# QEMU Semihosting in NuttX
+
+TODO
 
 `mcause` is 3, "Machine Software Interrupt".
 
@@ -2558,6 +2641,8 @@ dump_task:       0     0   0 FIFO     Kthread N-- Running            00000000000
 dump_task:       1     1 100 RR       Kthread --- Waiting Unlock     0000000000000000 0x4040a060      1952       264    13.5%    lpwork 0x404013e0
 ```
 
+TODO: See https://github.com/apache/nuttx/issues/9501
+
 # NuttX System Filesystem
 
 TODO: Where is `/system/bin/init`?
@@ -2589,6 +2674,8 @@ getprime hello    init     sh
 ```
 
 # TODO
+
+TODO: up_mtimer_initialize
 
 TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
 
