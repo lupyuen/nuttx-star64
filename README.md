@@ -6,6 +6,8 @@ Read the articles...
 
 -   ["Apache NuttX RTOS on RISC-V: Star64 JH7110 SBC"](https://lupyuen.github.io/articles/nuttx2)
 
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Privilege Levels and UART Registers"](https://lupyuen.github.io/articles/privilege)
+
 -   ["Star64 JH7110 RISC-V SBC: Boot from Network with U-Boot and TFTP"](https://lupyuen.github.io/articles/tftp)
 
 -   ["Booting RISC-V Linux on Star64 JH7110 SBC"](https://lupyuen.github.io/articles/linux)
