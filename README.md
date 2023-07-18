@@ -2016,6 +2016,10 @@ if set to “no” (any string beginning with ‘n’), “bootp” and “dhcp�
 
 # Hang in Enter Critical Section
 
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Privilege Levels and UART Registers"](https://lupyuen.github.io/articles/privilege)
+
 NuttX on Star64 JH7110 hangs when entering Critical Section...
 
 From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1713-L1737):
@@ -2186,6 +2190,10 @@ TODO: Trace this Store/AMO Access Fault
 
 # Hang in UART Transmit
 
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Privilege Levels and UART Registers"](https://lupyuen.github.io/articles/privilege)
+
 When printing to UART Port, the UART Transmit hangs while waiting for UART Transmit Ready...
 
 From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/drivers/serial/uart_16550.c#L1638-L1642)
@@ -2339,6 +2347,10 @@ We'll find out in a while...
 [See the QEMU Kernel Mode Build Log](https://gist.github.com/lupyuen/dce0cdbbf4a4bdf9c79e617b3fe1b679)
 
 # Initialise RISC-V Supervisor Mode
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Privilege Levels and UART Registers"](https://lupyuen.github.io/articles/privilege)
 
 Earlier we bypassed the Machine Mode and Supervisor Mode Initialisation during NuttX startup...
 
