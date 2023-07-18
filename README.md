@@ -2348,6 +2348,73 @@ We'll find out in a while...
 
 [See the QEMU Kernel Mode Build Log](https://gist.github.com/lupyuen/dce0cdbbf4a4bdf9c79e617b3fe1b679)
 
+```text
+nx_start_application: Starting init task: /system/bin/init
+load_absmodule: Loading /system/bin/init
+elf_loadbinary: Loading file: /system/bin/init
+elf_init: filename: /system/bin/init loadinfo: 0x802069e8
+hostfs_open: relpath=bin/init, oflags=0x1, mode=0x1b6
+...
+NuttShell (NSH) NuttX-12.2.1-RC0
+nsh> nx_start: CPU0: Beginning Idle Loop
+
+nsh> 
+nsh> uname -a
+posix_spawn: pid=0xc0202978 path=uname file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+hostfs_stat: relpath=bin/uname
+host_call: nbr=0x1, parm=0x80208fe0, size=24
+exec_spawn: ERROR: Failed to load program 'uname': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+NuttX 12.2.1-RC0 cafbbb1 Jul 15 2023 16:55:00 risc-v rv-virt
+nsh> 
+nsh> ls /
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+hostfs_stat: relpath=bin/ls
+host_call: nbr=0x1, parm=0x80208fe0, size=24
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+/:
+ dev/
+ proc/
+ system/
+nsh> 
+nsh> ls /system
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+hostfs_stat: relpath=bin/ls
+host_call: nbr=0x1, parm=0x80208fe0, size=24
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+hostfs_stat: relpath=
+host_call: nbr=0x1, parm=0x80209180, size=24
+host_call: nbr=0xc, parm=0x80209180, size=8
+host_call: nbr=0x2, parm=0x80209190, size=8
+ /system
+nsh> 
+nsh> ls /system/bin
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+hostfs_stat: relpath=bin/ls
+host_call: nbr=0x1, parm=0x80208fe0, size=24
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+hostfs_stat: relpath=bin
+host_call: nbr=0x1, parm=0x80209180, size=24
+host_call: nbr=0xc, parm=0x80209180, size=8
+host_call: nbr=0x2, parm=0x80209190, size=8
+ /system/bin
+nsh> 
+nsh> ls /system/bin/init
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+hostfs_stat: relpath=bin/ls
+host_call: nbr=0x1, parm=0x80208fe0, size=24
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+hostfs_stat: relpath=bin/init
+host_call: nbr=0x1, parm=0x80209180, size=24
+host_call: nbr=0xc, parm=0x80209180, size=8
+host_call: nbr=0x2, parm=0x80209190, size=8
+ /system/bin/init
+```
+
 # Initialise RISC-V Supervisor Mode
 
 Read the article...
