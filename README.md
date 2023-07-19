@@ -2348,73 +2348,6 @@ We'll find out in a while...
 
 [See the QEMU Kernel Mode Build Log](https://gist.github.com/lupyuen/dce0cdbbf4a4bdf9c79e617b3fe1b679)
 
-```text
-nx_start_application: Starting init task: /system/bin/init
-load_absmodule: Loading /system/bin/init
-elf_loadbinary: Loading file: /system/bin/init
-elf_init: filename: /system/bin/init loadinfo: 0x802069e8
-hostfs_open: relpath=bin/init, oflags=0x1, mode=0x1b6
-...
-NuttShell (NSH) NuttX-12.2.1-RC0
-nsh> nx_start: CPU0: Beginning Idle Loop
-
-nsh> 
-nsh> uname -a
-posix_spawn: pid=0xc0202978 path=uname file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-hostfs_stat: relpath=bin/uname
-host_call: nbr=0x1, parm=0x80208fe0, size=24
-exec_spawn: ERROR: Failed to load program 'uname': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-NuttX 12.2.1-RC0 cafbbb1 Jul 15 2023 16:55:00 risc-v rv-virt
-nsh> 
-nsh> ls /
-posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-hostfs_stat: relpath=bin/ls
-host_call: nbr=0x1, parm=0x80208fe0, size=24
-exec_spawn: ERROR: Failed to load program 'ls': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-/:
- dev/
- proc/
- system/
-nsh> 
-nsh> ls /system
-posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-hostfs_stat: relpath=bin/ls
-host_call: nbr=0x1, parm=0x80208fe0, size=24
-exec_spawn: ERROR: Failed to load program 'ls': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-hostfs_stat: relpath=
-host_call: nbr=0x1, parm=0x80209180, size=24
-host_call: nbr=0xc, parm=0x80209180, size=8
-host_call: nbr=0x2, parm=0x80209190, size=8
- /system
-nsh> 
-nsh> ls /system/bin
-posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-hostfs_stat: relpath=bin/ls
-host_call: nbr=0x1, parm=0x80208fe0, size=24
-exec_spawn: ERROR: Failed to load program 'ls': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-hostfs_stat: relpath=bin
-host_call: nbr=0x1, parm=0x80209180, size=24
-host_call: nbr=0xc, parm=0x80209180, size=8
-host_call: nbr=0x2, parm=0x80209190, size=8
- /system/bin
-nsh> 
-nsh> ls /system/bin/init
-posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-hostfs_stat: relpath=bin/ls
-host_call: nbr=0x1, parm=0x80208fe0, size=24
-exec_spawn: ERROR: Failed to load program 'ls': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-hostfs_stat: relpath=bin/init
-host_call: nbr=0x1, parm=0x80209180, size=24
-host_call: nbr=0xc, parm=0x80209180, size=8
-host_call: nbr=0x2, parm=0x80209190, size=8
- /system/bin/init
-```
-
 # Initialise RISC-V Supervisor Mode
 
 Read the article...
@@ -2602,7 +2535,7 @@ But NuttX crashes. Let's find out why...
 
 TODO
 
-`mcause` is 3, "Machine Software Interrupt".
+From the Crash Dump above, `mcause` is 3, "Machine Software Interrupt".
 
 Exception Program Counter `0x4020` `0434` is in RISC-V Semihosting `smh_call`...
 
@@ -2630,7 +2563,7 @@ smh_call:
     40200440:	0000                	unimp
 ```
 
-TODO: Who calls `smh_call`?
+When we log `smh_call`...
 
 ```text
 host_call: nbr=0x1, parm=0x40406778, size=24
@@ -2638,7 +2571,17 @@ host_call: nbr=0x1, parm=0x40406778, size=24
 
 [host_call](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/common/riscv_hostfs.c#L35-L73) says that the Semihosting Call is for HOST_OPEN. (Open a file)
 
-When we disable Semihosting...
+So NuttX crashes on Star64 because it's trying to read `/system/bin/init` via Semihosting!
+
+(See next section)
+
+Let's disable Semihosting and replace by Initial RAM Disk and ROMFS.
+
+See https://github.com/apache/nuttx/issues/9501
+
+And https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_smp/index.html
+
+Here's the Crash Dump after we disabled Semihosting...
 
 ```text
 123067DFHBCqemu_rv_kernel_mappings: map I/O regions
@@ -2724,11 +2667,11 @@ dump_task:       0     0   0 FIFO     Kthread N-- Running            00000000000
 dump_task:       1     1 100 RR       Kthread --- Waiting Unlock     0000000000000000 0x4040a060      1952       264    13.5%    lpwork 0x404013e0
 ```
 
-TODO: See https://github.com/apache/nuttx/issues/9501
-
 # NuttX System Filesystem
 
-TODO: Where is `/system/bin/init`?
+TODO
+
+Where is `/system/bin/init`?
 
 ```text
 → grep INIT .config
@@ -2755,6 +2698,83 @@ That's how `/system/bin/init` gets loaded over Semihosting...
 → ls ../apps/bin       
 getprime hello    init     sh
 ```
+
+We traced the Semihosting Calls in QEMU Kernel Mode, here's what we observed...
+
+[QEMU Kernel Mode Run Log](https://gist.github.com/lupyuen/6888376da6561bdc060c2459dffdef01)
+
+```text
+nx_start_application: Starting init task: /system/bin/init
+load_absmodule: Loading /system/bin/init
+elf_loadbinary: Loading file: /system/bin/init
+elf_init: filename: /system/bin/init loadinfo: 0x802069e8
+hostfs_open: relpath=bin/init, oflags=0x1, mode=0x1b6
+...
+NuttShell (NSH) NuttX-12.2.1-RC0
+nsh> nx_start: CPU0: Beginning Idle Loop
+
+nsh> 
+nsh> uname -a
+posix_spawn: pid=0xc0202978 path=uname file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+hostfs_stat: relpath=bin/uname
+host_call: nbr=0x1, parm=0x80208fe0, size=24
+exec_spawn: ERROR: Failed to load program 'uname': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+NuttX 12.2.1-RC0 cafbbb1 Jul 15 2023 16:55:00 risc-v rv-virt
+nsh> 
+nsh> ls /
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+hostfs_stat: relpath=bin/ls
+host_call: nbr=0x1, parm=0x80208fe0, size=24
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+/:
+ dev/
+ proc/
+ system/
+nsh> 
+nsh> ls /system
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+hostfs_stat: relpath=bin/ls
+host_call: nbr=0x1, parm=0x80208fe0, size=24
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+hostfs_stat: relpath=
+host_call: nbr=0x1, parm=0x80209180, size=24
+host_call: nbr=0xc, parm=0x80209180, size=8
+host_call: nbr=0x2, parm=0x80209190, size=8
+ /system
+nsh> 
+nsh> ls /system/bin
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+hostfs_stat: relpath=bin/ls
+host_call: nbr=0x1, parm=0x80208fe0, size=24
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+hostfs_stat: relpath=bin
+host_call: nbr=0x1, parm=0x80209180, size=24
+host_call: nbr=0xc, parm=0x80209180, size=8
+host_call: nbr=0x2, parm=0x80209190, size=8
+ /system/bin
+nsh> 
+nsh> ls /system/bin/init
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+hostfs_stat: relpath=bin/ls
+host_call: nbr=0x1, parm=0x80208fe0, size=24
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+hostfs_stat: relpath=bin/init
+host_call: nbr=0x1, parm=0x80209180, size=24
+host_call: nbr=0xc, parm=0x80209180, size=8
+host_call: nbr=0x2, parm=0x80209190, size=8
+ /system/bin/init
+```
+
+We need to replicate this with Initial RAM Disk and ROMFS.
+
+See https://github.com/apache/nuttx/issues/9501
+
+And https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_smp/index.html
 
 # TODO
 
