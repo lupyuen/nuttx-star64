@@ -2946,7 +2946,7 @@ Also we see that Kernel is loaded at `0x8000` `0000`, Device Tree at `0x8700` `0
 
 # Device Tree for RISC-V QEMU
 
-Let's dump the Device Tree for QEMU RISC-V...
+To dump the Device Tree for QEMU RISC-V, we specify `dumpdtb`...
 
 ```bash
 ## Dump Device Tree for QEMU RISC-V
@@ -2967,7 +2967,11 @@ dtc \
   qemu-riscv64.dtb
 ```
 
-This produces Device Tree for QEMU RISC-V: [qemu-riscv64.dts](https://github.com/lupyuen/nuttx-star64/blob/main/qemu-riscv64.dts)
+This produces the Device Tree for QEMU RISC-V...
+
+- [qemu-riscv64.dts: Device Tree for QEMU RISC-V](https://github.com/lupyuen/nuttx-star64/blob/main/qemu-riscv64.dts)
+
+Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 # TODO
 
