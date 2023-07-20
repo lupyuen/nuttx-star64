@@ -2971,7 +2971,7 @@ Here's the log...
 + cp .config nuttx.config
 + riscv64-unknown-elf-objdump -t -S --demangle --line-numbers --wide nuttx
 + sleep 10
-+ qemu-system-riscv64 -semihosting -M virt,aclint=on -cpu rv64 -smp 8 -bios none -kernel nuttx -nographic
++ qemu-system-riscv64 -semihosting -M virt,aclint=on -cpu rv64 -smp 8 -bios none -kernel nuttx -initrd initrd -nographic
 ABCnx_start: Entry
 uart_register: Registering /dev/console
 uart_register: Registering /dev/ttyS0
