@@ -2885,6 +2885,37 @@ int litex_mount_ramdisk(void)
 }
 ```
 
+`__ramdisk_start` is defined in [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64b/boards/risc-v/litex/arty_a7/include/board_memorymap.h#L58-L91):
+
+```c
+/* RAMDisk */
+#define RAMDISK_START     (uintptr_t)__ramdisk_start
+#define RAMDISK_SIZE      (uintptr_t)__ramdisk_size
+
+/* ramdisk (RW) */
+extern uint8_t          __ramdisk_start[];
+extern uint8_t          __ramdisk_size[];
+```
+
+And [ld-kernel.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64b/boards/risc-v/litex/arty_a7/scripts/ld-kernel.script#L20-L49):
+
+```text
+MEMORY
+{
+  kflash (rx)   : ORIGIN = 0x40000000, LENGTH = 4096K   /* w/ cache */
+  ksram (rwx)   : ORIGIN = 0x40400000, LENGTH = 4096K   /* w/ cache */
+  pgram (rwx)   : ORIGIN = 0x40800000, LENGTH = 4096K   /* w/ cache */
+  ramdisk (rwx) : ORIGIN = 0x40C00000, LENGTH = 4096K   /* w/ cache */
+}
+...
+/* Application ramdisk */
+__ramdisk_start = ORIGIN(ramdisk);
+__ramdisk_size = LENGTH(ramdisk);
+__ramdisk_end  = ORIGIN(ramdisk) + LENGTH(ramdisk);
+```
+
+Let's do the same to NuttX for QEMU...
+
 # Add Initial RAM Disk to NuttX QEMU
 
 TODO
@@ -2892,6 +2923,19 @@ TODO
 Now we can modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk instead of Semihosting. (So later we can replicate this on Star64)
 
 Build NuttX QEMU in Kernel Mode: [Build Steps](https://github.com/lupyuen2/wip-pinephone-nuttx/tree/master/boards/risc-v/qemu-rv/rv-virt)
+
+```bash
+## Build NuttX QEMU Kernel Mode
+./tools/configure.sh rv-virt:knsh64 
+make V=1 -j7
+
+## Build Apps Filesystem
+make export V=1
+pushd ../apps
+./tools/mkimport.sh -z -x ../nuttx/nuttx-export-*.tar.gz
+make import V=1
+popd
+```
 
 To load Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
 
