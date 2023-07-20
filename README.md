@@ -2907,11 +2907,17 @@ MEMORY
   ramdisk (rwx) : ORIGIN = 0x40C00000, LENGTH = 4096K   /* w/ cache */
 }
 ...
+/* Page heap */
+__pgheap_start = ORIGIN(pgram);
+__pgheap_size = LENGTH(pgram) + LENGTH(ramdisk);
+
 /* Application ramdisk */
 __ramdisk_start = ORIGIN(ramdisk);
 __ramdisk_size = LENGTH(ramdisk);
 __ramdisk_end  = ORIGIN(ramdisk) + LENGTH(ramdisk);
 ```
+
+Note that `__pgheap_size` needs to include `ramdisk`.
 
 Let's do the same to NuttX for QEMU...
 
@@ -2957,6 +2963,22 @@ qemu-system-riscv64 \
   -kernel nuttx \
   -initrd initrd \
   -nographic
+```
+
+TODO: Check [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/include/board_memorymap.h#L34-L37)
+
+```c
+/* DDR start address */
+#define QEMURV_DDR_BASE   (0x80000000)
+#define QEMURV_DDR_SIZE   (0x40000000)
+```
+
+TODO: Check [qemu_rv_mm_init.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/arch/risc-v/src/qemu-rv/qemu_rv_mm_init.c#L43-L46)
+
+```c
+/* Map the whole I/O memory with vaddr = paddr mappings */
+#define MMU_IO_BASE     (0x00000000)
+#define MMU_IO_SIZE     (0x80000000)
 ```
 
 Here's the log...
