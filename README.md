@@ -2899,6 +2899,29 @@ $ qemu-system-riscv64 -M virt -smp 4 -m 2G \
 
 TODO: Address of the Initial RAM Disk
 
+Let's dump the Device Tree for QEMU RISC-V...
+
+```bash
+## Dump Device Tree for QEMU RISC-V
+qemu-system-riscv64 \
+  -semihosting \
+  -M virt,aclint=on,dumpdtb=qemu-riscv64.dtb \
+  -cpu rv64 \
+  -smp 8 \
+  -bios none \
+  -kernel nuttx \
+  -nographic
+
+## Convert Device Tree to text format
+dtc \
+  -o qemu-riscv64.dts \
+  -O dts \
+  -I dtb \
+  qemu-riscv64.dtb
+```
+
+This produces Device Tree for QEMU RISC-V: [qemu-riscv64.dts](https://github.com/lupyuen/nuttx-star64/blob/main/qemu-riscv64.dts)
+
 # TODO
 
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
