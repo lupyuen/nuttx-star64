@@ -3099,6 +3099,12 @@ romfs_devread32():
     8001064a:	00074703          	lbu	a4,0(a4)
 ```
 
+[`MCAUSE 4`](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#sec:mcause) is "Load address misaligned"
+
+Probably because we're using 16-bit alignment, instead of 32-bit alignment?
+
+TODO: Fix to 32-bit alignment
+
 Let's find the RAM Address of the Initial RAM Disk...
 
 # RAM Disk Address for RISC-V QEMU
