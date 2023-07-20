@@ -3103,6 +3103,8 @@ romfs_devread32():
 
 Probably because we're using 16-bit alignment, instead of 32-bit alignment?
 
+MTVAL is `80f0` `7ee1`, the offending address. Looks misaligned.
+
 TODO: Fix to 32-bit alignment
 
 Let's find the RAM Address of the Initial RAM Disk...
