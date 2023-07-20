@@ -2940,7 +2940,7 @@ loader_write_rom fdt:
 
 So Initial RAM Disk is loaded at `0x8400` `0000`
 
-(`__ramdisk_start` from the previous section).
+(`__ramdisk_start` from the previous section)
 
 Also we see that Kernel is loaded at `0x8000` `0000`, Device Tree at `0x8700` `0000`.
 
