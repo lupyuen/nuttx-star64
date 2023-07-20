@@ -2782,7 +2782,7 @@ TODO
 
 Let's modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk instead of Semihosting. (So later we can replicate this on Star64)
 
-[NuttX RAM Disks and ROM Disks](https://cwiki.apache.org/confluence/plugins/servlet/mobile?contentId=139629548#content/view/139629548)
+[(About NuttX RAM Disks and ROM Disks)](https://cwiki.apache.org/confluence/plugins/servlet/mobile?contentId=139629548#content/view/139629548)
 
 Build NuttX QEMU in Kernel Mode: [Build Steps](https://github.com/lupyuen2/wip-pinephone-nuttx/tree/master/boards/risc-v/qemu-rv/rv-virt)
 
@@ -2792,6 +2792,8 @@ We copy from LiteX: [VexRISCV_SMP Core](https://nuttx.apache.org/docs/latest/pla
 $ cd nuttx
 $ genromfs -f romfs.img -d ../apps/bin -V "NuttXBootVol"
 ```
+
+[(About `genromfs`)](https://www.systutorials.com/docs/linux/man/8-genromfs/)
 
 LiteX Memory Map:
 
@@ -2885,7 +2887,17 @@ int litex_mount_ramdisk(void)
 
 TODO: Let's replicate this to NuttX for QEMU
 
-TODO: Load Initial RAM Disk on QEMU
+To load Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
+
+```bash
+$ qemu-system-riscv64 -M virt -smp 4 -m 2G \
+    -display none -serial stdio \
+    -kernel arch/riscv/boot/Image \
+    -initrd /path/to/rootfs.cpio \
+    -append "root=/dev/ram"
+```
+
+TODO: Address of the Initial RAM Disk
 
 # TODO
 
