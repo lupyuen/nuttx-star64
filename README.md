@@ -2937,6 +2937,15 @@ make import V=1
 popd
 ```
 
+TODO: To generate Initial RAM Disk...
+
+```bash
+cd nuttx
+genromfs -f initrd -d ../apps/bin -V "NuttXBootVol"
+```
+
+[(About `genromfs`)](https://www.systutorials.com/docs/linux/man/8-genromfs/)
+
 To load Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
 
 ```bash
@@ -2949,6 +2958,33 @@ qemu-system-riscv64 \
   -kernel nuttx \
   -initrd initrd \
   -nographic
+```
+
+Here's the log...
+
+```text
++ genromfs -f initrd -d ../apps/bin -V NuttXBootVol
++ riscv64-unknown-elf-size nuttx
+   text    data     bss     dec     hex filename
+ 171581     673   21872  194126   2f64e nuttx
++ riscv64-unknown-elf-objcopy -O binary nuttx nuttx.bin
++ cp .config nuttx.config
++ riscv64-unknown-elf-objdump -t -S --demangle --line-numbers --wide nuttx
++ sleep 10
++ qemu-system-riscv64 -semihosting -M virt,aclint=on -cpu rv64 -smp 8 -bios none -kernel nuttx -nographic
+ABCnx_start: Entry
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+nx_start_application: Starting init task: /system/bin/init
+hostfs_stat: relpath=bin/init
+hostfs_open: relpath=bin/init, oflags=0x1, mode=0x1b6
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
+
+NuttShell (NSH) NuttX-12.0.3
+nsh> nx_start: CPU0: Beginning Idle Loop
 ```
 
 Let's find the RAM Address of the Initial RAM Disk...
