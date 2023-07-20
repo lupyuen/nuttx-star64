@@ -2776,21 +2776,21 @@ See https://github.com/apache/nuttx/issues/9501
 
 And https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_smp/index.html
 
-# Initial RAM Disk
+# Initial RAM Disk for LiteX Arty-A7
 
 TODO
 
 Let's modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk instead of Semihosting. (So later we can replicate this on Star64)
 
+First we look at the Initial RAM Disk for LiteX Arty-A7...
+
 [(About NuttX RAM Disks and ROM Disks)](https://cwiki.apache.org/confluence/plugins/servlet/mobile?contentId=139629548#content/view/139629548)
 
-Build NuttX QEMU in Kernel Mode: [Build Steps](https://github.com/lupyuen2/wip-pinephone-nuttx/tree/master/boards/risc-v/qemu-rv/rv-virt)
-
-We copy from LiteX: [VexRISCV_SMP Core](https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_smp/index.html):
+To generate the RAM Disk: [VexRISCV_SMP Core](https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_smp/index.html):
 
 ```bash
-$ cd nuttx
-$ genromfs -f romfs.img -d ../apps/bin -V "NuttXBootVol"
+cd nuttx
+genromfs -f romfs.img -d ../apps/bin -V "NuttXBootVol"
 ```
 
 [(About `genromfs`)](https://www.systutorials.com/docs/linux/man/8-genromfs/)
@@ -2885,6 +2885,14 @@ int litex_mount_ramdisk(void)
 }
 ```
 
+# Add Initial RAM Disk to NuttX QEMU
+
+TODO
+
+Now we can modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk instead of Semihosting. (So later we can replicate this on Star64)
+
+Build NuttX QEMU in Kernel Mode: [Build Steps](https://github.com/lupyuen2/wip-pinephone-nuttx/tree/master/boards/risc-v/qemu-rv/rv-virt)
+
 To load Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
 
 ```bash
@@ -2896,8 +2904,7 @@ qemu-system-riscv64 \
   -bios none \
   -kernel nuttx \
   -initrd initrd \
-  -nographic \
-  -trace "*"
+  -nographic
 ```
 
 Let's find the RAM Address of the Initial RAM Disk...
