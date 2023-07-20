@@ -2885,19 +2885,43 @@ int litex_mount_ramdisk(void)
 }
 ```
 
-TODO: Let's replicate this to NuttX for QEMU
+Let's replicate this to NuttX for QEMU...
 
 To load Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
 
 ```bash
-$ qemu-system-riscv64 -M virt -smp 4 -m 2G \
-    -display none -serial stdio \
-    -kernel arch/riscv/boot/Image \
-    -initrd /path/to/rootfs.cpio \
-    -append "root=/dev/ram"
+qemu-system-riscv64 \
+  -semihosting \
+  -M virt,aclint=on \
+  -cpu rv64 \
+  -smp 8 \
+  -bios none \
+  -kernel nuttx \
+  -initrd initrd \
+  -nographic \
+  -trace "*"
 ```
 
-TODO: Address of the Initial RAM Disk
+Address of the Initial RAM Disk appears in the Trace Log:
+
+```text
+resettablloader_write_rom nuttx
+  ELF program header segment 0:
+  @0x80000000 size=0x2b374 ROM=0
+loader_write_rom nuttx
+  ELF program header segment 1:
+  @0x80200000 size=0x2a1 ROM=0
+loader_write_rom initrd:
+  @0x84000000 size=0x2fc3e8 ROM=0
+loader_write_rom fdt:
+  @0x87000000 size=0x100000 ROM=0
+```
+
+So Initial RAM Disk is loaded at `0x8400` `0000`
+
+(Kernel is at `0x8000` `0000`, Device Tree at `0x8700` `0000`)
+
+# Device Tree for RISC-V QEMU
 
 Let's dump the Device Tree for QEMU RISC-V...
 
