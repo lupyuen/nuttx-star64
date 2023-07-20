@@ -2902,7 +2902,7 @@ qemu-system-riscv64 \
 
 Let's find the RAM Address of the Initial RAM Disk...
 
-# Initial RAM Disk for RISC-V QEMU
+# RAM Disk Address for RISC-V QEMU
 
 _Can we enable logging for RISC-V QEMU?_
 
