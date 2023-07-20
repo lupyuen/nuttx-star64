@@ -2885,15 +2885,28 @@ int litex_mount_ramdisk(void)
 }
 ```
 
-Let's replicate this to NuttX for QEMU...
+To load Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
+
+```bash
+qemu-system-riscv64 \
+  -semihosting \
+  -M virt,aclint=on \
+  -cpu rv64 \
+  -smp 8 \
+  -bios none \
+  -kernel nuttx \
+  -initrd initrd \
+  -nographic \
+  -trace "*"
+```
+
+Let's find the RAM Address of the Initial RAM Disk...
 
 # Initial RAM Disk for RISC-V QEMU
 
 _Can we enable logging for RISC-V QEMU?_
 
 Yep we use the `-trace "*"` option like this...
-
-To load Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
 
 ```bash
 qemu-system-riscv64 \
