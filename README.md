@@ -3008,6 +3008,72 @@ NuttShell (NSH) NuttX-12.0.3
 nsh> nx_start: CPU0: Beginning Idle Loop
 ```
 
+TODO: Load Page Fault
+
+```text
+qemu-system-riscv64 -semihosting -M virt,aclint=on -cpu rv64 -smp 8 -bios none -kernel nuttx -initrd initrd -nographic
+ABCqemu_rv_kernel_mappings: map I/O regions
+qemu_rv_kernel_mappings: map kernel text
+qemu_rv_kernel_mappings: map kernel data
+qemu_rv_kernel_mappings: connect the L1 and L2 page tables
+qemu_rv_kernel_mappings: map the page pool
+qemu_rv_mm_init: mmu_enable: satp=2149601280
+nx_start: Entry
+elf_initialize: Registering ELF
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+ramdisk_register: buffer: 0x80800000 nsectors: 8192 sectsize: 512
+find_blockdriver: pathname="/dev/ram0"
+romfs_bind: Entry
+rd_open: rd_crefs: 1
+rd_geometry: Entry
+rd_geometry: available: true mediachanged: false writeenabled: false
+rd_geometry: nsectors: 8192 sectorsize: 512
+rd_ioctl: Entry
+rd_ioctl: ppv: 0x80800000
+riscv_exception: EXCEPTION: Load page fault. MCAUSE: 000000000000000d, EPC: 0000000080010642, MTVAL: 0000000080f07ee1
+riscv_exception: PANIC!!! Exception = 000000000000000d
+_assert: Current Version: NuttX  12.0.3 c63106e Jul 20 2023 20:44:04 risc-v
+_assert: Assertion failed panic: at file: common/riscv_exception.c:85 task: AppBringUp 0x80001a30
+up_dump_register: EPC: 0000000080010642
+up_dump_register: A0: 0000000080208ee0 A1: 00000000000000e0 A2: 000000000000383f A3: 000000008020c65c
+up_dump_register: A4: 0000000080f07ee1 A5: 0000000080f07e00 A6: 0000000000000000 A7: fffffffffffffff8
+up_dump_register: T0: 0000000000000030 T1: 0000000000000007 T2: 0000000000000020 T3: 0000000080209002
+up_dump_register: T4: 0000000080208ff8 T5: 00000000000001ff T6: 000000000000002d
+up_dump_register: S0: 0000000080208120 S1: 00000000000000e0 S2: 0000000080208ee0 S3: 0000000000707ee0
+up_dump_register: S4: 0000000080208f60 S5: 000000008020c658 S6: 000000008020c664 S7: 000000008020c65c
+up_dump_register: S8: 0000000000000001 S9: 000000008020c660 S10: 0000000000000000 S11: 0000000000000000
+up_dump_register: SP: 000000008020c5f0 FP: 0000000080208120 TP: 0000000000000000 RA: 0000000080010ba2
+dump_stack: User Stack:
+dump_stack:   base: 0x8020c050
+dump_stack:   size: 00001968
+dump_stack:     sp: 0x8020c5f0
+stack_dump: 0x8020c5e0: 0000002d 00000000 00040120 00000002 00000000 00000000 00000000 00000000
+stack_dump: 0x8020c600: 00000001 00000000 80029418 00000000 80029410 00000000 80208ee0 00000000
+stack_dump: 0x8020c620: 80208f60 00000000 00000004 00000000 00707ee0 00000000 00000000 00000000
+stack_dump: 0x8020c640: 80208120 00000000 80010da6 00000000 8002d1f0 00000000 0031bfe8 00707ee0
+stack_dump: 0x8020c660: 003ebed0 00000000 74006873 656d6900 80800000 00000000 00000009 00000000
+stack_dump: 0x8020c680: 00000068 00000000 8020c740 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x8020c6a0: 00000000 00000000 00000000 00000000 8002d1f0 00000000 80208ef8 00000000
+stack_dump: 0x8020c6c0: 80800000 00000000 80208ee0 00000000 00000000 00000000 80010ed6 00000000
+stack_dump: 0x8020c6e0: 8020c740 00000000 80208ee0 00000000 00000000 00000000 8000ff02 00000000
+stack_dump: 0x8020c700: 8002d1f0 00000000 8001c1a0 00000000 80029288 00000000 8001c190 00000000
+stack_dump: 0x8020c720: 00000000 00000000 8000f520 00000000 80208da0 00000000 80208e90 00000000
+stack_dump: 0x8020c740: 00000000 00000000 8001c191 00000000 00000000 00000000 80208df0 00000000
+stack_dump: 0x8020c760: 802073f0 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x8020c780: 00000000 00000000 00000000 00000000 00000000 00000000 00000064 00000000
+stack_dump: 0x8020c7a0: 00000c00 00000000 80001a7a 00000000 00000000 00000000 00026400 00000000
+stack_dump: 0x8020c7c0: 00000000 00000000 00000c00 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x8020c7e0: 00000000 00000000 800032a0 00000000 00000000 00000000 00000000 00000000
+dump_tasks:    PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
+dump_tasks:   ----   --- --- -------- ------- --- ------- ---------- -------- 0x80200290      2048      2040    99.6%!   irq
+dump_task:       0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80206030      3024       904    29.8%    Idle Task
+dump_task:       1     1 100 RR       Kthread --- Ready              0000000000000000 0x8020a060      1952       264    13.5%    lpwork 0x802014c8
+dump_task:       2     2 240 RR       Kthread --- Running            0000000000000000 0x8020c050      1968      1336    67.8%    AppBringUp
+```
+
 Let's find the RAM Address of the Initial RAM Disk...
 
 # RAM Disk Address for RISC-V QEMU
