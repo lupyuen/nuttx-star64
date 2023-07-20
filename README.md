@@ -2887,6 +2887,12 @@ int litex_mount_ramdisk(void)
 
 Let's replicate this to NuttX for QEMU...
 
+# Initial RAM Disk for RISC-V QEMU
+
+_Can we enable logging for RISC-V QEMU?_
+
+Yep we use the `-trace "*"` option like this...
+
 To load Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
 
 ```bash
@@ -2902,7 +2908,9 @@ qemu-system-riscv64 \
   -trace "*"
 ```
 
-Address of the Initial RAM Disk appears in the Trace Log:
+In the QEMU Command above we loaded the Initial RAM Disk `initrd`.
+
+To discover the RAM Address of the Initial RAM Disk, we check the QEMU Trace Log:
 
 ```text
 resettablloader_write_rom nuttx
@@ -2919,7 +2927,9 @@ loader_write_rom fdt:
 
 So Initial RAM Disk is loaded at `0x8400` `0000`
 
-(Kernel is at `0x8000` `0000`, Device Tree at `0x8700` `0000`)
+(`__ramdisk_start` from the previous section).
+
+Also we see that Kernel is loaded at `0x8000` `0000`, Device Tree at `0x8700` `0000`.
 
 # Device Tree for RISC-V QEMU
 
