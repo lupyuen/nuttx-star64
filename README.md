@@ -3074,6 +3074,31 @@ dump_task:       1     1 100 RR       Kthread --- Ready              00000000000
 dump_task:       2     2 240 RR       Kthread --- Running            0000000000000000 0x8020c050      1968      1336    67.8%    AppBringUp
 ```
 
+Which is here in the NuttX Disassembly...
+
+```text
+000000008001063a <romfs_devread32>:
+romfs_devread32():
+/Users/Luppy/riscv/nuttx/fs/romfs/fs_romfsutil.c:83
+{
+  /* This should not read past the end of the sector since the directory
+   * entries are aligned at 16-byte boundaries.
+   */
+
+  return ((((uint32_t)rm->rm_buffer[ndx]     & 0xff) << 24) |
+    8001063a:	6d3c                	ld	a5,88(a0)
+/Users/Luppy/riscv/nuttx/fs/romfs/fs_romfsutil.c:84
+          (((uint32_t)rm->rm_buffer[ndx + 1] & 0xff) << 16) |
+    8001063c:	0015871b          	addiw	a4,a1,1
+    80010640:	973e                	add	a4,a4,a5
+    /* Crashes here */
+    80010642:	00074503          	lbu	a0,0(a4)
+/Users/Luppy/riscv/nuttx/fs/romfs/fs_romfsutil.c:83
+  return ((((uint32_t)rm->rm_buffer[ndx]     & 0xff) << 24) |
+    80010646:	00b78733          	add	a4,a5,a1
+    8001064a:	00074703          	lbu	a4,0(a4)
+```
+
 Let's find the RAM Address of the Initial RAM Disk...
 
 # RAM Disk Address for RISC-V QEMU
