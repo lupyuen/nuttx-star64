@@ -2449,7 +2449,7 @@ void qemu_rv_start(int mhartid)
 }
 ```
 
-TODO: Check `up_mtimer_initialize`
+TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
 
 Now NuttX boots further!
 
@@ -2667,7 +2667,7 @@ dump_task:       0     0   0 FIFO     Kthread N-- Running            00000000000
 dump_task:       1     1 100 RR       Kthread --- Waiting Unlock     0000000000000000 0x4040a060      1952       264    13.5%    lpwork 0x404013e0
 ```
 
-# NuttX System Filesystem
+# NuttX Apps Filesystem
 
 TODO
 
@@ -2776,9 +2776,120 @@ See https://github.com/apache/nuttx/issues/9501
 
 And https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_smp/index.html
 
+# Initial RAM Disk
+
+TODO
+
+Let's modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk instead of Semihosting. (So later we can replicate this on Star64)
+
+[NuttX RAM Disks and ROM Disks](https://cwiki.apache.org/confluence/plugins/servlet/mobile?contentId=139629548#content/view/139629548)
+
+Build NuttX QEMU in Kernel Mode: [Build Steps](https://github.com/lupyuen2/wip-pinephone-nuttx/tree/master/boards/risc-v/qemu-rv/rv-virt)
+
+We copy from LiteX: [VexRISCV_SMP Core](https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_smp/index.html):
+
+```bash
+$ cd nuttx
+$ genromfs -f romfs.img -d ../apps/bin -V "NuttXBootVol"
+```
+
+LiteX Memory Map:
+
+```text
+"romfs.img":   "0x40C00000",
+"nuttx.bin":   "0x40000000",
+"opensbi.bin": "0x40f00000"
+```
+
+LiteX Build Configuration: [knsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/litex/arty_a7/configs/knsh/defconfig#L34)
+
+```bash
+CONFIG_BOARDCTL_ROMDISK=y
+CONFIG_BOARD_LATE_INITIALIZE=y
+CONFIG_BUILD_KERNEL=y
+CONFIG_FS_ROMFS=y
+CONFIG_INIT_FILEPATH="/system/bin/init"
+CONFIG_INIT_MOUNT=y
+CONFIG_INIT_MOUNT_FLAGS=0x1
+CONFIG_INIT_MOUNT_TARGET="/system/bin"
+CONFIG_INIT_STACKSIZE=3072
+CONFIG_LITEX_APPLICATION_RAMDISK=y
+CONFIG_NSH_FILE_APPS=y
+CONFIG_NSH_READLINE=y
+CONFIG_PATH_INITIAL="/system/bin"
+CONFIG_RAM_SIZE=4194304
+CONFIG_RAM_START=0x40400000
+CONFIG_RAW_BINARY=y
+CONFIG_SYSTEM_NSH_PROGNAME="init"
+CONFIG_TESTING_GETPRIME=y
+```
+
+From [NSH Start-Up Script](https://nuttx.apache.org/docs/latest/applications/nsh/nsh.html#nsh-start-up-script):
+
+```text
+CONFIG_DISABLE_MOUNTPOINT not set
+CONFIG_FS_ROMFS enabled
+```
+
+LiteX Startup: [litex_appinit.c](https://github.com/apache/nuttx/blob/master/boards/risc-v/litex/arty_a7/src/litex_appinit.c#L76-L103)
+
+```c
+void board_late_initialize(void)
+{
+  #ifdef CONFIG_LITEX_APPLICATION_RAMDISK
+  litex_mount_ramdisk();
+  #endif
+
+  litex_bringup();
+}
+```
+
+`litex_bringup` mounts the RAM Disk at startup: [litex_ramdisk.c](https://github.com/apache/nuttx/blob/master/boards/risc-v/litex/arty_a7/src/litex_ramdisk.c#L41-L98)
+
+```c
+#ifndef CONFIG_BUILD_KERNEL
+#error "Ramdisk usage is intended to be used with kernel build only"
+#endif
+
+#define SECTORSIZE   512
+#define NSECTORS(b)  (((b) + SECTORSIZE - 1) / SECTORSIZE)
+#define RAMDISK_DEVICE_MINOR 0
+
+// Mount a ramdisk defined in the ld-kernel.script to /dev/ramX.
+// The ramdisk is intended to contain a romfs with applications which can
+// be spawned at runtime.
+int litex_mount_ramdisk(void)
+{
+  int ret;
+  struct boardioc_romdisk_s desc;
+
+  desc.minor    = RAMDISK_DEVICE_MINOR;
+  desc.nsectors = NSECTORS((ssize_t)__ramdisk_size);
+  desc.sectsize = SECTORSIZE;
+  desc.image    = __ramdisk_start;
+
+  ret = boardctl(BOARDIOC_ROMDISK, (uintptr_t)&desc);
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "Ramdisk register failed: %s\n", strerror(errno));
+      syslog(LOG_ERR, "Ramdisk mountpoint /dev/ram%d\n",
+                                          RAMDISK_DEVICE_MINOR);
+      syslog(LOG_ERR, "Ramdisk length %u, origin %x\n",
+                                          (ssize_t)__ramdisk_size,
+                                          (uintptr_t)__ramdisk_start);
+    }
+
+  return ret;
+}
+```
+
+TODO: Let's replicate this to NuttX for QEMU
+
+TODO: Load Initial RAM Disk on QEMU
+
 # TODO
 
-TODO: up_mtimer_initialize
+TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
 
 TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
 
