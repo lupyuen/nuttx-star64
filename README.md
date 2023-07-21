@@ -2923,13 +2923,17 @@ Note that `__pgheap_size` needs to include `ramdisk`.
 
 Let's do the same to NuttX for QEMU...
 
-# Add Initial RAM Disk to NuttX QEMU
+# Modify NuttX QEMU to Load Initial RAM Disk
 
 TODO
 
-Now we can modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk instead of Semihosting. (So later we can replicate this on Star64)
+Now we can modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk instead of Semihosting.
 
-Build NuttX QEMU in Kernel Mode: [Build Steps](https://github.com/lupyuen2/wip-pinephone-nuttx/tree/master/boards/risc-v/qemu-rv/rv-virt)
+(So later we can replicate this on Star64)
+
+We follow the steps from LiteX Arty-A7...
+
+We build NuttX QEMU in Kernel Mode: [Build Steps](https://github.com/lupyuen2/wip-pinephone-nuttx/tree/master/boards/risc-v/qemu-rv/rv-virt)
 
 ```bash
 ## Build NuttX QEMU Kernel Mode
@@ -2944,7 +2948,7 @@ make import V=1
 popd
 ```
 
-TODO: To generate Initial RAM Disk...
+To generate the Initial RAM Disk `initrd`...
 
 ```bash
 cd nuttx
@@ -2967,7 +2971,15 @@ qemu-system-riscv64 \
   -nographic
 ```
 
-[(See the Modified Files)](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/33)
+_What is the RAM Address of the Initial RAM Disk in QEMU?_
+
+Initial RAM Disk is loaded by QEMU at `0x8400` `0000`...
+
+- ["RAM Disk Address for RISC-V QEMU"](https://github.com/lupyuen/nuttx-star64#ram-disk-address-for-risc-v-qemu)
+
+Below are the files that we changed in NuttX for QEMU to load the Initial RAM Disk (instead of Semihosting)...
+
+- [Modified Files for QEMU with Initial RAM Disk](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/33/files)
 
 We configured QEMU to mount the RAM Disk as ROMFS (instead of Semihosting): [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig)
 
@@ -3062,7 +3074,7 @@ void qemu_rv_kernel_mappings(void) {
   memcpy((void *)__ramdisk_start, (void *)0x84000000, (size_t)__ramdisk_size);
 ```
 
-Here's the log...
+Before making the above changes, here's the log for QEMU with Semihosting...
 
 ```text
 + genromfs -f initrd -d ../apps/bin -V NuttXBootVol
@@ -3089,11 +3101,7 @@ NuttShell (NSH) NuttX-12.0.3
 nsh> nx_start: CPU0: Beginning Idle Loop
 ```
 
-_What is the RAM Address of the Initial RAM Disk in QEMU?_
-
-Initial RAM Disk is loaded by QEMU at `0x8400` `0000`...
-
-- ["RAM Disk Address for RISC-V QEMU"](https://github.com/lupyuen/nuttx-star64#ram-disk-address-for-risc-v-qemu)
+Now we run it with Initial RAM Disk, without Semihosting...
 
 # Load Address Misaligned in NuttX ROMFS
 
