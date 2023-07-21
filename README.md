@@ -3228,9 +3228,9 @@ static uint32_t romfs_devread32(FAR struct romfs_mountpt_s *rm, int ndx) {
 }
 ```
 
-TODO: Why did it fail?
+TODO: Why would the compiler generate a Misaligned Address?
 
-TODO: What happens when we read a misaligned address like 0x10000001?
+TODO: What happens when we read a Misaligned Address like 0x10000001?
 
 We revert to the [earlier version](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/18e5e75008a73e7bec70c10fd64c6f46d2e0bdb4): []()
 
@@ -3267,7 +3267,7 @@ static uint32_t romfs_devread32(struct romfs_mountpt_s *rm, int ndx)
 
 And it boots OK yay!
 
-[See the Run Log]()
+[See the Run Log](https://gist.github.com/lupyuen/8afee5b07b61bb7f9f202f7f8c5e3ab3)
 
 # RAM Disk Address for RISC-V QEMU
 
