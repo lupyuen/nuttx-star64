@@ -2965,9 +2965,100 @@ qemu-system-riscv64 \
   -nographic
 ```
 
-
-
 [(See the Modified Files)](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/33)
+
+We configured QEMU to mount the RAM Disk as ROMFS (instead of Semihosting): [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig)
+
+```bash
+CONFIG_BOARDCTL_ROMDISK=y
+CONFIG_BOARD_LATE_INITIALIZE=y
+CONFIG_FS_ROMFS=y
+CONFIG_INIT_FILEPATH="/system/bin/init"
+CONFIG_INIT_MOUNT=y
+CONFIG_INIT_MOUNT_FLAGS=0x1
+CONFIG_INIT_MOUNT_TARGET="/system/bin"
+
+## We removed these...
+## CONFIG_FS_HOSTFS=y
+## CONFIG_RISCV_SEMIHOSTING_HOSTFS=y
+```
+
+We defined the RAM Disk Memory in the Linker Script: [ld-kernel64.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/scripts/ld-kernel64.script#L20-L54)
+
+```text
+MEMORY
+{
+  ...
+  /* Added RAM Disk */
+  ramdisk (rwx) : ORIGIN = 0x80800000, LENGTH = 4096K   /* w/ cache */
+
+  /* This won't work, crashes with a Memory Mgmt Fault...
+     ramdisk (rwx) : ORIGIN = 0x84000000, LENGTH = 4096K */   /* w/ cache */
+}
+
+/* Added RAM Disk */
+/* Page heap */
+
+__pgheap_start = ORIGIN(pgram);
+__pgheap_size = LENGTH(pgram) + LENGTH(ramdisk);
+/* Previously: __pgheap_size = LENGTH(pgram); */
+
+/* Added RAM Disk */
+/* Application ramdisk */
+
+__ramdisk_start = ORIGIN(ramdisk);
+__ramdisk_size = LENGTH(ramdisk);
+__ramdisk_end  = ORIGIN(ramdisk) + LENGTH(ramdisk);
+```
+
+At Startup, we mount the RAM Disk: [qemu_rv_appinit.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/src/qemu_rv_appinit.c#L83C1-L179C2)
+
+```c
+// Called at NuttX Startup
+void board_late_initialize(void) {
+  // Mount the RAM Disk
+  mount_ramdisk();
+
+  /* Perform board-specific initialization */
+#ifdef CONFIG_NSH_ARCHINIT
+  mount(NULL, "/proc", "procfs", 0, NULL);
+#endif
+}
+
+// Mount the RAM Disk
+int mount_ramdisk(void) {
+  int ret;
+  struct boardioc_romdisk_s desc;
+
+  desc.minor    = RAMDISK_DEVICE_MINOR;
+  desc.nsectors = NSECTORS((ssize_t)__ramdisk_size);
+  desc.sectsize = SECTORSIZE;
+  desc.image    = __ramdisk_start;
+
+  ret = boardctl(BOARDIOC_ROMDISK, (uintptr_t)&desc);
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "Ramdisk register failed: %s\n", strerror(errno));
+      syslog(LOG_ERR, "Ramdisk mountpoint /dev/ram%d\n",
+                                          RAMDISK_DEVICE_MINOR);
+      syslog(LOG_ERR, "Ramdisk length %lu, origin %lx\n",
+                                          (ssize_t)__ramdisk_size,
+                                          (uintptr_t)__ramdisk_start);
+    }
+
+  return ret;
+}
+```
+
+We copied the RAM Disk from the QEMU Address (0x84000000) to the NuttX Address (__ramdisk_start): [qemu_rv_mm_init.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/arch/risc-v/src/qemu-rv/qemu_rv_mm_init.c#L271-L280)
+
+```c
+void qemu_rv_kernel_mappings(void) {
+  ...
+  // Copy 0x84000000 to __ramdisk_start (__ramdisk_size bytes)
+  // TODO: RAM Disk must not exceed __ramdisk_size bytes
+  memcpy((void *)__ramdisk_start, (void *)0x84000000, (size_t)__ramdisk_size);
+```
 
 Here's the log...
 
