@@ -2949,6 +2949,13 @@ genromfs -f initrd -d ../apps/bin -V "NuttXBootVol"
 
 [(About `genromfs`)](https://www.systutorials.com/docs/linux/man/8-genromfs/)
 
+Initial RAM Disk `initrd` is 7.9 MB...
+
+```text
+→ ls -l initrd
+-rw-r--r--  1 Luppy  staff  7902208 Jul 21 13:41 initrd
+```
+
 This is how we load the Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
 
 ```bash
@@ -3097,7 +3104,7 @@ nsh> nx_start: CPU0: Beginning Idle Loop
 
 Now we run QEMU Kernel Mode with Initial RAM Disk, without Semihosting...
 
-# Load Address Misaligned in NuttX ROMFS
+# Misaligned Address in NuttX ROMFS
 
 TODO: Load Page Fault
 
