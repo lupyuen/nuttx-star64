@@ -3077,6 +3077,14 @@ void qemu_rv_kernel_mappings(void) {
 
 [(Because somehow `map_region` crashes when we try to map 0x84000000)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/arch/risc-v/src/qemu-rv/qemu_rv_mm_init.c#L280-L287)
 
+We check that the RAM Disk Memory is sufficient: [fs_romfsutil.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/fs/romfs/fs_romfsutil.c#L85-L105)
+
+```c
+static uint32_t romfs_devread32(struct romfs_mountpt_s *rm, int ndx) {
+  //// Stop if RAM Disk Memory is too small
+  DEBUGASSERT(&rm->rm_buffer[ndx] < __ramdisk_start + (size_t)__ramdisk_size); ////
+```
+
 Before making the above changes, here's the log for QEMU Kernel Mode with Semihosting...
 
 ```text
@@ -3220,9 +3228,46 @@ static uint32_t romfs_devread32(FAR struct romfs_mountpt_s *rm, int ndx) {
 }
 ```
 
-TODO: Why did it fail? See https://github.com/lupyuen2/wip-pinephone-nuttx/commit/18e5e75008a73e7bec70c10fd64c6f46d2e0bdb4
+TODO: Why did it fail?
 
 TODO: What happens when we read a misaligned address like 0x10000001?
+
+We revert to the [earlier version](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/18e5e75008a73e7bec70c10fd64c6f46d2e0bdb4): []()
+
+```c
+// Old version of romfs_devread32
+// https://github.com/lupyuen2/wip-pinephone-nuttx/commit/18e5e75008a73e7bec70c10fd64c6f46d2e0bdb4
+
+#ifndef CONFIG_ENDIAN_BIG
+// Convert the 32-bit big endian value to little endian
+static inline uint32_t romfs_swap32(uint32_t value)
+{
+  return ((((value) & 0x000000ff) << 24) | (((value) & 0x0000ff00) << 8) |
+          (((value) & 0x00ff0000) >>  8) | (((value) & 0xff000000) >> 24));
+}
+#endif
+
+// Read the big-endian 32-bit value from the mount device buffer
+static uint32_t romfs_devread32(struct romfs_mountpt_s *rm, int ndx)
+{
+  //// Stop if RAM Disk Memory is too small
+  DEBUGASSERT(&rm->rm_buffer[ndx] < __ramdisk_start + (size_t)__ramdisk_size); ////
+
+  /* Extract the value */
+  uint32_t value = *(FAR uint32_t *)&rm->rm_buffer[ndx];
+
+  /* Value is begin endian -- return the native host endian-ness. */
+#ifdef CONFIG_ENDIAN_BIG
+  return value;
+#else
+  return romfs_swap32(value);
+#endif
+}
+```
+
+And it boots OK yay!
+
+[See the Run Log]()
 
 # RAM Disk Address for RISC-V QEMU
 
