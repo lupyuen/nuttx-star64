@@ -3211,7 +3211,7 @@ static uint32_t romfs_devread32(FAR struct romfs_mountpt_s *rm, int ndx) {
 }
 ```
 
-TODO: Why did it fail?
+TODO: Why did it fail? See https://github.com/lupyuen2/wip-pinephone-nuttx/commit/18e5e75008a73e7bec70c10fd64c6f46d2e0bdb4
 
 TODO: What happens when we read a misaligned address like 0x10000001?
 
