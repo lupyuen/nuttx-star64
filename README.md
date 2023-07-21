@@ -3170,7 +3170,7 @@ Which is here in the NuttX Disassembly...
 ```text
 000000008001063a <romfs_devread32>:
 romfs_devread32():
-/Users/Luppy/riscv/nuttx/fs/romfs/fs_romfsutil.c:83
+nuttx/fs/romfs/fs_romfsutil.c:83
 {
   /* This should not read past the end of the sector since the directory
    * entries are aligned at 16-byte boundaries.
@@ -3178,13 +3178,13 @@ romfs_devread32():
 
   return ((((uint32_t)rm->rm_buffer[ndx]     & 0xff) << 24) |
     8001063a:	6d3c                	ld	a5,88(a0)
-/Users/Luppy/riscv/nuttx/fs/romfs/fs_romfsutil.c:84
+nuttx/fs/romfs/fs_romfsutil.c:84
           (((uint32_t)rm->rm_buffer[ndx + 1] & 0xff) << 16) |
     8001063c:	0015871b          	addiw	a4,a1,1
     80010640:	973e                	add	a4,a4,a5
     /* Crashes here */
     80010642:	00074503          	lbu	a0,0(a4)
-/Users/Luppy/riscv/nuttx/fs/romfs/fs_romfsutil.c:83
+nuttx/fs/romfs/fs_romfsutil.c:83
   return ((((uint32_t)rm->rm_buffer[ndx]     & 0xff) << 24) |
     80010646:	00b78733          	add	a4,a5,a1
     8001064a:	00074703          	lbu	a4,0(a4)
@@ -3192,11 +3192,28 @@ romfs_devread32():
 
 [`MCAUSE 4`](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#sec:mcause) is "Load address misaligned"
 
-`MTVAL` is `0x80f0` `7ee1`, the offending address. Looks misaligned.
+`MTVAL` is `0x80f0` `7ee1`, the offending address. (Looks misaligned, it's an Odd Address!)
 
 [`LBU` Instruction](https://web.archive.org/web/20230331004925/http://riscvbook.com/greencard-20181213.pdf) is "Load Byte Unsigned"
 
-TODO: Why?
+`romfs_devread32` comes from the NuttX ROMFS Driver: [fs_romfsutil.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64b/fs/romfs/fs_romfsutil.c#L66-L87)
+
+```c
+// Read the big-endian 32-bit value from the mount device buffer
+static uint32_t romfs_devread32(FAR struct romfs_mountpt_s *rm, int ndx) {
+  /* This should not read past the end of the sector since the directory
+   * entries are aligned at 16-byte boundaries.
+   */
+  return ((((uint32_t)rm->rm_buffer[ndx]     & 0xff) << 24) |
+          (((uint32_t)rm->rm_buffer[ndx + 1] & 0xff) << 16) |
+          (((uint32_t)rm->rm_buffer[ndx + 2] & 0xff) << 8) |
+           ((uint32_t)rm->rm_buffer[ndx + 3] & 0xff));
+}
+```
+
+TODO: Why did it fail?
+
+TODO: What happens when we read a misaligned address like 0x10000001?
 
 # RAM Disk Address for RISC-V QEMU
 
