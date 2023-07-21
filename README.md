@@ -2780,7 +2780,9 @@ And https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_s
 
 TODO
 
-Let's modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk instead of Semihosting. (So later we can replicate this on Star64)
+Let's modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk (instead of Semihosting).
+
+(So later we can replicate this on Star64)
 
 First we look at the Initial RAM Disk for LiteX Arty-A7...
 
