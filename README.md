@@ -3250,8 +3250,8 @@ static inline uint32_t romfs_swap32(uint32_t value)
 // Read the big-endian 32-bit value from the mount device buffer
 static uint32_t romfs_devread32(struct romfs_mountpt_s *rm, int ndx)
 {
-  //// Stop if RAM Disk Memory is too small
-  DEBUGASSERT(&rm->rm_buffer[ndx] < __ramdisk_start + (size_t)__ramdisk_size); ////
+  // Stop if RAM Disk Memory is too small
+  DEBUGASSERT(&rm->rm_buffer[ndx] < __ramdisk_start + (size_t)__ramdisk_size);
 
   /* Extract the value */
   uint32_t value = *(FAR uint32_t *)&rm->rm_buffer[ndx];
