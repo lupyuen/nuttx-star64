@@ -2535,7 +2535,7 @@ But NuttX crashes. Let's find out why...
 
 TODO
 
-From the Crash Dump above, `mcause` is 3, "Machine Software Interrupt".
+From the Crash Dump above, [`mcause`](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#sec:mcause) is 3: "Machine Software Interrupt".
 
 Exception Program Counter `0x4020` `0434` is in RISC-V Semihosting `smh_call`...
 
@@ -2965,21 +2965,9 @@ qemu-system-riscv64 \
   -nographic
 ```
 
-TODO: Check [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/include/board_memorymap.h#L34-L37)
 
-```c
-/* DDR start address */
-#define QEMURV_DDR_BASE   (0x80000000)
-#define QEMURV_DDR_SIZE   (0x40000000)
-```
 
-TODO: Check [qemu_rv_mm_init.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/arch/risc-v/src/qemu-rv/qemu_rv_mm_init.c#L43-L46)
-
-```c
-/* Map the whole I/O memory with vaddr = paddr mappings */
-#define MMU_IO_BASE     (0x00000000)
-#define MMU_IO_SIZE     (0x80000000)
-```
+[(See the Modified Files)](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/33)
 
 Here's the log...
 
@@ -3007,6 +2995,14 @@ elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
 NuttShell (NSH) NuttX-12.0.3
 nsh> nx_start: CPU0: Beginning Idle Loop
 ```
+
+_What is the RAM Address of the Initial RAM Disk in QEMU?_
+
+Initial RAM Disk is loaded by QEMU at `0x8400` `0000`...
+
+- ["RAM Disk Address for RISC-V QEMU"](https://github.com/lupyuen/nuttx-star64#ram-disk-address-for-risc-v-qemu)
+
+# Load Address Misaligned in NuttX ROMFS
 
 TODO: Load Page Fault
 
@@ -3109,8 +3105,6 @@ Probably crashed because we're using 16-bit alignment, instead of 32-bit alignme
 
 TODO: Fix to 32-bit alignment
 
-Let's find the RAM Address of the Initial RAM Disk...
-
 # RAM Disk Address for RISC-V QEMU
 
 _Can we enable logging for RISC-V QEMU?_
@@ -3186,27 +3180,21 @@ Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
 
-TODO: Any NuttX Boards using Supervisor Mode / OpenSBI?
+TODO: Check [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/include/board_memorymap.h#L34-L37)
 
-`litex` boots from OpenSBI to NuttX, but doesn't callback to OpenSBI:
+```c
+/* DDR start address */
+#define QEMURV_DDR_BASE   (0x80000000)
+#define QEMURV_DDR_SIZE   (0x40000000)
+```
 
-[litex_shead.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_shead.S#L56)
+TODO: Check [qemu_rv_mm_init.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/arch/risc-v/src/qemu-rv/qemu_rv_mm_init.c#L43-L46)
 
-[litex_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/litex/litex_start.c#L50)
-
-[litex/arty_a7/configs/knsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/litex/arty_a7/configs/knsh/defconfig#L34)
-
-`mpfs` runs a copy of OpenSBI inside NuttX:
-
-[mpfs_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_start.c#L52)
-
-[mpfs_shead.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_shead.S#L62)
-
-[mpfs_opensbi.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi.c#L602)
-
-[mpfs_opensbi_utils.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_opensbi_utils.S#L62-L107)
-
-[mpfs_ihc_sbi.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/mpfs/mpfs_ihc_sbi.c#L570)
+```c
+/* Map the whole I/O memory with vaddr = paddr mappings */
+#define MMU_IO_BASE     (0x00000000)
+#define MMU_IO_SIZE     (0x80000000)
+```
 
 TODO: RISC-V Exceptions [riscv_exception_common.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/common/riscv_exception_common.S#L77)
 
