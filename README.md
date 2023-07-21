@@ -3188,13 +3188,11 @@ romfs_devread32():
 
 [`MCAUSE 4`](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#sec:mcause) is "Load address misaligned"
 
-`MTVAL` is `80f0` `7ee1`, the offending address. Looks misaligned.
+`MTVAL` is `0x80f0` `7ee1`, the offending address. Looks misaligned.
 
-[`LBU`](https://web.archive.org/web/20230331004925/http://riscvbook.com/greencard-20181213.pdf) is "Load Byte Unsigned"
+[`LBU` Instruction](https://web.archive.org/web/20230331004925/http://riscvbook.com/greencard-20181213.pdf) is "Load Byte Unsigned"
 
-Probably crashed because we're using 16-bit alignment, instead of 32-bit alignment?
-
-TODO: Fix to 32-bit alignment
+TODO: Why?
 
 # RAM Disk Address for RISC-V QEMU
 
