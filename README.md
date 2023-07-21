@@ -3003,10 +3003,10 @@ MEMORY
 {
   ...
   /* Added RAM Disk */
-  ramdisk (rwx) : ORIGIN = 0x80800000, LENGTH = 4096K   /* w/ cache */
+  ramdisk (rwx) : ORIGIN = 0x80800000, LENGTH = 16M   /* w/ cache */
 
   /* This won't work, crashes with a Memory Mgmt Fault...
-     ramdisk (rwx) : ORIGIN = 0x84000000, LENGTH = 4096K */   /* w/ cache */
+     ramdisk (rwx) : ORIGIN = 0x84000000, LENGTH = 16M */   /* w/ cache */
 }
 
 /* Added RAM Disk */
@@ -3023,6 +3023,8 @@ __ramdisk_start = ORIGIN(ramdisk);
 __ramdisk_size = LENGTH(ramdisk);
 __ramdisk_end  = ORIGIN(ramdisk) + LENGTH(ramdisk);
 ```
+
+(We increased RAM Disk Memory from 4 MB to 16 MB because our RAM Disk is now bigger)
 
 At Startup, we mount the RAM Disk: [qemu_rv_appinit.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/src/qemu_rv_appinit.c#L83C1-L179C2)
 
