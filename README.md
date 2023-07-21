@@ -2533,9 +2533,7 @@ But NuttX crashes. Let's find out why...
 
 # QEMU Semihosting in NuttX
 
-TODO
-
-From the Crash Dump above, [`mcause`](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#sec:mcause) is 3: "Machine Software Interrupt".
+NuttX crashes while booting on Star64 JH7110 SBC. From the Crash Dump above, [`mcause`](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#sec:mcause) is 3: "Machine Software Interrupt".
 
 Exception Program Counter `0x4020` `0434` is in RISC-V Semihosting `smh_call`...
 
@@ -2577,9 +2575,7 @@ So NuttX crashes on Star64 because it's trying to read `/system/bin/init` via Se
 
 Let's disable Semihosting and replace by Initial RAM Disk and ROMFS.
 
-See https://github.com/apache/nuttx/issues/9501
-
-And https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_smp/index.html
+(See https://github.com/apache/nuttx/issues/9501)
 
 Here's the Crash Dump after we disabled Semihosting...
 
@@ -2669,9 +2665,11 @@ dump_task:       1     1 100 RR       Kthread --- Waiting Unlock     00000000000
 
 # NuttX Apps Filesystem
 
-TODO
+_Where is `/system/bin/init`? Why is it loaded by NuttX over Semihosting?_
 
-Where is `/system/bin/init`?
+`/system/bin/init` is needed for starting the NuttX Shell (and NuttX Apps) on Star64 JH7110 SBC.
+
+We see it in the NuttX Build Configuration...
 
 ```text
 → grep INIT .config
@@ -2690,7 +2688,7 @@ CONFIG_PATH_INITIAL="/system/bin"
 CONFIG_NSH_ARCHINIT=y
 ```
 
-Which means that `../apps` is mounted as `/system`.
+Which says that `../apps` is mounted as `/system`, via Semihosting HostFS.
 
 That's how `/system/bin/init` gets loaded over Semihosting...
 
@@ -2770,25 +2768,21 @@ host_call: nbr=0x2, parm=0x80209190, size=8
  /system/bin/init
 ```
 
-We need to replicate this with Initial RAM Disk and ROMFS.
+Semihosting won't work on Star64 SBC. Let's replace this with Initial RAM Disk and ROMFS...
 
-See https://github.com/apache/nuttx/issues/9501
-
-And https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_smp/index.html
+(See https://github.com/apache/nuttx/issues/9501)
 
 # Initial RAM Disk for LiteX Arty-A7
 
-TODO
-
 Let's modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk (instead of Semihosting).
 
-(So later we can replicate this on Star64)
+(So later we can replicate this on Star64 JH7110 SBC)
 
 First we look at the Initial RAM Disk for LiteX Arty-A7...
 
 [(About NuttX RAM Disks and ROM Disks)](https://cwiki.apache.org/confluence/plugins/servlet/mobile?contentId=139629548#content/view/139629548)
 
-To generate the RAM Disk: [VexRISCV_SMP Core](https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_smp/index.html):
+To generate the RAM Disk, we run this command: [VexRISCV_SMP Core](https://nuttx.apache.org/docs/latest/platforms/risc-v/litex/cores/vexriscv_smp/index.html)
 
 ```bash
 cd nuttx
@@ -2797,7 +2791,7 @@ genromfs -f romfs.img -d ../apps/bin -V "NuttXBootVol"
 
 [(About `genromfs`)](https://www.systutorials.com/docs/linux/man/8-genromfs/)
 
-LiteX Memory Map:
+LiteX Memory Map says where the RAM Disk is loaded...
 
 ```text
 "romfs.img":   "0x40C00000",
@@ -2805,7 +2799,7 @@ LiteX Memory Map:
 "opensbi.bin": "0x40f00000"
 ```
 
-LiteX Build Configuration: [knsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/litex/arty_a7/configs/knsh/defconfig#L34)
+This is the LiteX Build Configuration for mounting the RAM Disk: [knsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/boards/risc-v/litex/arty_a7/configs/knsh/defconfig#L34)
 
 ```bash
 CONFIG_BOARDCTL_ROMDISK=y
@@ -2827,14 +2821,14 @@ CONFIG_SYSTEM_NSH_PROGNAME="init"
 CONFIG_TESTING_GETPRIME=y
 ```
 
-From [NSH Start-Up Script](https://nuttx.apache.org/docs/latest/applications/nsh/nsh.html#nsh-start-up-script):
+According to [NSH Start-Up Script](https://nuttx.apache.org/docs/latest/applications/nsh/nsh.html#nsh-start-up-script):
 
 ```text
 CONFIG_DISABLE_MOUNTPOINT not set
 CONFIG_FS_ROMFS enabled
 ```
 
-LiteX Startup: [litex_appinit.c](https://github.com/apache/nuttx/blob/master/boards/risc-v/litex/arty_a7/src/litex_appinit.c#L76-L103)
+The RAM Disk is mounted at LiteX Startup: [litex_appinit.c](https://github.com/apache/nuttx/blob/master/boards/risc-v/litex/arty_a7/src/litex_appinit.c#L76-L103)
 
 ```c
 void board_late_initialize(void)
@@ -2925,13 +2919,11 @@ Let's do the same to NuttX for QEMU...
 
 # Modify NuttX QEMU to Load Initial RAM Disk
 
-TODO
-
 Now we can modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk instead of Semihosting.
 
-(So later we can replicate this on Star64)
+(So later we can replicate this on Star64 JH7110 SBC)
 
-We follow the steps from LiteX Arty-A7...
+We follow the steps from LiteX Arty-A7 (from the previous section)...
 
 We build NuttX QEMU in Kernel Mode: [Build Steps](https://github.com/lupyuen2/wip-pinephone-nuttx/tree/master/boards/risc-v/qemu-rv/rv-virt)
 
@@ -2948,7 +2940,7 @@ make import V=1
 popd
 ```
 
-To generate the Initial RAM Disk `initrd`...
+We generate the Initial RAM Disk `initrd`...
 
 ```bash
 cd nuttx
@@ -2957,7 +2949,7 @@ genromfs -f initrd -d ../apps/bin -V "NuttXBootVol"
 
 [(About `genromfs`)](https://www.systutorials.com/docs/linux/man/8-genromfs/)
 
-To load Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
+This is how we load the Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
 
 ```bash
 qemu-system-riscv64 \
@@ -3074,7 +3066,9 @@ void qemu_rv_kernel_mappings(void) {
   memcpy((void *)__ramdisk_start, (void *)0x84000000, (size_t)__ramdisk_size);
 ```
 
-Before making the above changes, here's the log for QEMU with Semihosting...
+[(Because somehow `map_region` crashes when we try to map 0x84000000)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/arch/risc-v/src/qemu-rv/qemu_rv_mm_init.c#L280-L287)
+
+Before making the above changes, here's the log for QEMU Kernel Mode with Semihosting...
 
 ```text
 + genromfs -f initrd -d ../apps/bin -V NuttXBootVol
@@ -3101,7 +3095,7 @@ NuttShell (NSH) NuttX-12.0.3
 nsh> nx_start: CPU0: Beginning Idle Loop
 ```
 
-Now we run it with Initial RAM Disk, without Semihosting...
+Now we run QEMU Kernel Mode with Initial RAM Disk, without Semihosting...
 
 # Load Address Misaligned in NuttX ROMFS
 
