@@ -172,10 +172,10 @@ Plus one unused partition (2 MB) at the top. (Partition Table)
 `boot` partition has 2 files...
 
 ```text
-$ ls -l /run/media/luppy/boot
+$ ls -l /run/media/$USER/boot
 total 14808
--rw-r--r-- 1 luppy luppy 15151064 Apr  6  2011 fitImage
--rw-r--r-- 1 luppy luppy     1562 Apr  6  2011 vf2_uEnv.txt
+-rw-r--r-- 1 15151064 Apr  6  2011 fitImage
+-rw-r--r-- 1     1562 Apr  6  2011 vf2_uEnv.txt
 ```
 
 `boot/vf2_uEnv.txt` contains the U-Boot Bootloader Configuration...
@@ -227,11 +227,11 @@ Yocto boots from the [Flat Image Tree (FIT)](https://u-boot.readthedocs.io/en/la
 Yocto's `root/boot` looks different from Armbian...
 
 ```text
-$ ls -l /run/media/luppy/root/boot
+$ ls -l /run/media/$USER/root/boot
 total 24376
-lrwxrwxrwx 1 root root       17 Mar  9  2018 fitImage -> fitImage-5.15.107
--rw-r--r-- 1 root root  9807808 Mar  9  2018 fitImage-5.15.107
--rw-r--r-- 1 root root 15151064 Mar  9  2018 fitImage-initramfs-5.15.107
+lrwxrwxrwx 1       17 Mar  9  2018 fitImage -> fitImage-5.15.107
+-rw-r--r-- 1  9807808 Mar  9  2018 fitImage-5.15.107
+-rw-r--r-- 1 15151064 Mar  9  2018 fitImage-initramfs-5.15.107
 ```
 
 # Boot NuttX with U-Boot Bootloader
@@ -2052,12 +2052,12 @@ int up_putc(int ch)
 {
   ...
 up_irq_save():
-/Users/Luppy/PinePhone/wip-nuttx/nuttx/include/arch/irq.h:675
+nuttx/include/arch/irq.h:675
   __asm__ __volatile__
     40204598:	47a1                	li	a5,8
     4020459a:	3007b7f3          	csrrc	a5,mstatus,a5
 up_putc():
-/Users/Luppy/PinePhone/wip-nuttx/nuttx/drivers/serial/uart_16550.c:1726
+nuttx/drivers/serial/uart_16550.c:1726
   flags = enter_critical_section();
 ```
 
@@ -2540,7 +2540,7 @@ Exception Program Counter `0x4020` `0434` is in RISC-V Semihosting `smh_call`...
 ```text
 0000000040200430 <smh_call>:
 smh_call():
-/Users/Luppy/PinePhone/wip-nuttx/nuttx/arch/risc-v/src/common/riscv_semihost.S:37
+nuttx/arch/risc-v/src/common/riscv_semihost.S:37
   .global smh_call
   .type smh_call @function
 
@@ -2548,14 +2548,14 @@ smh_call:
 
   slli zero, zero, 0x1f
     40200430:	01f01013          	slli	zero,zero,0x1f
-/Users/Luppy/PinePhone/wip-nuttx/nuttx/arch/risc-v/src/common/riscv_semihost.S:38
+nuttx/arch/risc-v/src/common/riscv_semihost.S:38
   ebreak
     //// Crashes here (Trigger semihosting breakpoint)
     40200434:	00100073          	ebreak
-/Users/Luppy/PinePhone/wip-nuttx/nuttx/arch/risc-v/src/common/riscv_semihost.S:39
+nuttx/arch/risc-v/src/common/riscv_semihost.S:39
   srai zero, zero, 0x7
     40200438:	40705013          	srai	zero,zero,0x7
-/Users/Luppy/PinePhone/wip-nuttx/nuttx/arch/risc-v/src/common/riscv_semihost.S:40
+nuttx/arch/risc-v/src/common/riscv_semihost.S:40
   ret
     4020043c:	00008067          	ret
     40200440:	0000                	unimp
@@ -2953,7 +2953,7 @@ Initial RAM Disk `initrd` is 7.9 MB...
 
 ```text
 → ls -l initrd
--rw-r--r--  1 Luppy  staff  7902208 Jul 21 13:41 initrd
+-rw-r--r--  1 7902208 Jul 21 13:41 initrd
 ```
 
 This is how we load the Initial RAM Disk on QEMU: [‘virt’ Generic Virtual Platform (virt)](https://www.qemu.org/docs/master/system/riscv/virt.html#running-linux-kernel)
