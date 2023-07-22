@@ -3193,6 +3193,8 @@ printenv bootcmd_tftp
 saveenv
 ```
 
+Update Build Configuration...
+
 - Board Selection > Enable boardctl() interface > Enable application space creation of ROM disks
 
 - RTOS Features > RTOS hooks > Custom board late initialization   
@@ -3207,7 +3209,7 @@ saveenv
 
 - Disable: File Systems > Host File System   
 
-- Manually delete...
+- Manually delete from `knsh64/defconfig`...
 
   ```text
   CONFIG_HOST_MACOS=y
