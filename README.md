@@ -3122,6 +3122,31 @@ And it boots OK on QEMU yay!
 
 TODO: Port RAM Disk to Star64
 
+Update Build Configuration...
+
+- Board Selection > Enable boardctl() interface > Enable application space creation of ROM disks
+
+- RTOS Features > RTOS hooks > Custom board late initialization   
+
+- File Systems > ROMFS file system 
+
+- RTOS Features > Tasks and Scheduling > Auto-mount init file system 
+
+  Set to `/system/bin`
+
+- Build Setup > Debug Options > File System Debug Features > File System Error, Warnings and Info Output
+
+- Disable: File Systems > Host File System   
+
+- Manually delete from `knsh64/defconfig`...
+
+  ```text
+  CONFIG_HOST_MACOS=y
+  CONFIG_INIT_MOUNT_DATA="fs=../apps"
+  CONFIG_INIT_MOUNT_FSTYPE="hostfs"
+  CONFIG_INIT_MOUNT_SOURCE=""
+  ```
+
 _What is the RAM Address of the Initial RAM Disk in Star64?_
 
 Initial RAM Disk is loaded by Star64's U-Boot Bootloader at `0x4610` `0000`...
@@ -3193,30 +3218,19 @@ printenv bootcmd_tftp
 saveenv
 ```
 
-Update Build Configuration...
+TODO
 
-- Board Selection > Enable boardctl() interface > Enable application space creation of ROM disks
+```text
+$ booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r}
+Wrong Ramdisk Image Format
+Ramdisk image is corrupt or invalid
 
-- RTOS Features > RTOS hooks > Custom board late initialization   
+## Boots OK with exact size
+$ booti ${kernel_addr_r} ${ramdisk_addr_r}:7930880 ${fdt_addr_r}
 
-- File Systems > ROMFS file system 
-
-- RTOS Features > Tasks and Scheduling > Auto-mount init file system 
-
-  Set to `/system/bin`
-
-- Build Setup > Debug Options > File System Debug Features > File System Error, Warnings and Info Output
-
-- Disable: File Systems > Host File System   
-
-- Manually delete from `knsh64/defconfig`...
-
-  ```text
-  CONFIG_HOST_MACOS=y
-  CONFIG_INIT_MOUNT_DATA="fs=../apps"
-  CONFIG_INIT_MOUNT_FSTYPE="hostfs"
-  CONFIG_INIT_MOUNT_SOURCE=""
-  ```
+## Assume max 16 MB
+$ booti ${kernel_addr_r} ${ramdisk_addr_r}:0x1000000 ${fdt_addr_r}
+```
 
 # RAM Disk Address for RISC-V QEMU
 
