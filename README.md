@@ -3147,6 +3147,52 @@ tftpboot ${ramdisk_addr_r} ${tftp_server}:initrd
 booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r}
 ```
 
+Which will change our U-Boot Boot Script to...
+
+```bash
+## Load the NuttX Image from TFTP Server
+## kernel_addr_r=0x40200000
+## tftp_server=192.168.x.x
+if tftpboot ${kernel_addr_r} ${tftp_server}:Image;
+then
+
+  ## Load the Device Tree from TFTP Server
+  ## fdt_addr_r=0x46000000
+  if tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb;
+  then
+
+    ## Set the RAM Address of Device Tree
+    ## fdt_addr_r=0x46000000
+    if fdt addr ${fdt_addr_r};
+    then
+
+      ## Load the Intial RAM Disk from TFTP Server
+      ## ramdisk_addr_r=0x46100000
+      if tftpboot ${ramdisk_addr_r} ${tftp_server}:initrd;
+      then
+
+        ## Boot the NuttX Image with the Initial RAM Disk and Device Tree
+        ## kernel_addr_r=0x40200000
+        ## ramdisk_addr_r=0x46100000
+        ## fdt_addr_r=0x46000000
+        booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r};
+      fi;
+    fi;
+  fi;
+fi
+```
+
+Which becomes...
+
+```bash
+## Add the Boot Command for TFTP
+setenv bootcmd_tftp 'if tftpboot ${kernel_addr_r} ${tftp_server}:Image ; then if tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb ; then if fdt addr ${fdt_addr_r} ; then if tftpboot ${ramdisk_addr_r} ${tftp_server}:initrd ; then booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r} ; fi ; fi ; fi ; fi'
+## Check that it's correct
+printenv bootcmd_tftp
+## Save it for future reboots
+saveenv
+```
+
 # RAM Disk Address for RISC-V QEMU
 
 _Can we enable logging for RISC-V QEMU?_
