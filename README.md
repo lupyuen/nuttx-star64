@@ -3120,11 +3120,68 @@ And it boots OK on QEMU yay!
 
 # Modify NuttX Star64 to Load Initial RAM Disk
 
-TODO: Port RAM Disk to Star64
+TODO
 
-TODO: Modified files
+Now we can modify NuttX for Star64 JH7110 RISC-V SBC to mount the Apps Filesystem from an Initial RAM Disk. (Instead of Semihosting)
 
-Update Build Configuration...
+We follow the steps from QEMU Kernel Mode's Initial RAM Disk. (See previous section)
+
+We build NuttX Star64 in Kernel Mode: [Build Steps](https://github.com/lupyuen2/wip-pinephone-nuttx/tree/master/boards/risc-v/qemu-rv/rv-virt)
+
+```bash
+## Build NuttX Star64 in Kernel Mode
+tools/configure.sh rv-virt:knsh64
+make V=1 -j7
+
+## Build Apps Filesystem
+make export V=1
+pushd ../apps
+./tools/mkimport.sh -z -x ../nuttx/nuttx-export-*.tar.gz
+make import V=1
+popd
+```
+
+We generate the Initial RAM Disk `initrd` and copy to TFTP Folder (for Network Booting)...
+
+```bash
+## Generate Initial RAM Disk
+cd nuttx
+genromfs -f initrd -d ../apps/bin -V "NuttXBootVol"
+
+## Copy NuttX Binary Image, Device Tree and Initial RAM Disk to TFTP Folder
+cp nuttx.bin $HOME/tftproot/Image
+cp ../jh7110-star64-pine64.dtb $HOME/tftproot
+cp initrd $HOME/tftproot
+```
+
+[(About `genromfs`)](https://www.systutorials.com/docs/linux/man/8-genromfs/)
+
+Initial RAM Disk `initrd` is 7.9 MB...
+
+```text
+→ ls -l initrd
+-rw-r--r--  1 7930880 Jul 21 13:41 initrd
+```
+
+Below are the files that we changed in NuttX for Star64 to load the Initial RAM Disk (instead of Semihosting)...
+
+- [Modified Files for Initial RAM Disk on Star64](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/34/files)
+
+These are the same changes that we made earlier for QEMU Kernel Mode's Initial RAM Disk.
+
+(For a detailed explanation of the modified files, see the previous section_
+
+Note that we copy the Initial RAM Disk from `0x4610` `0000` (instead of QEMU's `0x8400` `0000`): [qemu_rv_mm_init.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64c/arch/risc-v/src/qemu-rv/qemu_rv_mm_init.c#L271-L280)
+
+```c
+// Copy 0x46100000 to __ramdisk_start (__ramdisk_size bytes)
+// TODO: RAM Disk must not exceed __ramdisk_size bytes
+memcpy((void *)__ramdisk_start, (void *)0x46100000, (size_t)__ramdisk_size);
+```
+
+(Why `0x4610` `0000`? See `ramdisk_addr_r` below)
+
+This is how we updated the NuttX Build Configuration in `make menuconfig`...
 
 - Board Selection > Enable boardctl() interface > Enable application space creation of ROM disks
 
@@ -3140,7 +3197,7 @@ Update Build Configuration...
 
 - Disable: File Systems > Host File System   
 
-- Manually delete from `knsh64/defconfig`...
+- Manually delete from [`knsh64/defconfig`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64c/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig)...
 
   ```text
   CONFIG_HOST_MACOS=y
@@ -3148,6 +3205,8 @@ Update Build Configuration...
   CONFIG_INIT_MOUNT_FSTYPE="hostfs"
   CONFIG_INIT_MOUNT_SOURCE=""
   ```
+
+Updated Build Configuration: [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64c/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig)
 
 _What is the RAM Address of the Initial RAM Disk in Star64?_
 
@@ -3159,7 +3218,7 @@ ramdisk_addr_r=0x46100000
 
 [(Source)](https://lupyuen.github.io/articles/linux#u-boot-settings-for-star64)
 
-Which means that we need to add this TFTP Command to U-Boot Bootloader...
+Which means that we need to add these TFTP Commands to U-Boot Bootloader...
 
 ```bash
 ## Assume Initial RAM Disk is max 16 MB
@@ -3247,6 +3306,8 @@ $ booti ${kernel_addr_r} ${ramdisk_addr_r}:0x1000000 ${fdt_addr_r}
 ## Boots OK
 ```
 
+_Does the Initial RAM Disk work on Star64?_
+
 Star64 JH7110 boots OK with the Initial RAM Disk yay!
 
 ```text
@@ -3273,9 +3334,13 @@ up_exit: TCB=0x404088d0 exiting
 nx_start: CPU0: Beginning Idle Loop
 ```
 
-TODO: Boot from MicroSD with Initial RAM Disk
-
 TODO: Why no shell?
+
+TODO: Why `nx_start_application: ret=3`?
+
+TODO: Check User Address Space
+
+TODO: Boot from MicroSD with Initial RAM Disk
 
 # RAM Disk Address for RISC-V QEMU
 
