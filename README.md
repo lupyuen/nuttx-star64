@@ -3193,6 +3193,29 @@ printenv bootcmd_tftp
 saveenv
 ```
 
+- Board Selection > Enable boardctl() interface > Enable application space creation of ROM disks
+
+- RTOS Features > RTOS hooks > Custom board late initialization   
+
+- File Systems > ROMFS file system 
+
+- RTOS Features > Tasks and Scheduling > Auto-mount init file system 
+
+  Set to `/system/bin`
+
+- Build Setup > Debug Options > File System Debug Features > File System Error, Warnings and Info Output
+
+- Disable: File Systems > Host File System   
+
+- Manually delete...
+
+  ```text
+  CONFIG_HOST_MACOS=y
+  CONFIG_INIT_MOUNT_DATA="fs=../apps"
+  CONFIG_INIT_MOUNT_FSTYPE="hostfs"
+  CONFIG_INIT_MOUNT_SOURCE=""
+  ```
+
 # RAM Disk Address for RISC-V QEMU
 
 _Can we enable logging for RISC-V QEMU?_
