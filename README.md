@@ -3122,6 +3122,8 @@ And it boots OK on QEMU yay!
 
 TODO: Port RAM Disk to Star64
 
+TODO: Modified files
+
 Update Build Configuration...
 
 - Board Selection > Enable boardctl() interface > Enable application space creation of ROM disks
@@ -3160,6 +3162,13 @@ ramdisk_addr_r=0x46100000
 Which means that we need to add this TFTP Command to U-Boot Bootloader...
 
 ```bash
+## Assume Initial RAM Disk is max 16 MB
+setenv ramdisk_size 0x1000000
+## Check that it's correct
+printenv ramdisk_size
+## Save it for future reboots
+saveenv
+
 ## Load Kernel and Device Tree over TFTP
 tftpboot ${kernel_addr_r} ${tftp_server}:Image
 tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb
@@ -3168,8 +3177,8 @@ fdt addr ${fdt_addr_r}
 ## Added this: Load Initial RAM Disk over TFTP
 tftpboot ${ramdisk_addr_r} ${tftp_server}:initrd
 
-## Changed this: Replaced `-` by `ramdisk_addr_r`
-booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r}
+## Changed this: Replaced `-` by `ramdisk_addr_r:ramdisk_size`
+booti ${kernel_addr_r} ${ramdisk_addr_r}:${ramdisk_size} ${fdt_addr_r}
 ```
 
 Which will change our U-Boot Boot Script to...
@@ -3199,8 +3208,9 @@ then
         ## Boot the NuttX Image with the Initial RAM Disk and Device Tree
         ## kernel_addr_r=0x40200000
         ## ramdisk_addr_r=0x46100000
+        ## ramdisk_size=0x1000000
         ## fdt_addr_r=0x46000000
-        booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r};
+        booti ${kernel_addr_r} ${ramdisk_addr_r}:${ramdisk_size} ${fdt_addr_r};
       fi;
     fi;
   fi;
@@ -3210,29 +3220,34 @@ fi
 Which becomes...
 
 ```bash
+## Assume Initial RAM Disk is max 16 MB
+setenv ramdisk_size 0x1000000
+## Check that it's correct
+printenv ramdisk_size
+## Save it for future reboots
+saveenv
+
 ## Add the Boot Command for TFTP
-setenv bootcmd_tftp 'if tftpboot ${kernel_addr_r} ${tftp_server}:Image ; then if tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb ; then if fdt addr ${fdt_addr_r} ; then if tftpboot ${ramdisk_addr_r} ${tftp_server}:initrd ; then booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r} ; fi ; fi ; fi ; fi'
+setenv bootcmd_tftp 'if tftpboot ${kernel_addr_r} ${tftp_server}:Image ; then if tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb ; then if fdt addr ${fdt_addr_r} ; then if tftpboot ${ramdisk_addr_r} ${tftp_server}:initrd ; then booti ${kernel_addr_r} ${ramdisk_addr_r}:${ramdisk_size} ${fdt_addr_r} ; fi ; fi ; fi ; fi'
 ## Check that it's correct
 printenv bootcmd_tftp
 ## Save it for future reboots
 saveenv
 ```
 
-TODO
+_What happens if we omit the RAM Disk Size?_
 
 ```text
 $ booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r}
 Wrong Ramdisk Image Format
 Ramdisk image is corrupt or invalid
 
-## Boots OK with exact size
-$ booti ${kernel_addr_r} ${ramdisk_addr_r}:7930880 ${fdt_addr_r}
-
 ## Assume max 16 MB
 $ booti ${kernel_addr_r} ${ramdisk_addr_r}:0x1000000 ${fdt_addr_r}
+## Boots OK
 ```
 
-TODO
+Star64 JH7110 boots OK with the Initial RAM Disk yay!
 
 ```text
 StarFive # booti ${kernel_addr_r} ${ramdisk_addr_r}:0x1000000 ${fdt_addr_r}
@@ -3257,6 +3272,8 @@ nx_start_application: ret=3
 up_exit: TCB=0x404088d0 exiting
 nx_start: CPU0: Beginning Idle Loop
 ```
+
+TODO: Why no shell?
 
 # RAM Disk Address for RISC-V QEMU
 
