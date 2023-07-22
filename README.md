@@ -3273,6 +3273,8 @@ up_exit: TCB=0x404088d0 exiting
 nx_start: CPU0: Beginning Idle Loop
 ```
 
+TODO: Boot from MicroSD with Initial RAM Disk
+
 TODO: Why no shell?
 
 # RAM Disk Address for RISC-V QEMU
