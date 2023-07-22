@@ -3114,11 +3114,23 @@ nsh> nx_start: CPU0: Beginning Idle Loop
 
 Now we run QEMU Kernel Mode with Initial RAM Disk, without Semihosting...
 
-And it boots OK yay!
+And it boots OK on QEMU yay!
 
 [See the Run Log](https://gist.github.com/lupyuen/8afee5b07b61bb7f9f202f7f8c5e3ab3)
 
+# Modify NuttX Star64 to Load Initial RAM Disk
+
 TODO: Port RAM Disk to Star64
+
+_What is the RAM Address of the Initial RAM Disk in Star64?_
+
+Initial RAM Disk is loaded by Star64's U-Boot Bootloader at `0x4610` `0000`...
+
+```bash
+ramdisk_addr_r=0x46100000
+```
+
+[(Source)](https://lupyuen.github.io/articles/linux#u-boot-settings-for-star64)
 
 # RAM Disk Address for RISC-V QEMU
 
