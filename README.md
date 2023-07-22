@@ -3132,6 +3132,21 @@ ramdisk_addr_r=0x46100000
 
 [(Source)](https://lupyuen.github.io/articles/linux#u-boot-settings-for-star64)
 
+Which means that we need to add this TFTP Command to U-Boot Bootloader...
+
+```bash
+## Load Kernel and Device Tree over TFTP
+tftpboot ${kernel_addr_r} ${tftp_server}:Image
+tftpboot ${fdt_addr_r} ${tftp_server}:jh7110-star64-pine64.dtb
+fdt addr ${fdt_addr_r}
+
+## Added this: Load Initial RAM Disk over TFTP
+tftpboot ${ramdisk_addr_r} ${tftp_server}:initrd
+
+## Changed this: Replaced `-` by `ramdisk_addr_r`
+booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r}
+```
+
 # RAM Disk Address for RISC-V QEMU
 
 _Can we enable logging for RISC-V QEMU?_
