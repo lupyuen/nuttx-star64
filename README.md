@@ -3232,6 +3232,32 @@ $ booti ${kernel_addr_r} ${ramdisk_addr_r}:7930880 ${fdt_addr_r}
 $ booti ${kernel_addr_r} ${ramdisk_addr_r}:0x1000000 ${fdt_addr_r}
 ```
 
+TODO
+
+```text
+StarFive # booti ${kernel_addr_r} ${ramdisk_addr_r}:0x1000000 ${fdt_addr_r}
+## Flattened Device Tree blob at 46000000
+   Booting using the fdt blob at 0x46000000
+   Using Device Tree in place at 0000000046000000, end 000000004600f43a
+
+Starting kernel ...
+
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFHBCInx_start: Entry
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
+nx_start_application: ret=3
+up_exit: TCB=0x404088d0 exiting
+nx_start: CPU0: Beginning Idle Loop
+```
+
 # RAM Disk Address for RISC-V QEMU
 
 _Can we enable logging for RISC-V QEMU?_
