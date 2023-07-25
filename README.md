@@ -2925,6 +2925,8 @@ Now we can modify NuttX for QEMU to mount the Apps Filesystem from an Initial RA
 
 (So later we can replicate this on Star64 JH7110 SBC)
 
+![NuttX for QEMU will mount the Apps Filesystem from an Initial RAM Disk](https://lupyuen.github.io/images/semihost-qemu2.jpg)
+
 We follow the steps from LiteX Arty-A7 (from the previous section)...
 
 We build NuttX QEMU in Kernel Mode: [Build Steps](https://github.com/lupyuen2/wip-pinephone-nuttx/tree/master/boards/risc-v/qemu-rv/rv-virt)
