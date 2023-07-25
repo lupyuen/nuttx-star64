@@ -2577,6 +2577,8 @@ Let's disable Semihosting and replace by Initial RAM Disk and ROMFS.
 
 (See https://github.com/apache/nuttx/issues/9501)
 
+![QEMU Semihosting](https://lupyuen.github.io/images/semihost-qemu.jpg)
+
 Here's the Crash Dump after we disabled Semihosting...
 
 ```text
@@ -3123,6 +3125,8 @@ And it boots OK on QEMU yay!
 TODO
 
 Now we can modify NuttX for Star64 JH7110 RISC-V SBC to mount the Apps Filesystem from an Initial RAM Disk. (Instead of Semihosting)
+
+![NuttX for Star64 JH7110 RISC-V SBC will mount the Apps Filesystem from an Initial RAM Disk](https://lupyuen.github.io/images/semihost-star64.jpg)
 
 We follow the steps from QEMU Kernel Mode's Initial RAM Disk. (See previous section)
 
