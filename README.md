@@ -2577,7 +2577,7 @@ Let's disable Semihosting and replace by Initial RAM Disk and ROMFS.
 
 (See https://github.com/apache/nuttx/issues/9501)
 
-![QEMU Semihosting](https://lupyuen.github.io/images/semihost-qemu.jpg)
+![QEMU reads the Apps Filesystem over Semihosting](https://lupyuen.github.io/images/semihost-qemu.jpg)
 
 Here's the Crash Dump after we disabled Semihosting...
 
@@ -2698,6 +2698,8 @@ That's how `/system/bin/init` gets loaded over Semihosting...
 → ls ../apps/bin       
 getprime hello    init     sh
 ```
+
+![QEMU reads the Apps Filesystem over Semihosting](https://lupyuen.github.io/images/semihost-qemu.jpg)
 
 We traced the Semihosting Calls in QEMU Kernel Mode, here's what we observed...
 
