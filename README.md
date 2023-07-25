@@ -3126,9 +3126,7 @@ And it boots OK on QEMU yay!
 
 # Modify NuttX Star64 to Load Initial RAM Disk
 
-TODO
-
-Now we can modify NuttX for Star64 JH7110 RISC-V SBC to mount the Apps Filesystem from an Initial RAM Disk. (Instead of Semihosting)
+Finally we can modify NuttX for Star64 JH7110 RISC-V SBC to mount the Apps Filesystem from an Initial RAM Disk. (Instead of Semihosting)
 
 ![NuttX for Star64 JH7110 RISC-V SBC will mount the Apps Filesystem from an Initial RAM Disk](https://lupyuen.github.io/images/semihost-star64.jpg)
 
