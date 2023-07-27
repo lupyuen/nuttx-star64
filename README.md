@@ -3451,6 +3451,8 @@ Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 # TODO
 
+From Star64:
+
 ```text
 Starting kernel ...
 
@@ -3563,6 +3565,84 @@ binfmt_copyargv: args=2 argsize=23
 exec_module: Initialize the user heap (heapsize=528384)
 nx_start_application: ret=3
 up_exit: TCB=0x404088d0 exiting
+nx_start: CPU0: Beginning Idle Loop
+```
+
+From QEMU:
+
+```text
+elf_symvalue: Other: 00005d76+c0000000=c0005d76
+elf_read: Read 24 bytes from offset 1302760
+elf_symvalue: Other: 00005d4c+c0000000=c0005d4c
+elf_read: Read 24 bytes from offset 1302784
+elf_symvalue: Other: 00005d52+c0000000=c0005d52
+elf_read: Read 24 bytes from offset 1302808
+elf_symvalue: Other: 00005d56+c0000000=c0005d56
+elf_read: Read 24 bytes from offset 1951160
+elf_read: Read 24 bytes from offset 1770880
+elf_symvalue: Other: 00000000+c0101028=c0101028
+up_relocateadd: RISCV_64 at c0101028 [00000000] to sym=0x8020a850 st_value=c0101028
+load_absmodule: Successfully loaded module /system/bin/init
+binfmt_dumpmodule: Module:
+binfmt_dumpmodule:   entrypt:   0xc000004a
+binfmt_dumpmodule:   mapped:    0 size=0
+binfmt_dumpmodule:   alloc:     0 0 0
+binfmt_dumpmodule:   addrenv:   0x80209f60
+binfmt_dumpmodule:   stacksize: 2048
+binfmt_dumpmodule:   unload:    0
+exec_module: Executing /system/bin/init
+binfmt_copyargv: args=0 argsize=0
+binfmt_copyargv: args=2 argsize=23
+exec_module: Initialize the user heap (heapsize=528384)
+up_exit: TCB=0x802088d0 exiting
+
+NuttShell (NSH) NuttX-12.0.3
+nsh> nx_start: CPU0: Beginning Idle Loop
+```
+
+From Star64:
+
+```text
+mm_free: Freeing 0x4040aa10
+mm_free: Freeing 0x4040a9d0
+mm_free: Freeing 0x4040a990
+mm_free: Freeing 0x4040a950
+mm_free: Freeing 0x4040a890
+mm_malloc: Allocated 0x4040c810, size 6160
+mm_malloc: Allocated 0x4040a890, size 64
+mm_free: Freeing 0x4040c810
+mm_free: Freeing 0x4040a890
+mm_free: Freeing 0x40409290
+mm_free: Freeing 0x40409fa0
+mm_free: Freeing 0x40409250
+mm_malloc: Allocated 0x40409250, size 368
+mm_malloc: Allocated 0x404093c0, size 64
+mm_initialize: Heap: name=(null), start=0xc0200000 size=528384
+mm_addregion: [(null)] Region 1: base=0xc0200298 size=527712
+mm_malloc: Allocated 0x4040a890, size 3088
+mm_malloc: Allocated 0x4040b4a0, size 304
+mm_malloc: Allocated 0x4040b5d0, size 32
+mm_malloc: Allocated 0xc02002c0, size 624
+mm_malloc: Allocated 0xc0200530, size 32
+mm_malloc: Allocated 0xc0200550, size 32
+mm_malloc: Allocated 0xc0200570, size 32
+mm_malloc: Allocated 0x4040b5f0, size 32
+mm_malloc: Allocated 0x4040b610, size 160
+mm_malloc: Allocated 0xc0200590, size 19472
+mm_free: Freeing 0x404093c0
+nx_start_application: ret=3
+mm_free: Freeing 0x40408b90
+mm_free: Freeing 0x40408e80
+mm_free: Freeing 0x40408e60
+mm_free: Freeing 0x40408e40
+mm_free: Freeing 0x40408e20
+mm_free: Freeing 0x40408e00
+mm_free: Freeing 0x40408b70
+mm_free: Freeing 0x40408a40
+up_exit: TCB=0x404088d0 exiting
+mm_free: Freeing 0x4040c000
+mm_free: Freeing 0x404088d0
+mm_malloc: Allocated 0xc0200590, size 848
 nx_start: CPU0: Beginning Idle Loop
 ```
 
