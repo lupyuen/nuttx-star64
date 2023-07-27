@@ -3694,7 +3694,7 @@ NuttShell (NSH) NuttX-12.0.3
 nsh> nx_start: CPU0: Beginning Idle Loop
 ```
 
-From Star64:
+From Star64: No Console Output!
 
 ```text
 clk u5_dw_i2c_clk_core already disabled
@@ -3747,7 +3747,7 @@ up_exit: TCB=0x40409a60 exiting
 nx_start: CPU0: Beginning Idle Loop
 ```
 
-From QEMU:
+From QEMU: Console Output OK
 
 ```text
 ABCnx_start: Entry
