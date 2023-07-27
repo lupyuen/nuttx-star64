@@ -3798,6 +3798,34 @@ up_exit: TCB=0x80209a60 exiting
 nx_start: CPU0: Beginning Idle Loop
 ```
 
+From Star64: Console Output is stuck
+
+```text
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFHBCInx_start: Entry
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
+nx_start_application: ret=3
+up_exit: TCB=0x404088d0 exiting
+uart_write (0xc0200428):
+0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
+uart_write (0xc000a610):
+0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
+0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
+uart_write (0xc0015340):
+0000  6e 73 68 3e 20                                   nsh>            
+uart_write (0xc0015318):
+0000  1b 5b 4b                                         .[K             
+nx_start: CPU0: Beginning Idle Loop
+```
+
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
 
 TODO: Check [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/include/board_memorymap.h#L34-L37)
