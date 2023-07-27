@@ -2535,6 +2535,10 @@ But NuttX crashes. Let's find out why...
 
 # QEMU Semihosting in NuttX
 
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
+
 NuttX crashes while booting on Star64 JH7110 SBC. From the Crash Dump above, [`mcause`](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#sec:mcause) is 3: "Machine Software Interrupt".
 
 Exception Program Counter `0x4020` `0434` is in RISC-V Semihosting `smh_call`...
@@ -2669,6 +2673,10 @@ dump_task:       1     1 100 RR       Kthread --- Waiting Unlock     00000000000
 
 # NuttX Apps Filesystem
 
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
+
 _Where is `/system/bin/init`? Why is it loaded by NuttX over Semihosting?_
 
 `/system/bin/init` is needed for starting the NuttX Shell (and NuttX Apps) on Star64 JH7110 SBC.
@@ -2779,6 +2787,10 @@ Semihosting won't work on Star64 SBC. Let's replace this with Initial RAM Disk a
 (See https://github.com/apache/nuttx/issues/9501)
 
 # Initial RAM Disk for LiteX Arty-A7
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
 
 Let's modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk (instead of Semihosting).
 
@@ -2924,6 +2936,10 @@ Note that `__pgheap_size` needs to include `ramdisk`.
 Let's do the same to NuttX for QEMU...
 
 # Modify NuttX QEMU to Load Initial RAM Disk
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
 
 Now we can modify NuttX for QEMU to mount the Apps Filesystem from an Initial RAM Disk instead of Semihosting.
 
@@ -3127,6 +3143,10 @@ And it boots OK on QEMU yay!
 [See the Run Log](https://gist.github.com/lupyuen/8afee5b07b61bb7f9f202f7f8c5e3ab3)
 
 # Modify NuttX Star64 to Load Initial RAM Disk
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
 
 Finally we can modify NuttX for Star64 JH7110 RISC-V SBC to mount the Apps Filesystem from an Initial RAM Disk. (Instead of Semihosting)
 
@@ -3352,6 +3372,10 @@ TODO: Boot from MicroSD with Initial RAM Disk
 
 # RAM Disk Address for RISC-V QEMU
 
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
+
 _Can we enable logging for RISC-V QEMU?_
 
 Yep we use the `-trace "*"` option like this...
@@ -3393,6 +3417,10 @@ So Initial RAM Disk is loaded at `0x8400` `0000`
 Also we see that Kernel is loaded at `0x8000` `0000`, Device Tree at `0x8700` `0000`.
 
 # Device Tree for RISC-V QEMU
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
 
 To dump the Device Tree for QEMU RISC-V, we specify `dumpdtb`...
 
