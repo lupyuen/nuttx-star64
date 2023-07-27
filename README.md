@@ -3646,6 +3646,54 @@ mm_malloc: Allocated 0xc0200590, size 848
 nx_start: CPU0: Beginning Idle Loop
 ```
 
+From QEMU:
+
+```text
+mm_free: Freeing 0x8020aa80
+mm_free: Freeing 0x8020aa40
+mm_free: Freeing 0x8020a9c0
+mm_free: Freeing 0x8020a980
+mm_free: Freeing 0x8020a940
+mm_free: Freeing 0x8020a900
+mm_free: Freeing 0x8020a840
+mm_malloc: Allocated 0x8020c810, size 6160
+mm_malloc: Allocated 0x8020a840, size 64
+mm_free: Freeing 0x8020c810
+mm_free: Freeing 0x8020a840
+mm_free: Freeing 0x80209290
+mm_free: Freeing 0x8020a810
+mm_free: Freeing 0x80209250
+mm_malloc: Allocated 0x80209250, size 368
+mm_malloc: Allocated 0x802093c0, size 64
+mm_initialize: Heap: name=(null), start=0xc0200000 size=528384
+mm_addregion: [(null)] Region 1: base=0xc0200298 size=527712
+mm_malloc: Allocated 0x8020a810, size 3088
+mm_malloc: Allocated 0x80209400, size 304
+mm_malloc: Allocated 0x80209fe0, size 32
+mm_malloc: Allocated 0xc02002c0, size 624
+mm_malloc: Allocated 0xc0200530, size 32
+mm_malloc: Allocated 0xc0200550, size 32
+mm_malloc: Allocated 0xc0200570, size 32
+mm_malloc: Allocated 0x80209530, size 32
+mm_malloc: Allocated 0x80209550, size 160
+mm_malloc: Allocated 0xc0200590, size 19472
+mm_free: Freeing 0x802093c0
+mm_free: Freeing 0x80208b90
+mm_free: Freeing 0x80208e80
+mm_free: Freeing 0x80208e60
+mm_free: Freeing 0x80208e40
+mm_free: Freeing 0x80208e20
+mm_free: Freeing 0x80208e00
+mm_free: Freeing 0x80208b70
+mm_free: Freeing 0x80208a40
+up_exit: TCB=0x802088d0 exiting
+mm_free: Freeing 0x8020c000
+mm_free: Freeing 0x802088d0
+
+NuttShell (NSH) NuttX-12.0.3
+nsh> nx_start: CPU0: Beginning Idle Loop
+```
+
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
 
 TODO: Check [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/include/board_memorymap.h#L34-L37)
