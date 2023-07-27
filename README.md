@@ -3451,6 +3451,121 @@ Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 # TODO
 
+```text
+Starting kernel ...
+
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFHBCqemu_rv_kernel_mappings: map I/O regions
+qemu_rv_kernel_mappings: map kernel text
+qemu_rv_kernel_mappings: map kernel data
+qemu_rv_kernel_mappings: connect the L1 and L2 page tables
+qemu_rv_kernel_mappings: map the page pool
+qemu_rv_mm_init: mmu_enable: satp=1077956608
+Inx_start: Entry
+elf_initialize: Registering ELF
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+load_absmodule: Loading /system/bin/init
+elf_loadbinary: Loading file: /system/bin/init
+elf_init: filename: /system/bin/init loadinfo: 0x4040c638
+elf_read: Read 64 bytes from offset 0
+elf_dumploadinfo: LOAD_INFO:
+elf_dumploadinfo:   textalloc:    00000000
+elf_dumploadinfo:   dataalloc:    00000000
+elf_dumploadinfo:   textsize:     0
+elf_dumploadinfo:   datasize:     0
+elf_dumploadinfo:   textalign:    0
+elf_dumploadinfo:   dataalign:    0
+elf_dumploadinfo:   filelen:      3289528
+elf_dumploadinfo:   symtabidx:    0
+elf_dumploadinfo:   strtabidx:    0
+elf_dumploadinfo: ELF Header:
+elf_dumploadinfo:   e_ident:      7f 45 4c 46
+elf_dumploadinfo:   e_type:       0001
+elf_dumploadinfo:   e_machine:    00f3
+elf_dumploadinfo:   e_version:    00000001
+elf_dumploadinfo:   e_entry:      0000004a
+elf_dumploadinfo:   e_phoff:      0
+elf_dumploadinfo:   e_shoff:      3286264
+elf_dumploadinfo:   e_flags:      00000001
+elf_dumploadinfo:   e_ehsize:     64
+elf_dumploadinfo:   e_phentsize:  0
+elf_dumploadinfo:   e_phnum:      0
+elf_dumploadinfo:   e_shentsize:  64
+elf_dumploadinfo:   e_shnum:      51
+elf_dumploadinfo:   e_shstrndx:   50
+elf_load: loadinfo: 0x4040c638
+elf_read: Read 3264 bytes from offset 3286264
+elf_loadfile: Loaded sections:
+elf_read: Read 39900 bytes from offset 64
+elf_loadfile: 1. 00000000->c0000000
+elf_read: Read 45804 bytes from offset 39968
+elf_loadfile: 3. 00009be0->c0009be0
+elf_read: Read 9 bytes from offset 85776
+elf_loadfile: 5. 00000000->c0014ed0
+elf_read: Read 3 bytes from offset 85792
+elf_loadfile: 6. 00000000->c0014ee0
+elf_read: Read 3 bytes from offset 85800
+elf_loadfile: 7. 00000000->c0014ee8
+elf_read: Read 2 bytes from offset 85808
+elf_loadfile: 8. 00000000->c0014ef0
+elf_read: Read 2 bytes from offset 85816
+...
+elf_read: Read 24 bytes from offset 1313160
+elf_symvalue: Other: 00005c88+c0000000=c0005c88
+elf_read: Read 24 bytes from offset 1313352
+elf_symvalue: Other: 00005c82+c0000000=c0005c82
+elf_read: Read 24 bytes from offset 1313376
+elf_symvalue: Other: 00005c72+c0000000=c0005c72
+elf_read: Read 24 bytes from offset 1313400
+elf_symvalue: Other: 00005c60+c0000000=c0005c60
+elf_read: Read 24 bytes from offset 1313424
+elf_symvalue: Other: 00005c78+c0000000=c0005c78
+elf_read: Read 24 bytes from offset 1313448
+elf_symvalue: Other: 00005c66+c0000000=c0005c66
+elf_read: Read 24 bytes from offset 1313472
+elf_symvalue: Other: 00005c6c+c0000000=c0005c6c
+elf_read: Read 24 bytes from offset 1313496
+elf_symvalue: Other: 00005d70+c0000000=c0005d70
+elf_read: Read 24 bytes from offset 1312896
+elf_symvalue: Other: 000019d0+c0009be0=c000b5b0
+elf_read: Read 24 bytes from offset 1313232
+elf_symvalue: Other: 00005d5a+c0000000=c0005d5a
+elf_read: Read 24 bytes from offset 1313520
+elf_symvalue: Other: 00005cf8+c0000000=c0005cf8
+elf_read: Read 24 bytes from offset 1313544
+elf_symvalue: Other: 00005d76+c0000000=c0005d76
+elf_read: Read 24 bytes from offset 1313568
+elf_symvalue: Other: 00005d4c+c0000000=c0005d4c
+elf_read: Read 24 bytes from offset 1313592
+elf_symvalue: Other: 00005d52+c0000000=c0005d52
+elf_read: Read 24 bytes from offset 1313616
+elf_symvalue: Other: 00005d56+c0000000=c0005d56
+elf_read: Read 24 bytes from offset 1961968
+elf_read: Read 24 bytes from offset 1781688
+elf_symvalue: Other: 00000000+c0101028=c0101028
+up_relocateadd: RISCV_64 at c0101028 [00000000] to sym=0x4040a850 st_value=c0101028
+load_absmodule: Successfully loaded module /system/bin/init
+binfmt_dumpmodule: Module:
+binfmt_dumpmodule:   entrypt:   0xc000004a
+binfmt_dumpmodule:   mapped:    0 size=0
+binfmt_dumpmodule:   alloc:     0 0 0
+binfmt_dumpmodule:   addrenv:   0x40409f60
+binfmt_dumpmodule:   stacksize: 2048
+binfmt_dumpmodule:   unload:    0
+exec_module: Executing /system/bin/init
+binfmt_copyargv: args=0 argsize=0
+binfmt_copyargv: args=2 argsize=23
+exec_module: Initialize the user heap (heapsize=528384)
+nx_start_application: ret=3
+up_exit: TCB=0x404088d0 exiting
+nx_start: CPU0: Beginning Idle Loop
+```
+
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
 
 TODO: Check [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/include/board_memorymap.h#L34-L37)
