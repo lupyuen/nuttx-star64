@@ -3177,7 +3177,7 @@ Below are the files that we changed in NuttX for Star64 to load the Initial RAM 
 
 These are the same changes that we made earlier for QEMU Kernel Mode's Initial RAM Disk.
 
-(For a detailed explanation of the modified files, see the previous section_
+(For a detailed explanation of the modified files, see the previous section)
 
 Note that we copy the Initial RAM Disk from `0x4610` `0000` (instead of QEMU's `0x8400` `0000`): [qemu_rv_mm_init.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64c/arch/risc-v/src/qemu-rv/qemu_rv_mm_init.c#L271-L280)
 
