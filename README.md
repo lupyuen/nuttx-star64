@@ -3462,6 +3462,18 @@ RISCV_IRQ_EXT = RISCV_IRQ_SEXT = 16 + 9
 
 [JH7110 Interrupt Connections](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html) says that Global Interrupts are 0 to 126 (127 total interrupts)
 
+Check the Device Tree...
+
+```text
+dtc \
+  -o jh7110-visionfive-v2.dts \
+  -O dts \
+  -I dtb \
+  jh7110-visionfive-v2.dtb
+```
+
+Which produces [jh7110-visionfive-v2.dts]()
+
 [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf)
 
 • Software Interrupt, Machine Mode, Interrupt ID: 3
