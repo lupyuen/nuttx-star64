@@ -3565,6 +3565,8 @@ https://lupyuen.github.io/articles/privilege#other-risc-v-ports-of-nuttx
 
 TODO: Check Linux Boot Code
 
+https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S
+
 From [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf):
 
 - Software Interrupt, Machine Mode, Interrupt ID: 3
@@ -3593,6 +3595,15 @@ From NuttX SBI: [nuttsbi/sbi_start.c](https://github.com/lupyuen2/wip-pinephone-
 
   reg = (MIP_SSIP | MIP_STIP | MIP_SEIP);
   WRITE_CSR(mideleg, reg);
+
+  /* Delegate exceptions (all of them) */
+
+  reg = ((1 << RISCV_IRQ_IAMISALIGNED) |
+         (1 << RISCV_IRQ_INSTRUCTIONPF) |
+         (1 << RISCV_IRQ_LOADPF) |
+         (1 << RISCV_IRQ_STOREPF) |
+         (1 << RISCV_IRQ_ECALLU));
+  WRITE_CSR(medeleg, reg);
 ```
 
 SSIP: Supervisor Software Interrupt
@@ -3602,6 +3613,10 @@ STIP: Supervisor Timer Interrupt
 SEIP: Supervisor External Interrupt
 
 TODO: Can OpenSBI handle mideleg?
+
+TODO: Linux SBI Interface
+
+https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/sbi.c
 
 # RAM Disk Address for RISC-V QEMU
 
