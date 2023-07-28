@@ -3912,6 +3912,8 @@ AAAD#nx_start: CPU0: Beginning Idle Loop
 
 TODO: Check [PLIC Code](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L45-L214) based on [PLIC Spec](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc)
 
+TODO: What is a PLIC Context? Why context is 0 for Machine Mode, 1 for Supervisor Mode?
+
 According to [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
 
 ```text
