@@ -3423,11 +3423,13 @@ RISCV_IRQ_EXT = RISCV_IRQ_SEXT = 16 + 9
 From Star64: [`uart_txready`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/serial_io.c#L63-L68) is NOT Ready, that's why it doesn't call [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L1542-L1556)
 
 ```text
-123067DFHBCInx_start: Entry
+123067BCnx_start: Entry
 up_enable_irq: irq=17
+up_enable_irq: RISCV_IRQ_SOFT=17
 uart_register: Registering /dev/console
 uart_register: Registering /dev/ttyS0
-up_enable_irq: irq=32
+up_enable_irq: irq=57
+up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
 work_start_lowpri: Starting low-priority kernel worker thread(s)
 board_late_initialize: 
 nx_start_application: Starting init task: /system/bin/init
