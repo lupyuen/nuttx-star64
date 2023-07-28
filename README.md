@@ -3910,7 +3910,21 @@ AAAAAD#uart_write (0xc0015310):
 AAAD#nx_start: CPU0: Beginning Idle Loop
 ```
 
-[PLIC Spec](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc)
+TODO: Check [PLIC Code](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L45-L214) based on [PLIC Spec](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc)
+
+According to [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
+
+```text
+0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
+0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
+```
+
+Which is correct: [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L30-L32)
+
+```c
+#define QEMU_RV_CLINT_BASE   0x02000000
+#define QEMU_RV_PLIC_BASE    0x0c000000
+```
 
 From [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf):
 
