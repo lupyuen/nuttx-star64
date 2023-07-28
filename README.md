@@ -3416,6 +3416,10 @@ AAADEF[FKnx_start: CPU0: Beginning Idle Loop
 
   `F`: [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L1542-L1556)
 
+QEMU UART is IRQ 10, which becomes NuttX IRQ 35 (10 + 25).
+
+RISCV_IRQ_EXT = RISCV_IRQ_SEXT = 16 + 9
+
 From Star64: [`uart_txready`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/serial_io.c#L63-L68) is NOT Ready, that's why it doesn't call [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L1542-L1556)
 
 ```text
@@ -3449,6 +3453,10 @@ AAADnx_start: CPU0: Beginning Idle Loop
   [(See the __JH7110 U74 Memory Map__)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html)
 
 No response to UART Input.
+
+Star64 UART is RISC-V IRQ 32, which becomes NuttX IRQ 57 (32 + 25).
+
+RISCV_IRQ_EXT = RISCV_IRQ_SEXT = 16 + 9
 
 [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf)
 
