@@ -3810,6 +3810,36 @@ Star64 UART is [RISC-V IRQ 32](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH
 CONFIG_16550_UART0_IRQ=57
 ```
 
+Check the Device Tree...
+
+```text
+dtc \
+  -o jh7110-visionfive-v2.dts \
+  -O dts \
+  -I dtb \
+  jh7110-visionfive-v2.dtb
+```
+
+Which produces [jh7110-visionfive-v2.dts](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dts)
+
+UART0 is indeed IRQ 32: [jh7110-visionfive-v2.dts](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dts#L619-L631)
+
+```text
+serial@10000000 {
+  compatible = "snps,dw-apb-uart";
+  reg = <0x00 0x10000000 0x00 0x10000>;
+  reg-io-width = <0x04>;
+  reg-shift = <0x02>;
+  clocks = <0x08 0x92 0x08 0x91>;
+  clock-names = "baudclk\0apb_pclk";
+  resets = <0x21 0x53 0x21 0x54>;
+  interrupts = <0x20>;
+  status = "okay";
+  pinctrl-names = "default";
+  pinctrl-0 = <0x24>;
+};
+```
+
 [JH7110 Interrupt Connections](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html) says that Global Interrupts are 0 to 126 (127 total interrupts)
 
 From [qemu-rv/irq.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/include/qemu-rv/irq.h#L31-L40):
@@ -3841,78 +3871,27 @@ void up_irqinitialize(void)
     }
 ```
 
-Check the Device Tree...
+Needs fixing: [qemu_rv_irq.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L143-L198)
 
-```text
-dtc \
-  -o jh7110-visionfive-v2.dts \
-  -O dts \
-  -I dtb \
-  jh7110-visionfive-v2.dtb
+```c
+void up_enable_irq(int irq)
+{
+  ...
+  else if (irq > RISCV_IRQ_EXT)
+    {
+      extirq = irq - RISCV_IRQ_EXT;
+      _info("extirq=%d, RISCV_IRQ_EXT=%d\n", extirq, RISCV_IRQ_EXT);////
+
+      /* Set enable bit for the irq */
+
+      if (0 <= extirq && extirq <= 63) ////TODO: Why 63?
+        {
+          modifyreg32(QEMU_RV_PLIC_ENABLE1 + (4 * (extirq / 32)),
+                      0, 1 << (extirq % 32));
+        }
 ```
 
-Which produces [jh7110-visionfive-v2.dts](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dts)
-
-UART0 is indeed IRQ 32: [jh7110-visionfive-v2.dts](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dts#L619-L631)
-
-```text
-serial@10000000 {
-  compatible = "snps,dw-apb-uart";
-  reg = <0x00 0x10000000 0x00 0x10000>;
-  reg-io-width = <0x04>;
-  reg-shift = <0x02>;
-  clocks = <0x08 0x92 0x08 0x91>;
-  clock-names = "baudclk\0apb_pclk";
-  resets = <0x21 0x53 0x21 0x54>;
-  interrupts = <0x20>;
-  status = "okay";
-  pinctrl-names = "default";
-  pinctrl-0 = <0x24>;
-};
-```
-
-Try [UART0 RISC-V IRQ 27](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html), which is NuttX IRQ 52.
-
-```bash
-CONFIG_16550_UART0_IRQ=52
-```
-
-Also no response...
-
-```text
-clk u5_dw_i2c_clk_core already disabled
-clk u5_dw_i2c_clk_apb already disabled
-123067BCnx_start: Entry
-up_irq_enable: 
-up_enable_irq: irq=17
-up_enable_irq: RISCV_IRQ_SOFT=17
-uart_register: Registering /dev/console
-uart_register: Registering /dev/ttyS0
-up_enable_irq: irq=52
-up_enable_irq: extirq=27, RISCV_IRQ_EXT=25
-work_start_lowpri: Starting low-priority kernel worker thread(s)
-board_late_initialize: 
-nx_start_application: Starting init task: /system/bin/init
-elf_symname: Symbol has no name
-elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
-elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
-nx_start_application: ret=3
-up_exit: TCB=0x404088d0 exiting
-###############uart_write (0xc0200428):
-0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
-AAAAAAAAAD#####uart_write (0xc000a610):
-0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
-0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
-AAAAAAAAAAAAAAAuart_write (0xc0015338):
-0000  6e 73 68 3e 20                                   nsh>            
-AAAAAD#uart_write (0xc0015310):
-0000  1b 5b 4b                                         .[K             
-AAAD#nx_start: CPU0: Beginning Idle Loop
-```
-
-TODO: Check [PLIC Code](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L45-L214) based on [PLIC Spec](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc)
-
-TODO: What is a PLIC Context? Why context is 0 for Machine Mode, 1 for Supervisor Mode?
+We update the [PLIC Code](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L45-L214) based on [PLIC Spec](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc)
 
 From [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf):
 
@@ -3941,8 +3920,11 @@ Page 193: PLIC Memory Map
 | 0x0C20_8000 | 4B | RW | Hart 4 S-Mode priority threshold
 | 0x0C20_8004 | 4B | RW | Hart 4 S-Mode claim/complete
 
+From the above doc...
 - Hart 0: S7 Core
 - Harts 1 to 4: U7 Cores
+
+According to OpenSBI, we are now running on Hart 1. (NuttX thinks it's Hart 0)
 
 According to [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
 
@@ -3956,6 +3938,37 @@ Which is correct: [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephon
 ```c
 #define QEMU_RV_CLINT_BASE   0x02000000
 #define QEMU_RV_PLIC_BASE    0x0c000000
+```
+
+We fix the PLIC Addresses: [qemu_rv_plic.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/hardware/qemu_rv_plic.h#L33-L59)
+
+```c
+// | 0x0C00_0004 | 4B | RW | Source 1 priority
+#define QEMU_RV_PLIC_PRIORITY    (QEMU_RV_PLIC_BASE + 0x000000)
+
+// | 0x0C00_1000 | 4B | RO | Start of pending array
+#define QEMU_RV_PLIC_PENDING1    (QEMU_RV_PLIC_BASE + 0x001000)
+
+// Previously:
+// #define QEMU_RV_PLIC_PRIORITY    (QEMU_RV_PLIC_BASE + 0x000000)
+// #define QEMU_RV_PLIC_PENDING1    (QEMU_RV_PLIC_BASE + 0x001000)
+
+#ifdef CONFIG_ARCH_USE_S_MODE
+// | 0x0C00_2100 | 4B | RW | Start Hart 1 S-Mode interrupt enables
+#  define QEMU_RV_PLIC_ENABLE1   (QEMU_RV_PLIC_BASE + 0x002100)
+#  define QEMU_RV_PLIC_ENABLE2   (QEMU_RV_PLIC_BASE + 0x002104)
+
+// | 0x0C20_2000 | 4B | RW | Hart 1 S-Mode priority threshold
+#  define QEMU_RV_PLIC_THRESHOLD (QEMU_RV_PLIC_BASE + 0x202000)
+
+// | 0x0C20_2004 | 4B | RW | Hart 1 S-Mode claim/complete 
+#  define QEMU_RV_PLIC_CLAIM     (QEMU_RV_PLIC_BASE + 0x202004)
+
+// Previously:
+// #  define QEMU_RV_PLIC_ENABLE1   (QEMU_RV_PLIC_BASE + 0x002080)
+// #  define QEMU_RV_PLIC_ENABLE2   (QEMU_RV_PLIC_BASE + 0x002084)
+// #  define QEMU_RV_PLIC_THRESHOLD (QEMU_RV_PLIC_BASE + 0x201000)
+// #  define QEMU_RV_PLIC_CLAIM     (QEMU_RV_PLIC_BASE + 0x201004)
 ```
 
 From [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf):
@@ -3979,14 +3992,14 @@ if a CPU is in Machine mode. While operating in Supervisor mode, a CPU does not 
 
 [What is mideleg](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#machine-trap-delegation-registers-medeleg-and-mideleg)
 
-From [OpenSBI Log](https://lupyuen.github.io/articles/linux#appendix-opensbi-log-for-star64):
+From [OpenSBI Log](https://lupyuen.github.io/articles/linux#appendix-opensbi-log-for-star64): MIDELEG and MEDELEG are...
 
 ```bash
 Boot HART MIDELEG: 0x0000000000000222
 Boot HART MEDELEG: 0x000000000000b109
 ```
 
-From [csr.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/include/csr.h#L343-L346):
+Which have the following bits: [csr.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/include/csr.h#L343-L346):
 
 ```c
 #define MIP_SSIP            (0x1 << 1)
@@ -4020,6 +4033,53 @@ Which is same as NuttX SBI: [nuttsbi/sbi_start.c](https://github.com/lupyuen2/wi
   WRITE_CSR(medeleg, reg);
 ```
 
+From [JH7110 Interrupt Connections](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html): `u0_uart`	is at `global_interrupts[27]`
+
+Which is correct because [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf) (Page 198) says that `global_interrupts[0]` is PLIC Interrupt ID 5.
+
+Thus `u0_uart`(IRQ 32) is at `global_interrupts[27]`.
+
+IRQ 57 is now OK yay! But it's not triggered by UART Input. Why?
+
+```text
+123067BCnx_start: Entry
+up_irq_enable: 
+up_enable_irq: irq=17
+up_enable_irq: RISCV_IRQ_SOFT=17
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+up_enable_irq: irq=57
+up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
+$%^&riscv_doirq: irq=57
+#*$%^&riscv_doirq: irq=57
+#*$%^&riscv_doirq: irq=57
+#*$%^&riscv_doirq: irq=57
+#*$%^&riscv_doirq: irq=57
+...
+#*$%^&riscv_doirq: irq=57
+#*$%^&riscv_doirq: irq=57
+#*$%^&riscv_doirq: irq=57
+#*$%^&riscv_doirq: irq=57
+#*$%^&nx_start: CPU0: Beginning Idle Loop
+```
+
+TODO: Check why no UART Output
+
+```text
+123067BCnx_start: Entry
+up_irq_enable: 
+up_enable_irq: irq=17
+up_enable_irq: RISCV_IRQ_SOFT=17
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+up_enable_irq: irq=57
+up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
+```
+
+TODO
+
+
+
 TODO: Check PolarFire Icicle 
 
 https://lupyuen.github.io/articles/privilege#other-risc-v-ports-of-nuttx
@@ -4035,461 +4095,6 @@ https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/sbi.c
 TODO: Handle Machine Exception
 
 https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_exception_m.S#L64
-
-IRQ 57 OK yay!
-
-```text
-123067BCnx_start: Entry
-up_irq_enable: 
-up_enable_irq: irq=17
-up_enable_irq: RISCV_IRQ_SOFT=17
-uart_register: Registering /dev/console
-uart_register: Registering /dev/ttyS0
-up_enable_irq: irq=57
-up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
-```
-
-TODO
-
-```text
-123067BCnx_start: Entry
-up_irq_enable: 
-up_enable_irq: irq=17
-up_enable_irq: RISCV_IRQ_SOFT=17
-uart_register: Registering /dev/console
-uart_register: Registering /dev/ttyS0
-up_enable_irq: irq=57
-up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
-$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*w$%^&riscv_doirq: irq=57
-#*o$%^&riscv_doirq: irq=57
-#*r$%^&riscv_doirq: irq=57
-#*k$%^&riscv_doirq: irq=57
-#*_$%^&riscv_doirq: irq=57
-#*s$%^&riscv_doirq: irq=57
-#*t$%^&riscv_doirq: irq=57
-#*a$%^&riscv_doirq: irq=57
-#*r$%^&riscv_doirq: irq=57
-#*t$%^&riscv_doirq: irq=57
-#*_$%^&riscv_doirq: irq=57
-#*l$%^&riscv_doirq: irq=57
-#*o$%^&riscv_doirq: irq=57
-#*w$%^&riscv_doirq: irq=57
-#*p$%^&riscv_doirq: irq=57
-#*r$%^&riscv_doirq: irq=57
-#*i$%^&riscv_doirq: irq=57
-#*:$%^&riscv_doirq: irq=57
-#* $%^&riscv_doirq: irq=57
-#*S$%^&riscv_doirq: irq=57
-#*t$%^&riscv_doirq: irq=57
-#*a$%^&riscv_doirq: irq=57
-#*r$%^&riscv_doirq: irq=57
-#*t$%^&riscv_doirq: irq=57
-#*i$%^&riscv_doirq: irq=57
-#*n$%^&riscv_doirq: irq=57
-#*g$%^&riscv_doirq: irq=57
-#* $%^&riscv_doirq: irq=57
-#*l$%^&riscv_doirq: irq=57
-#*o$%^&riscv_doirq: irq=57
-#*w$%^&riscv_doirq: irq=57
-#*-$%^&riscv_doirq: irq=57
-#*p$%^&riscv_doirq: irq=57
-#*r$%^&riscv_doirq: irq=57
-#*i$%^&riscv_doirq: irq=57
-#*o$%^&riscv_doirq: irq=57
-#*r$%^&riscv_doirq: irq=57
-#*i$%^&riscv_doirq: irq=57
-#*t$%^&riscv_doirq: irq=57
-#*y$%^&riscv_doirq: irq=57
-#* $%^&riscv_doirq: irq=57
-#*k$%^&riscv_doirq: irq=57
-#*e$%^&riscv_doirq: irq=57
-#*r$%^&riscv_doirq: irq=57
-#*n$%^&riscv_doirq: irq=57
-#*e$%^&riscv_doirq: irq=57
-#*l$%^&riscv_doirq: irq=57
-#* $%^&riscv_doirq: irq=57
-#*w$%^&riscv_doirq: irq=57
-#*o$%^&riscv_doirq: irq=57
-#*r$%^&riscv_doirq: irq=57
-#*k$%^&riscv_doirq: irq=57
-#*e$%^&riscv_doirq: irq=57
-#*r$%^&riscv_doirq: irq=57
-#* $%^&riscv_doirq: irq=57
-#*t$%^&riscv_doirq: irq=57
-#*h$%^&riscv_doirq: irq=57
-#*r$%^&riscv_doirq: irq=57
-#*e$%^&riscv_doirq: irq=57
-#*a$%^&riscv_doirq: irq=57
-#*d$%^&riscv_doirq: irq=57
-#*($%^&riscv_doirq: irq=57
-#*s$%^&riscv_doirq: irq=57
-#*)$%^&riscv_doirq: irq=57
-#*
-$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&riscv_doirq: irq=57
-#*$%^&nx_start: CPU0: Beginning Idle Loop
-```
 
 # RAM Disk Address for RISC-V QEMU
 
