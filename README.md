@@ -3575,6 +3575,17 @@ From [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2
 - Timer Interrupt, Supervisor Mode, Interrupt ID: 5
 - External Interrupt, Supervisor Mode, Interrupt ID: 9
 
+From Page 15:
+
+> A CPU operating in Supervisor mode will trap to Machine mode upon the arrival of a Machine
+mode interrupt, unless the Machine mode interrupt has been delegated to Supervisor mode
+through the mideleg register. On the contrary, Supervisor interrupts will not immediately trigger
+if a CPU is in Machine mode. While operating in Supervisor mode, a CPU does not have visibility to configure Machine mode interrupts.
+
+TODO: What is mideleg?
+
+TODO: Can OpenSBI handle mideleg?
+
 # RAM Disk Address for RISC-V QEMU
 
 Read the article...
