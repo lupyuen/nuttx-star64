@@ -3914,7 +3914,7 @@ TODO: Check [PLIC Code](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sta
 
 TODO: What is a PLIC Context? Why context is 0 for Machine Mode, 1 for Supervisor Mode?
 
-[SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf)
+From [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf):
 
 Page 130: PLIC Memory Map
 
