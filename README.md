@@ -3565,15 +3565,15 @@ https://lupyuen.github.io/articles/privilege#other-risc-v-ports-of-nuttx
 
 TODO: Check Linux Boot Code
 
-[SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf)
+From [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf):
 
-• Software Interrupt, Machine Mode, Interrupt ID: 3
-• Timer Interrupt, Machine Mode, Interrupt ID: 7
-• External Interrupt, Machine Mode, Interrupt ID: 11
+- Software Interrupt, Machine Mode, Interrupt ID: 3
+- Timer Interrupt, Machine Mode, Interrupt ID: 7
+- External Interrupt, Machine Mode, Interrupt ID: 11
 
-• Software Interrupt, Supervisor Mode, Interrupt ID: 1
-• Timer Interrupt, Supervisor Mode, Interrupt ID: 5
-• External Interrupt, Supervisor Mode, Interrupt ID: 9
+- Software Interrupt, Supervisor Mode, Interrupt ID: 1
+- Timer Interrupt, Supervisor Mode, Interrupt ID: 5
+- External Interrupt, Supervisor Mode, Interrupt ID: 9
 
 # RAM Disk Address for RISC-V QEMU
 
