@@ -3416,7 +3416,7 @@ AAADEF[FKnx_start: CPU0: Beginning Idle Loop
 
   `F`: [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L1542-L1556)
 
-QEMU UART is IRQ 10, which becomes NuttX IRQ 35 (10 + 25).
+QEMU UART is [RISC-V IRQ 10](https://github.com/lupyuen/nuttx-star64/blob/main/qemu-riscv64.dts#L225-L226), which becomes NuttX IRQ 35 (10 + 25).
 
 RISCV_IRQ_EXT = RISCV_IRQ_SEXT = 16 + 9
 
@@ -3454,7 +3454,7 @@ AAADnx_start: CPU0: Beginning Idle Loop
 
 No response to UART Input.
 
-Star64 UART is RISC-V IRQ 32, which becomes NuttX IRQ 57 (32 + 25).
+Star64 UART is [RISC-V IRQ 32](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html), which becomes NuttX IRQ 57 (32 + 25).
 
 RISCV_IRQ_EXT = RISCV_IRQ_SEXT = 16 + 9
 
