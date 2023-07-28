@@ -4047,6 +4047,19 @@ uart_register: Registering /dev/console
 uart_register: Registering /dev/ttyS0
 up_enable_irq: irq=57
 up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
+```
+
+TODO
+
+```text
+123067BCnx_start: Entry
+up_irq_enable: 
+up_enable_irq: irq=17
+up_enable_irq: RISCV_IRQ_SOFT=17
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+up_enable_irq: irq=57
+up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
 $%^&riscv_doirq: irq=57
 #*$%^&riscv_doirq: irq=57
 #*$%^&riscv_doirq: irq=57
