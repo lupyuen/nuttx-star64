@@ -3378,6 +3378,7 @@ From QEMU:
 
 ```text
 ABCnx_start: Entry
+up_irq_enable: 
 up_enable_irq: irq=17
 up_enable_irq: RISCV_IRQ_SOFT=17
 uart_register: Registering /dev/console
@@ -3424,6 +3425,7 @@ From Star64: [`uart_txready`](https://github.com/lupyuen2/wip-pinephone-nuttx/bl
 
 ```text
 123067BCnx_start: Entry
+up_irq_enable: 
 up_enable_irq: irq=17
 up_enable_irq: RISCV_IRQ_SOFT=17
 uart_register: Registering /dev/console
@@ -3447,7 +3449,6 @@ AAAAAAAAAAAAAAAuart_write (0xc0015338):
 0000  6e 73 68 3e 20                                   nsh>            
 AAAAADuart_write (0xc0015310):
 0000  1b 5b 4b                                         .[K             
-AAADnx_start: CPU0: Beginning Idle Loop
 ```
 
 - Is our [__Interrupt Controller__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64c/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33) OK?
