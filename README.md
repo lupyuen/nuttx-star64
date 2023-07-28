@@ -3916,6 +3916,28 @@ TODO: What is a PLIC Context? Why context is 0 for Machine Mode, 1 for Superviso
 
 [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf)
 
+Page 130: PLIC Memory Map
+
+| Address | Width | Attr | Description
+|---------|-------|------|------------
+| 0x0C00_2100 | 4B | RW | Start | Hart 1 S-Mode interrupt enables
+| 0x0C00_2110 | 4B | RW | End Hart 1 S-Mode interrupt enables
+| 0x0C00_2200 | 4B | RW | Start Hart 2 S-Mode interrupt enables
+| 0x0C00_2210 | 4B | RW | End Hart 2 S-Mode interrupt enables
+| 0x0C00_2300 | 4B | RW | Start Hart 3 S-Mode interrupt enables
+| 0x0C00_2310 | 4B | RW | End Hart 3 S-Mode interrupt enables
+| 0x0C00_2400 | 4B | RW | Start Hart 4 S-Mode interrupt enables
+| 0x0C00_2410 | 4B | RW | End Hart 4 S-Mode interrupt enables
+| 0x0C20_2000 | 4B | RW | Hart 1 S-Mode priority threshold
+| 0x0C20_2004 | 4B | RW | Hart 1 S-Mode claim/complete 
+| 0x0C20_4000 | 4B | RW | Hart 2 S-Mode priority threshold
+| 0x0C20_4004 | 4B | RW | Hart 2 S-Mode claim/complete
+| 0x0C20_6000 | 4B | RW | Hart 3 S-Mode priority threshold
+| 0x0C20_6004 | 4B | RW | Hart 3 S-Mode claim/complete 
+| 0x0C20_8000 | 4B | RW | Hart 4 S-Mode priority threshold
+| 0x0C20_8004 | 4B | RW | Hart 4 S-Mode claim/complete
+```
+
 According to [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
 
 ```text
