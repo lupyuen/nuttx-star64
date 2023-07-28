@@ -3451,381 +3451,6 @@ Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 # TODO
 
-From Star64:
-
-```text
-Starting kernel ...
-
-clk u5_dw_i2c_clk_core already disabled
-clk u5_dw_i2c_clk_apb already disabled
-123067DFHBCqemu_rv_kernel_mappings: map I/O regions
-qemu_rv_kernel_mappings: map kernel text
-qemu_rv_kernel_mappings: map kernel data
-qemu_rv_kernel_mappings: connect the L1 and L2 page tables
-qemu_rv_kernel_mappings: map the page pool
-qemu_rv_mm_init: mmu_enable: satp=1077956608
-Inx_start: Entry
-elf_initialize: Registering ELF
-uart_register: Registering /dev/console
-uart_register: Registering /dev/ttyS0
-work_start_lowpri: Starting low-priority kernel worker thread(s)
-board_late_initialize: 
-nx_start_application: Starting init task: /system/bin/init
-load_absmodule: Loading /system/bin/init
-elf_loadbinary: Loading file: /system/bin/init
-elf_init: filename: /system/bin/init loadinfo: 0x4040c638
-elf_read: Read 64 bytes from offset 0
-elf_dumploadinfo: LOAD_INFO:
-elf_dumploadinfo:   textalloc:    00000000
-elf_dumploadinfo:   dataalloc:    00000000
-elf_dumploadinfo:   textsize:     0
-elf_dumploadinfo:   datasize:     0
-elf_dumploadinfo:   textalign:    0
-elf_dumploadinfo:   dataalign:    0
-elf_dumploadinfo:   filelen:      3289528
-elf_dumploadinfo:   symtabidx:    0
-elf_dumploadinfo:   strtabidx:    0
-elf_dumploadinfo: ELF Header:
-elf_dumploadinfo:   e_ident:      7f 45 4c 46
-elf_dumploadinfo:   e_type:       0001
-elf_dumploadinfo:   e_machine:    00f3
-elf_dumploadinfo:   e_version:    00000001
-elf_dumploadinfo:   e_entry:      0000004a
-elf_dumploadinfo:   e_phoff:      0
-elf_dumploadinfo:   e_shoff:      3286264
-elf_dumploadinfo:   e_flags:      00000001
-elf_dumploadinfo:   e_ehsize:     64
-elf_dumploadinfo:   e_phentsize:  0
-elf_dumploadinfo:   e_phnum:      0
-elf_dumploadinfo:   e_shentsize:  64
-elf_dumploadinfo:   e_shnum:      51
-elf_dumploadinfo:   e_shstrndx:   50
-elf_load: loadinfo: 0x4040c638
-elf_read: Read 3264 bytes from offset 3286264
-elf_loadfile: Loaded sections:
-elf_read: Read 39900 bytes from offset 64
-elf_loadfile: 1. 00000000->c0000000
-elf_read: Read 45804 bytes from offset 39968
-elf_loadfile: 3. 00009be0->c0009be0
-elf_read: Read 9 bytes from offset 85776
-elf_loadfile: 5. 00000000->c0014ed0
-elf_read: Read 3 bytes from offset 85792
-elf_loadfile: 6. 00000000->c0014ee0
-elf_read: Read 3 bytes from offset 85800
-elf_loadfile: 7. 00000000->c0014ee8
-elf_read: Read 2 bytes from offset 85808
-elf_loadfile: 8. 00000000->c0014ef0
-elf_read: Read 2 bytes from offset 85816
-...
-elf_read: Read 24 bytes from offset 1313160
-elf_symvalue: Other: 00005c88+c0000000=c0005c88
-elf_read: Read 24 bytes from offset 1313352
-elf_symvalue: Other: 00005c82+c0000000=c0005c82
-elf_read: Read 24 bytes from offset 1313376
-elf_symvalue: Other: 00005c72+c0000000=c0005c72
-elf_read: Read 24 bytes from offset 1313400
-elf_symvalue: Other: 00005c60+c0000000=c0005c60
-elf_read: Read 24 bytes from offset 1313424
-elf_symvalue: Other: 00005c78+c0000000=c0005c78
-elf_read: Read 24 bytes from offset 1313448
-elf_symvalue: Other: 00005c66+c0000000=c0005c66
-elf_read: Read 24 bytes from offset 1313472
-elf_symvalue: Other: 00005c6c+c0000000=c0005c6c
-elf_read: Read 24 bytes from offset 1313496
-elf_symvalue: Other: 00005d70+c0000000=c0005d70
-elf_read: Read 24 bytes from offset 1312896
-elf_symvalue: Other: 000019d0+c0009be0=c000b5b0
-elf_read: Read 24 bytes from offset 1313232
-elf_symvalue: Other: 00005d5a+c0000000=c0005d5a
-elf_read: Read 24 bytes from offset 1313520
-elf_symvalue: Other: 00005cf8+c0000000=c0005cf8
-elf_read: Read 24 bytes from offset 1313544
-elf_symvalue: Other: 00005d76+c0000000=c0005d76
-elf_read: Read 24 bytes from offset 1313568
-elf_symvalue: Other: 00005d4c+c0000000=c0005d4c
-elf_read: Read 24 bytes from offset 1313592
-elf_symvalue: Other: 00005d52+c0000000=c0005d52
-elf_read: Read 24 bytes from offset 1313616
-elf_symvalue: Other: 00005d56+c0000000=c0005d56
-elf_read: Read 24 bytes from offset 1961968
-elf_read: Read 24 bytes from offset 1781688
-elf_symvalue: Other: 00000000+c0101028=c0101028
-up_relocateadd: RISCV_64 at c0101028 [00000000] to sym=0x4040a850 st_value=c0101028
-load_absmodule: Successfully loaded module /system/bin/init
-binfmt_dumpmodule: Module:
-binfmt_dumpmodule:   entrypt:   0xc000004a
-binfmt_dumpmodule:   mapped:    0 size=0
-binfmt_dumpmodule:   alloc:     0 0 0
-binfmt_dumpmodule:   addrenv:   0x40409f60
-binfmt_dumpmodule:   stacksize: 2048
-binfmt_dumpmodule:   unload:    0
-exec_module: Executing /system/bin/init
-binfmt_copyargv: args=0 argsize=0
-binfmt_copyargv: args=2 argsize=23
-exec_module: Initialize the user heap (heapsize=528384)
-nx_start_application: ret=3
-up_exit: TCB=0x404088d0 exiting
-nx_start: CPU0: Beginning Idle Loop
-```
-
-From QEMU:
-
-```text
-elf_symvalue: Other: 00005d76+c0000000=c0005d76
-elf_read: Read 24 bytes from offset 1302760
-elf_symvalue: Other: 00005d4c+c0000000=c0005d4c
-elf_read: Read 24 bytes from offset 1302784
-elf_symvalue: Other: 00005d52+c0000000=c0005d52
-elf_read: Read 24 bytes from offset 1302808
-elf_symvalue: Other: 00005d56+c0000000=c0005d56
-elf_read: Read 24 bytes from offset 1951160
-elf_read: Read 24 bytes from offset 1770880
-elf_symvalue: Other: 00000000+c0101028=c0101028
-up_relocateadd: RISCV_64 at c0101028 [00000000] to sym=0x8020a850 st_value=c0101028
-load_absmodule: Successfully loaded module /system/bin/init
-binfmt_dumpmodule: Module:
-binfmt_dumpmodule:   entrypt:   0xc000004a
-binfmt_dumpmodule:   mapped:    0 size=0
-binfmt_dumpmodule:   alloc:     0 0 0
-binfmt_dumpmodule:   addrenv:   0x80209f60
-binfmt_dumpmodule:   stacksize: 2048
-binfmt_dumpmodule:   unload:    0
-exec_module: Executing /system/bin/init
-binfmt_copyargv: args=0 argsize=0
-binfmt_copyargv: args=2 argsize=23
-exec_module: Initialize the user heap (heapsize=528384)
-up_exit: TCB=0x802088d0 exiting
-
-NuttShell (NSH) NuttX-12.0.3
-nsh> nx_start: CPU0: Beginning Idle Loop
-```
-
-From Star64:
-
-```text
-mm_free: Freeing 0x4040aa10
-mm_free: Freeing 0x4040a9d0
-mm_free: Freeing 0x4040a990
-mm_free: Freeing 0x4040a950
-mm_free: Freeing 0x4040a890
-mm_malloc: Allocated 0x4040c810, size 6160
-mm_malloc: Allocated 0x4040a890, size 64
-mm_free: Freeing 0x4040c810
-mm_free: Freeing 0x4040a890
-mm_free: Freeing 0x40409290
-mm_free: Freeing 0x40409fa0
-mm_free: Freeing 0x40409250
-mm_malloc: Allocated 0x40409250, size 368
-mm_malloc: Allocated 0x404093c0, size 64
-mm_initialize: Heap: name=(null), start=0xc0200000 size=528384
-mm_addregion: [(null)] Region 1: base=0xc0200298 size=527712
-mm_malloc: Allocated 0x4040a890, size 3088
-mm_malloc: Allocated 0x4040b4a0, size 304
-mm_malloc: Allocated 0x4040b5d0, size 32
-mm_malloc: Allocated 0xc02002c0, size 624
-mm_malloc: Allocated 0xc0200530, size 32
-mm_malloc: Allocated 0xc0200550, size 32
-mm_malloc: Allocated 0xc0200570, size 32
-mm_malloc: Allocated 0x4040b5f0, size 32
-mm_malloc: Allocated 0x4040b610, size 160
-mm_malloc: Allocated 0xc0200590, size 19472
-mm_free: Freeing 0x404093c0
-nx_start_application: ret=3
-mm_free: Freeing 0x40408b90
-mm_free: Freeing 0x40408e80
-mm_free: Freeing 0x40408e60
-mm_free: Freeing 0x40408e40
-mm_free: Freeing 0x40408e20
-mm_free: Freeing 0x40408e00
-mm_free: Freeing 0x40408b70
-mm_free: Freeing 0x40408a40
-up_exit: TCB=0x404088d0 exiting
-mm_free: Freeing 0x4040c000
-mm_free: Freeing 0x404088d0
-mm_malloc: Allocated 0xc0200590, size 848
-nx_start: CPU0: Beginning Idle Loop
-```
-
-From QEMU:
-
-```text
-mm_free: Freeing 0x8020aa80
-mm_free: Freeing 0x8020aa40
-mm_free: Freeing 0x8020a9c0
-mm_free: Freeing 0x8020a980
-mm_free: Freeing 0x8020a940
-mm_free: Freeing 0x8020a900
-mm_free: Freeing 0x8020a840
-mm_malloc: Allocated 0x8020c810, size 6160
-mm_malloc: Allocated 0x8020a840, size 64
-mm_free: Freeing 0x8020c810
-mm_free: Freeing 0x8020a840
-mm_free: Freeing 0x80209290
-mm_free: Freeing 0x8020a810
-mm_free: Freeing 0x80209250
-mm_malloc: Allocated 0x80209250, size 368
-mm_malloc: Allocated 0x802093c0, size 64
-mm_initialize: Heap: name=(null), start=0xc0200000 size=528384
-mm_addregion: [(null)] Region 1: base=0xc0200298 size=527712
-mm_malloc: Allocated 0x8020a810, size 3088
-mm_malloc: Allocated 0x80209400, size 304
-mm_malloc: Allocated 0x80209fe0, size 32
-mm_malloc: Allocated 0xc02002c0, size 624
-mm_malloc: Allocated 0xc0200530, size 32
-mm_malloc: Allocated 0xc0200550, size 32
-mm_malloc: Allocated 0xc0200570, size 32
-mm_malloc: Allocated 0x80209530, size 32
-mm_malloc: Allocated 0x80209550, size 160
-mm_malloc: Allocated 0xc0200590, size 19472
-mm_free: Freeing 0x802093c0
-mm_free: Freeing 0x80208b90
-mm_free: Freeing 0x80208e80
-mm_free: Freeing 0x80208e60
-mm_free: Freeing 0x80208e40
-mm_free: Freeing 0x80208e20
-mm_free: Freeing 0x80208e00
-mm_free: Freeing 0x80208b70
-mm_free: Freeing 0x80208a40
-up_exit: TCB=0x802088d0 exiting
-mm_free: Freeing 0x8020c000
-mm_free: Freeing 0x802088d0
-
-NuttShell (NSH) NuttX-12.0.3
-nsh> nx_start: CPU0: Beginning Idle Loop
-```
-
-From Star64: No Console Output!
-
-```text
-clk u5_dw_i2c_clk_core already disabled
-clk u5_dw_i2c_clk_apb already disabled
-123067DFHBCInx_start: Entry
-uart_register: Registering /dev/console
-uart_register: Registering /dev/ttyS0
-work_start_lowpri: Starting low-priority kernel worker thread(s)
-board_late_initialize: 
-nx_start_application: Starting init task: /system/bin/init
-elf_symname: Symbol has no name
-elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
-elf_relocateadd: Section 2 reloc 1: Undefined symbol[0] has no name: -3
-nx_start_application: ret=3
-up_exit: TCB=0x404088d0 exiting
-_assert: Current Version: NuttX  12.0.3 46c1a0f Jul 27 2023 19:31:45 risc-v
-_assert: Assertion failed (_Bool)0: at file: nsh_main.c:54 task: /system/bin/init 0xc000001a
-up_dump_register: EPC: 000000004020fffc
-up_dump_register: A0: 0000000040401610 A1: 0000000000000036 A2: 00000000c0000e58 A3: 0000000000000000
-up_dump_register: A4: 0000000000000000 A5: 0000000000000000 A6: 0000000000000036 A7: 00000000c0000e68
-up_dump_register: T0: 0000000040211e9e T1: 00000000c000042c T2: 0000000000000000 T3: 0000000000000000
-up_dump_register: T4: 0000000000000000 T5: 0000000000000000 T6: 0000000000000000
-up_dump_register: S0: 0000000000000000 S1: 0000000040409a60 S2: 0000000040401748 S3: 00000000c0000e58
-up_dump_register: S4: 00000000c0000e68 S5: 0000000000000036 S6: 0000000000000000 S7: 0000000000000000
-up_dump_register: S8: 0000000000000000 S9: 0000000000000000 S10: 0000000000000000 S11: 0000000000000000
-up_dump_register: SP: 000000004040b1d8 FP: 0000000000000000 TP: 0000000000000000 RA: 000000004020fffc
-dump_stack: Kernel Stack:
-dump_stack:   base: 0x4040a810
-dump_stack:   size: 00003072
-dump_stack:     sp: 0x4040b1d8
-stack_dump: 0x4040b1c0: 40409a60 00000000 00000000 00000000 4021021c 00000000 40406cf8 00000000
-stack_dump: 0x4040b1e0: 00000219 00010000 c00003ee 00000000 00000000 00000000 4020029a 00000000
-stack_dump: 0x4040b200: 7474754e 00000058 c000080e 00000000 c0202b90 00000000 ffffff83 ffffffff
-stack_dump: 0x4040b220: 00000000 00000000 402126ce 00000000 c000042c 2e323100 00332e30 00000000
-stack_dump: 0x4040b240: c02003d8 00000000 363403d0 30613163 754a2066 3732206c 32303220 39312033
-stack_dump: 0x4040b260: 3a31333a 00003534 00000000 00000000 00007fff 00000000 00000001 73697200
-stack_dump: 0x4040b280: 00762d63 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-stack_dump: 0x4040b2a0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-stack_dump: 0x4040b2c0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-stack_dump: 0x4040b2e0: 40211eb0 00000000 00000000 00000000 402086f4 00000000 c000007c 00000000
-stack_dump: 0x4040b300: 00040020 00000002 402086dc 00000000 c000007c 00000000 4040b308 00000000
-stack_dump: 0x4040b320: 00000000 00000000 00000000 00000000 402126ce 00000000 c000042c 00000000
-stack_dump: 0x4040b340: 00000000 00000000 00000000 00000000 00000000 00000000 00000001 00000000
-stack_dump: 0x4040b360: c0000e68 00000000 00000036 00000000 c0000e58 00000000 00000000 00000000
-stack_dump: 0x4040b380: c0000e58 00000000 00000036 00000000 c0000e68 00000000 00000000 00000000
-stack_dump: 0x4040b3a0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-stack_dump: 0x4040b3c0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-stack_dump: 0x4040b3e0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-up_exit: TCB=0x40409a60 exiting
-nx_start: CPU0: Beginning Idle Loop
-```
-
-From QEMU: Console Output OK
-
-```text
-ABCnx_start: Entry
-uart_register: Registering /dev/console
-uart_register: Registering /dev/ttyS0
-work_start_lowpri: Starting low-priority kernel worker thread(s)
-board_late_initialize: 
-nx_start_application: Starting init task: /system/bin/init
-elf_symname: Symbol has no name
-elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
-elf_relocateadd: Section 2 reloc 1: Undefined symbol[0] has no name: -3
-up_exit: TCB=0x802088d0 exiting
-***main
-_assert: Current Version: NuttX  12.0.3 3c99d2b-dirty Jul 27 2023 19:27:52 risc-v
-_assert: Assertion failed (_Bool)0: at file: nsh_main.c:54 task: /system/bin/init 0xc000001a
-up_dump_register: EPC: 0000000080001e82
-up_dump_register: A0: 0000000080200f10 A1: 0000000000000036 A2: 00000000c0000e58 A3: 0000000000000000
-up_dump_register: A4: 0000000000000000 A5: 0000000000000000 A6: 0000000000000036 A7: 00000000c0000e68
-up_dump_register: T0: 0000000080006d36 T1: 00000000c000042c T2: 0000000000000000 T3: 0000000000000000
-up_dump_register: T4: 0000000000000000 T5: 0000000000000000 T6: 0000000000000000
-up_dump_register: S0: 0000000000000000 S1: 0000000080209a60 S2: 0000000080201750 S3: 00000000c0000e58
-up_dump_register: S4: 00000000c0000e68 S5: 0000000000000036 S6: 0000000000000000 S7: 0000000000000000
-up_dump_register: S8: 0000000000000000 S9: 0000000000000000 S10: 0000000000000000 S11: 0000000000000000
-up_dump_register: SP: 000000008020b1d8 FP: 0000000000000000 TP: 0000000000000000 RA: 0000000080001e82
-dump_stack: Kernel Stack:
-dump_stack:   base: 0x8020a810
-dump_stack:   size: 00003072
-dump_stack:     sp: 0x8020b1d8
-stack_dump: 0x8020b1c0: 80209a60 00000000 00000000 00000000 800020a2 00000000 80206cf8 00000000
-stack_dump: 0x8020b1e0: 00000219 00010000 c00003ee 00000000 00000000 00000000 80000592 00000000
-stack_dump: 0x8020b200: 7474754e 00000058 c000080e 00000000 c0202b90 00000000 c0200430 00000000
-stack_dump: 0x8020b220: 00000000 00000000 80007566 00000000 c000042c 2e323100 00332e30 00000000
-stack_dump: 0x8020b240: c02003d8 00000000 633303d0 32643939 69642d62 20797472 206c754a 32203732
-stack_dump: 0x8020b260: 20333230 323a3931 32353a37 00000000 00007fff 00000000 00000001 73697200
-stack_dump: 0x8020b280: 00762d63 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-stack_dump: 0x8020b2a0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-stack_dump: 0x8020b2c0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-stack_dump: 0x8020b2e0: 80006d48 00000000 00000000 00000000 80001264 00000000 c000007c 00000000
-stack_dump: 0x8020b300: 00040020 00000002 8000124c 00000000 c000007c 00000000 8020b308 00000000
-stack_dump: 0x8020b320: 00000000 00000000 00000000 00000000 80007566 00000000 c000042c 00000000
-stack_dump: 0x8020b340: 00000000 00000000 00000000 00000000 00000000 00000000 00000001 00000000
-stack_dump: 0x8020b360: c0000e68 00000000 00000036 00000000 c0000e58 00000000 00000000 00000000
-stack_dump: 0x8020b380: c0000e58 00000000 00000036 00000000 c0000e68 00000000 00000000 00000000
-stack_dump: 0x8020b3a0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-stack_dump: 0x8020b3c0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-stack_dump: 0x8020b3e0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-up_exit: TCB=0x80209a60 exiting
-nx_start: CPU0: Beginning Idle Loop
-```
-
-From Star64: Console Output is stuck
-
-```text
-clk u5_dw_i2c_clk_core already disabled
-clk u5_dw_i2c_clk_apb already disabled
-123067DFHBCInx_start: Entry
-uart_register: Registering /dev/console
-uart_register: Registering /dev/ttyS0
-work_start_lowpri: Starting low-priority kernel worker thread(s)
-board_late_initialize: 
-nx_start_application: Starting init task: /system/bin/init
-elf_symname: Symbol has no name
-elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
-elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
-nx_start_application: ret=3
-up_exit: TCB=0x404088d0 exiting
-uart_write (0xc0200428):
-0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
-uart_write (0xc000a610):
-0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
-0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
-uart_write (0xc0015340):
-0000  6e 73 68 3e 20                                   nsh>            
-uart_write (0xc0015318):
-0000  1b 5b 4b                                         .[K             
-nx_start: CPU0: Beginning Idle Loop
-```
-
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
 
 TODO: Check [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/include/board_memorymap.h#L34-L37)
@@ -4187,4 +3812,387 @@ Code: 879b 0277 d7b3 00f6 f793 1ff7 078e 95be (b023 0105)
 resetting ...
 reset not supported yet
 ### ERROR ### Please RESET the board ###
+```
+
+# NuttX Logs
+
+## NuttX Star64 Binary Loader Log
+
+```text
+Starting kernel ...
+
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFHBCqemu_rv_kernel_mappings: map I/O regions
+qemu_rv_kernel_mappings: map kernel text
+qemu_rv_kernel_mappings: map kernel data
+qemu_rv_kernel_mappings: connect the L1 and L2 page tables
+qemu_rv_kernel_mappings: map the page pool
+qemu_rv_mm_init: mmu_enable: satp=1077956608
+Inx_start: Entry
+elf_initialize: Registering ELF
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+load_absmodule: Loading /system/bin/init
+elf_loadbinary: Loading file: /system/bin/init
+elf_init: filename: /system/bin/init loadinfo: 0x4040c638
+elf_read: Read 64 bytes from offset 0
+elf_dumploadinfo: LOAD_INFO:
+elf_dumploadinfo:   textalloc:    00000000
+elf_dumploadinfo:   dataalloc:    00000000
+elf_dumploadinfo:   textsize:     0
+elf_dumploadinfo:   datasize:     0
+elf_dumploadinfo:   textalign:    0
+elf_dumploadinfo:   dataalign:    0
+elf_dumploadinfo:   filelen:      3289528
+elf_dumploadinfo:   symtabidx:    0
+elf_dumploadinfo:   strtabidx:    0
+elf_dumploadinfo: ELF Header:
+elf_dumploadinfo:   e_ident:      7f 45 4c 46
+elf_dumploadinfo:   e_type:       0001
+elf_dumploadinfo:   e_machine:    00f3
+elf_dumploadinfo:   e_version:    00000001
+elf_dumploadinfo:   e_entry:      0000004a
+elf_dumploadinfo:   e_phoff:      0
+elf_dumploadinfo:   e_shoff:      3286264
+elf_dumploadinfo:   e_flags:      00000001
+elf_dumploadinfo:   e_ehsize:     64
+elf_dumploadinfo:   e_phentsize:  0
+elf_dumploadinfo:   e_phnum:      0
+elf_dumploadinfo:   e_shentsize:  64
+elf_dumploadinfo:   e_shnum:      51
+elf_dumploadinfo:   e_shstrndx:   50
+elf_load: loadinfo: 0x4040c638
+elf_read: Read 3264 bytes from offset 3286264
+elf_loadfile: Loaded sections:
+elf_read: Read 39900 bytes from offset 64
+elf_loadfile: 1. 00000000->c0000000
+elf_read: Read 45804 bytes from offset 39968
+elf_loadfile: 3. 00009be0->c0009be0
+elf_read: Read 9 bytes from offset 85776
+elf_loadfile: 5. 00000000->c0014ed0
+elf_read: Read 3 bytes from offset 85792
+elf_loadfile: 6. 00000000->c0014ee0
+elf_read: Read 3 bytes from offset 85800
+elf_loadfile: 7. 00000000->c0014ee8
+elf_read: Read 2 bytes from offset 85808
+elf_loadfile: 8. 00000000->c0014ef0
+elf_read: Read 2 bytes from offset 85816
+...
+elf_read: Read 24 bytes from offset 1313160
+elf_symvalue: Other: 00005c88+c0000000=c0005c88
+elf_read: Read 24 bytes from offset 1313352
+elf_symvalue: Other: 00005c82+c0000000=c0005c82
+elf_read: Read 24 bytes from offset 1313376
+elf_symvalue: Other: 00005c72+c0000000=c0005c72
+elf_read: Read 24 bytes from offset 1313400
+elf_symvalue: Other: 00005c60+c0000000=c0005c60
+elf_read: Read 24 bytes from offset 1313424
+elf_symvalue: Other: 00005c78+c0000000=c0005c78
+elf_read: Read 24 bytes from offset 1313448
+elf_symvalue: Other: 00005c66+c0000000=c0005c66
+elf_read: Read 24 bytes from offset 1313472
+elf_symvalue: Other: 00005c6c+c0000000=c0005c6c
+elf_read: Read 24 bytes from offset 1313496
+elf_symvalue: Other: 00005d70+c0000000=c0005d70
+elf_read: Read 24 bytes from offset 1312896
+elf_symvalue: Other: 000019d0+c0009be0=c000b5b0
+elf_read: Read 24 bytes from offset 1313232
+elf_symvalue: Other: 00005d5a+c0000000=c0005d5a
+elf_read: Read 24 bytes from offset 1313520
+elf_symvalue: Other: 00005cf8+c0000000=c0005cf8
+elf_read: Read 24 bytes from offset 1313544
+elf_symvalue: Other: 00005d76+c0000000=c0005d76
+elf_read: Read 24 bytes from offset 1313568
+elf_symvalue: Other: 00005d4c+c0000000=c0005d4c
+elf_read: Read 24 bytes from offset 1313592
+elf_symvalue: Other: 00005d52+c0000000=c0005d52
+elf_read: Read 24 bytes from offset 1313616
+elf_symvalue: Other: 00005d56+c0000000=c0005d56
+elf_read: Read 24 bytes from offset 1961968
+elf_read: Read 24 bytes from offset 1781688
+elf_symvalue: Other: 00000000+c0101028=c0101028
+up_relocateadd: RISCV_64 at c0101028 [00000000] to sym=0x4040a850 st_value=c0101028
+load_absmodule: Successfully loaded module /system/bin/init
+binfmt_dumpmodule: Module:
+binfmt_dumpmodule:   entrypt:   0xc000004a
+binfmt_dumpmodule:   mapped:    0 size=0
+binfmt_dumpmodule:   alloc:     0 0 0
+binfmt_dumpmodule:   addrenv:   0x40409f60
+binfmt_dumpmodule:   stacksize: 2048
+binfmt_dumpmodule:   unload:    0
+exec_module: Executing /system/bin/init
+binfmt_copyargv: args=0 argsize=0
+binfmt_copyargv: args=2 argsize=23
+exec_module: Initialize the user heap (heapsize=528384)
+nx_start_application: ret=3
+up_exit: TCB=0x404088d0 exiting
+nx_start: CPU0: Beginning Idle Loop
+```
+
+## NuttX QEMU Binary Loader Log
+
+```text
+elf_symvalue: Other: 00005d76+c0000000=c0005d76
+elf_read: Read 24 bytes from offset 1302760
+elf_symvalue: Other: 00005d4c+c0000000=c0005d4c
+elf_read: Read 24 bytes from offset 1302784
+elf_symvalue: Other: 00005d52+c0000000=c0005d52
+elf_read: Read 24 bytes from offset 1302808
+elf_symvalue: Other: 00005d56+c0000000=c0005d56
+elf_read: Read 24 bytes from offset 1951160
+elf_read: Read 24 bytes from offset 1770880
+elf_symvalue: Other: 00000000+c0101028=c0101028
+up_relocateadd: RISCV_64 at c0101028 [00000000] to sym=0x8020a850 st_value=c0101028
+load_absmodule: Successfully loaded module /system/bin/init
+binfmt_dumpmodule: Module:
+binfmt_dumpmodule:   entrypt:   0xc000004a
+binfmt_dumpmodule:   mapped:    0 size=0
+binfmt_dumpmodule:   alloc:     0 0 0
+binfmt_dumpmodule:   addrenv:   0x80209f60
+binfmt_dumpmodule:   stacksize: 2048
+binfmt_dumpmodule:   unload:    0
+exec_module: Executing /system/bin/init
+binfmt_copyargv: args=0 argsize=0
+binfmt_copyargv: args=2 argsize=23
+exec_module: Initialize the user heap (heapsize=528384)
+up_exit: TCB=0x802088d0 exiting
+
+NuttShell (NSH) NuttX-12.0.3
+nsh> nx_start: CPU0: Beginning Idle Loop
+```
+
+## NuttX Star64 Memory Management Log
+
+```text
+mm_free: Freeing 0x4040aa10
+mm_free: Freeing 0x4040a9d0
+mm_free: Freeing 0x4040a990
+mm_free: Freeing 0x4040a950
+mm_free: Freeing 0x4040a890
+mm_malloc: Allocated 0x4040c810, size 6160
+mm_malloc: Allocated 0x4040a890, size 64
+mm_free: Freeing 0x4040c810
+mm_free: Freeing 0x4040a890
+mm_free: Freeing 0x40409290
+mm_free: Freeing 0x40409fa0
+mm_free: Freeing 0x40409250
+mm_malloc: Allocated 0x40409250, size 368
+mm_malloc: Allocated 0x404093c0, size 64
+mm_initialize: Heap: name=(null), start=0xc0200000 size=528384
+mm_addregion: [(null)] Region 1: base=0xc0200298 size=527712
+mm_malloc: Allocated 0x4040a890, size 3088
+mm_malloc: Allocated 0x4040b4a0, size 304
+mm_malloc: Allocated 0x4040b5d0, size 32
+mm_malloc: Allocated 0xc02002c0, size 624
+mm_malloc: Allocated 0xc0200530, size 32
+mm_malloc: Allocated 0xc0200550, size 32
+mm_malloc: Allocated 0xc0200570, size 32
+mm_malloc: Allocated 0x4040b5f0, size 32
+mm_malloc: Allocated 0x4040b610, size 160
+mm_malloc: Allocated 0xc0200590, size 19472
+mm_free: Freeing 0x404093c0
+nx_start_application: ret=3
+mm_free: Freeing 0x40408b90
+mm_free: Freeing 0x40408e80
+mm_free: Freeing 0x40408e60
+mm_free: Freeing 0x40408e40
+mm_free: Freeing 0x40408e20
+mm_free: Freeing 0x40408e00
+mm_free: Freeing 0x40408b70
+mm_free: Freeing 0x40408a40
+up_exit: TCB=0x404088d0 exiting
+mm_free: Freeing 0x4040c000
+mm_free: Freeing 0x404088d0
+mm_malloc: Allocated 0xc0200590, size 848
+nx_start: CPU0: Beginning Idle Loop
+```
+
+## NuttX QEMU Memory Management Log
+
+```text
+mm_free: Freeing 0x8020aa80
+mm_free: Freeing 0x8020aa40
+mm_free: Freeing 0x8020a9c0
+mm_free: Freeing 0x8020a980
+mm_free: Freeing 0x8020a940
+mm_free: Freeing 0x8020a900
+mm_free: Freeing 0x8020a840
+mm_malloc: Allocated 0x8020c810, size 6160
+mm_malloc: Allocated 0x8020a840, size 64
+mm_free: Freeing 0x8020c810
+mm_free: Freeing 0x8020a840
+mm_free: Freeing 0x80209290
+mm_free: Freeing 0x8020a810
+mm_free: Freeing 0x80209250
+mm_malloc: Allocated 0x80209250, size 368
+mm_malloc: Allocated 0x802093c0, size 64
+mm_initialize: Heap: name=(null), start=0xc0200000 size=528384
+mm_addregion: [(null)] Region 1: base=0xc0200298 size=527712
+mm_malloc: Allocated 0x8020a810, size 3088
+mm_malloc: Allocated 0x80209400, size 304
+mm_malloc: Allocated 0x80209fe0, size 32
+mm_malloc: Allocated 0xc02002c0, size 624
+mm_malloc: Allocated 0xc0200530, size 32
+mm_malloc: Allocated 0xc0200550, size 32
+mm_malloc: Allocated 0xc0200570, size 32
+mm_malloc: Allocated 0x80209530, size 32
+mm_malloc: Allocated 0x80209550, size 160
+mm_malloc: Allocated 0xc0200590, size 19472
+mm_free: Freeing 0x802093c0
+mm_free: Freeing 0x80208b90
+mm_free: Freeing 0x80208e80
+mm_free: Freeing 0x80208e60
+mm_free: Freeing 0x80208e40
+mm_free: Freeing 0x80208e20
+mm_free: Freeing 0x80208e00
+mm_free: Freeing 0x80208b70
+mm_free: Freeing 0x80208a40
+up_exit: TCB=0x802088d0 exiting
+mm_free: Freeing 0x8020c000
+mm_free: Freeing 0x802088d0
+
+NuttShell (NSH) NuttX-12.0.3
+nsh> nx_start: CPU0: Beginning Idle Loop
+```
+
+## NuttX Star64 NSH Assertion Log
+
+No Console Output!
+
+```text
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFHBCInx_start: Entry
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 1: Undefined symbol[0] has no name: -3
+nx_start_application: ret=3
+up_exit: TCB=0x404088d0 exiting
+_assert: Current Version: NuttX  12.0.3 46c1a0f Jul 27 2023 19:31:45 risc-v
+_assert: Assertion failed (_Bool)0: at file: nsh_main.c:54 task: /system/bin/init 0xc000001a
+up_dump_register: EPC: 000000004020fffc
+up_dump_register: A0: 0000000040401610 A1: 0000000000000036 A2: 00000000c0000e58 A3: 0000000000000000
+up_dump_register: A4: 0000000000000000 A5: 0000000000000000 A6: 0000000000000036 A7: 00000000c0000e68
+up_dump_register: T0: 0000000040211e9e T1: 00000000c000042c T2: 0000000000000000 T3: 0000000000000000
+up_dump_register: T4: 0000000000000000 T5: 0000000000000000 T6: 0000000000000000
+up_dump_register: S0: 0000000000000000 S1: 0000000040409a60 S2: 0000000040401748 S3: 00000000c0000e58
+up_dump_register: S4: 00000000c0000e68 S5: 0000000000000036 S6: 0000000000000000 S7: 0000000000000000
+up_dump_register: S8: 0000000000000000 S9: 0000000000000000 S10: 0000000000000000 S11: 0000000000000000
+up_dump_register: SP: 000000004040b1d8 FP: 0000000000000000 TP: 0000000000000000 RA: 000000004020fffc
+dump_stack: Kernel Stack:
+dump_stack:   base: 0x4040a810
+dump_stack:   size: 00003072
+dump_stack:     sp: 0x4040b1d8
+stack_dump: 0x4040b1c0: 40409a60 00000000 00000000 00000000 4021021c 00000000 40406cf8 00000000
+stack_dump: 0x4040b1e0: 00000219 00010000 c00003ee 00000000 00000000 00000000 4020029a 00000000
+stack_dump: 0x4040b200: 7474754e 00000058 c000080e 00000000 c0202b90 00000000 ffffff83 ffffffff
+stack_dump: 0x4040b220: 00000000 00000000 402126ce 00000000 c000042c 2e323100 00332e30 00000000
+stack_dump: 0x4040b240: c02003d8 00000000 363403d0 30613163 754a2066 3732206c 32303220 39312033
+stack_dump: 0x4040b260: 3a31333a 00003534 00000000 00000000 00007fff 00000000 00000001 73697200
+stack_dump: 0x4040b280: 00762d63 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x4040b2a0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x4040b2c0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x4040b2e0: 40211eb0 00000000 00000000 00000000 402086f4 00000000 c000007c 00000000
+stack_dump: 0x4040b300: 00040020 00000002 402086dc 00000000 c000007c 00000000 4040b308 00000000
+stack_dump: 0x4040b320: 00000000 00000000 00000000 00000000 402126ce 00000000 c000042c 00000000
+stack_dump: 0x4040b340: 00000000 00000000 00000000 00000000 00000000 00000000 00000001 00000000
+stack_dump: 0x4040b360: c0000e68 00000000 00000036 00000000 c0000e58 00000000 00000000 00000000
+stack_dump: 0x4040b380: c0000e58 00000000 00000036 00000000 c0000e68 00000000 00000000 00000000
+stack_dump: 0x4040b3a0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x4040b3c0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x4040b3e0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+up_exit: TCB=0x40409a60 exiting
+nx_start: CPU0: Beginning Idle Loop
+```
+
+## NuttX QEMU NSH Assertion Log
+
+Console Output OK
+
+```text
+ABCnx_start: Entry
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 1: Undefined symbol[0] has no name: -3
+up_exit: TCB=0x802088d0 exiting
+***main
+_assert: Current Version: NuttX  12.0.3 3c99d2b-dirty Jul 27 2023 19:27:52 risc-v
+_assert: Assertion failed (_Bool)0: at file: nsh_main.c:54 task: /system/bin/init 0xc000001a
+up_dump_register: EPC: 0000000080001e82
+up_dump_register: A0: 0000000080200f10 A1: 0000000000000036 A2: 00000000c0000e58 A3: 0000000000000000
+up_dump_register: A4: 0000000000000000 A5: 0000000000000000 A6: 0000000000000036 A7: 00000000c0000e68
+up_dump_register: T0: 0000000080006d36 T1: 00000000c000042c T2: 0000000000000000 T3: 0000000000000000
+up_dump_register: T4: 0000000000000000 T5: 0000000000000000 T6: 0000000000000000
+up_dump_register: S0: 0000000000000000 S1: 0000000080209a60 S2: 0000000080201750 S3: 00000000c0000e58
+up_dump_register: S4: 00000000c0000e68 S5: 0000000000000036 S6: 0000000000000000 S7: 0000000000000000
+up_dump_register: S8: 0000000000000000 S9: 0000000000000000 S10: 0000000000000000 S11: 0000000000000000
+up_dump_register: SP: 000000008020b1d8 FP: 0000000000000000 TP: 0000000000000000 RA: 0000000080001e82
+dump_stack: Kernel Stack:
+dump_stack:   base: 0x8020a810
+dump_stack:   size: 00003072
+dump_stack:     sp: 0x8020b1d8
+stack_dump: 0x8020b1c0: 80209a60 00000000 00000000 00000000 800020a2 00000000 80206cf8 00000000
+stack_dump: 0x8020b1e0: 00000219 00010000 c00003ee 00000000 00000000 00000000 80000592 00000000
+stack_dump: 0x8020b200: 7474754e 00000058 c000080e 00000000 c0202b90 00000000 c0200430 00000000
+stack_dump: 0x8020b220: 00000000 00000000 80007566 00000000 c000042c 2e323100 00332e30 00000000
+stack_dump: 0x8020b240: c02003d8 00000000 633303d0 32643939 69642d62 20797472 206c754a 32203732
+stack_dump: 0x8020b260: 20333230 323a3931 32353a37 00000000 00007fff 00000000 00000001 73697200
+stack_dump: 0x8020b280: 00762d63 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x8020b2a0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x8020b2c0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x8020b2e0: 80006d48 00000000 00000000 00000000 80001264 00000000 c000007c 00000000
+stack_dump: 0x8020b300: 00040020 00000002 8000124c 00000000 c000007c 00000000 8020b308 00000000
+stack_dump: 0x8020b320: 00000000 00000000 00000000 00000000 80007566 00000000 c000042c 00000000
+stack_dump: 0x8020b340: 00000000 00000000 00000000 00000000 00000000 00000000 00000001 00000000
+stack_dump: 0x8020b360: c0000e68 00000000 00000036 00000000 c0000e58 00000000 00000000 00000000
+stack_dump: 0x8020b380: c0000e58 00000000 00000036 00000000 c0000e68 00000000 00000000 00000000
+stack_dump: 0x8020b3a0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x8020b3c0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+stack_dump: 0x8020b3e0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+up_exit: TCB=0x80209a60 exiting
+nx_start: CPU0: Beginning Idle Loop
+```
+
+## NuttX Star64 Console Output Log
+
+Console Output is stuck
+
+```text
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067DFHBCInx_start: Entry
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
+nx_start_application: ret=3
+up_exit: TCB=0x404088d0 exiting
+uart_write (0xc0200428):
+0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
+uart_write (0xc000a610):
+0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
+0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
+uart_write (0xc0015340):
+0000  6e 73 68 3e 20                                   nsh>            
+uart_write (0xc0015318):
+0000  1b 5b 4b                                         .[K             
+nx_start: CPU0: Beginning Idle Loop
 ```
