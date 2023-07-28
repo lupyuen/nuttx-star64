@@ -3920,7 +3920,7 @@ Page 130: PLIC Memory Map
 
 | Address | Width | Attr | Description
 |---------|-------|------|------------
-| 0x0C00_2100 | 4B | RW | Start | Hart 1 S-Mode interrupt enables
+| 0x0C00_2100 | 4B | RW | Start Hart 1 S-Mode interrupt enables
 | 0x0C00_2110 | 4B | RW | End Hart 1 S-Mode interrupt enables
 | 0x0C00_2200 | 4B | RW | Start Hart 2 S-Mode interrupt enables
 | 0x0C00_2210 | 4B | RW | End Hart 2 S-Mode interrupt enables
