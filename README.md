@@ -3392,20 +3392,20 @@ elf_symname: Symbol has no name
 elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
 elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
 up_exit: TCB=0x802088d0 exiting
-######################uart_write (0xc0200428):
+$$$$$$$$$$$$$$$$$$$$$$uart_write (0xc0200428):
 0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
 FAAAAAAAADEF*F*F*FmFaFiFnF
-###########uart_write (0xc000a610):
+$$$$$$$$$$$uart_write (0xc000a610):
 0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
 0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
 FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADEF
 FNFuFtFtFSFhFeFlFlF F(FNFSFHF)F FNFuFtFtFXF-F1F2F.F0F.F3F
-#uart_write (0xc0015340):
+$uart_write (0xc0015340):
 0000  6e 73 68 3e 20                                   nsh>            
-AAAAADEFnFsFhF>F #uart_write (0xc0015318):
+AAAAADEFnFsFhF>F $uart_write (0xc0015318):
 0000  1b 5b 4b                                         .[K             
-AAADEF[FK#nx_start: CPU0: Beginning Idle Loop
-##ADEFa###ADEFa###ADEFa###ADEFa###ADEFa#
+AAADEF[FK$nx_start: CPU0: Beginning Idle Loop
+$#ADEFa$$#ADEFa$$#ADEFa$
 ```
 
 [`uart_write`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/serial.c#L1172-L1341) calls...
@@ -3416,17 +3416,19 @@ AAADEF[FK#nx_start: CPU0: Beginning Idle Loop
 
 - `E`: [`uart_txready`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/serial_io.c#L63-L68) and...
 
-  `F`: [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L1542-L1556)
+  `F`: [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L1542-L1556) which will trigger UART Interrupt...
+
+- `$`: [`exception_common`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/common/riscv_exception_common.S#L63-L189) which calls...
+
+- `#`: [`u16550_interrupt`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L918-L1021)
 
 QEMU UART is [RISC-V IRQ 10](https://github.com/lupyuen/nuttx-star64/blob/main/qemu-riscv64.dts#L225-L226), which becomes NuttX IRQ 35 (10 + 25).
 
 RISCV_IRQ_EXT = RISCV_IRQ_SEXT = 16 + 9
 
-From Star64: [`uart_txready`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/serial_io.c#L63-L68) is NOT Ready, that's why it doesn't call [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L1542-L1556)
+From Star64:
 
 ```text
-clk u5_dw_i2c_clk_core already disabled
-clk u5_dw_i2c_clk_apb already disabled
 123067BCnx_start: Entry
 up_irq_enable: 
 up_enable_irq: irq=17
@@ -3443,17 +3445,21 @@ elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
 elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
 nx_start_application: ret=3
 up_exit: TCB=0x404088d0 exiting
-###############uart_write (0xc0200428):
+$$$$$$$$$$$$$$$uart_write (0xc0200428):
 0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
-AAAAAAAAAD#####uart_write (0xc000a610):
+AAAAAAAAAD$$$$$uart_write (0xc000a610):
 0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
 0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
 AAAAAAAAAAAAAAAuart_write (0xc0015338):
 0000  6e 73 68 3e 20                                   nsh>            
-AAAAAD#uart_write (0xc0015310):
+AAAAAD$uart_write (0xc0015310):
 0000  1b 5b 4b                                         .[K             
-AAAD#nx_start: CPU0: Beginning Idle Loop          
+AAAD$nx_start: CPU0: Beginning Idle Loop        
 ```
+
+[`uart_txready`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/serial_io.c#L63-L68) is NOT Ready, that's why it doesn't call [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L1542-L1556)
+
+But `$`: [`exception_common`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/common/riscv_exception_common.S#L63-L189) is called
 
 - Is our [__Interrupt Controller__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64c/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33) OK?
 
