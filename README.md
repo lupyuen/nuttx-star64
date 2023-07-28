@@ -3379,6 +3379,132 @@ From QEMU:
 ```text
 ABCnx_start: Entry
 up_irq_enable: 
+up_enable_irq: irq=26
+up_enable_irq: extirq=1, RISCV_IRQ_EXT=25
+up_enable_irq: irq=27
+up_enable_irq: extirq=2, RISCV_IRQ_EXT=25
+up_enable_irq: irq=28
+up_enable_irq: extirq=3, RISCV_IRQ_EXT=25
+up_enable_irq: irq=29
+up_enable_irq: extirq=4, RISCV_IRQ_EXT=25
+up_enable_irq: irq=30
+up_enable_irq: extirq=5, RISCV_IRQ_EXT=25
+up_enable_irq: irq=31
+up_enable_irq: extirq=6, RISCV_IRQ_EXT=25
+up_enable_irq: irq=32
+up_enable_irq: extirq=7, RISCV_IRQ_EXT=25
+up_enable_irq: irq=33
+up_enable_irq: extirq=8, RISCV_IRQ_EXT=25
+up_enable_irq: irq=34
+up_enable_irq: extirq=9, RISCV_IRQ_EXT=25
+up_enable_irq: irq=35
+up_enable_irq: extirq=10, RISCV_IRQ_EXT=25
+up_enable_irq: irq=36
+up_enable_irq: extirq=11, RISCV_IRQ_EXT=25
+up_enable_irq: irq=37
+up_enable_irq: extirq=12, RISCV_IRQ_EXT=25
+up_enable_irq: irq=38
+up_enable_irq: extirq=13, RISCV_IRQ_EXT=25
+up_enable_irq: irq=39
+up_enable_irq: extirq=14, RISCV_IRQ_EXT=25
+up_enable_irq: irq=40
+up_enable_irq: extirq=15, RISCV_IRQ_EXT=25
+up_enable_irq: irq=41
+up_enable_irq: extirq=16, RISCV_IRQ_EXT=25
+up_enable_irq: irq=42
+up_enable_irq: extirq=17, RISCV_IRQ_EXT=25
+up_enable_irq: irq=43
+up_enable_irq: extirq=18, RISCV_IRQ_EXT=25
+up_enable_irq: irq=44
+up_enable_irq: extirq=19, RISCV_IRQ_EXT=25
+up_enable_irq: irq=45
+up_enable_irq: extirq=20, RISCV_IRQ_EXT=25
+up_enable_irq: irq=46
+up_enable_irq: extirq=21, RISCV_IRQ_EXT=25
+up_enable_irq: irq=47
+up_enable_irq: extirq=22, RISCV_IRQ_EXT=25
+up_enable_irq: irq=48
+up_enable_irq: extirq=23, RISCV_IRQ_EXT=25
+up_enable_irq: irq=49
+up_enable_irq: extirq=24, RISCV_IRQ_EXT=25
+up_enable_irq: irq=50
+up_enable_irq: extirq=25, RISCV_IRQ_EXT=25
+up_enable_irq: irq=51
+up_enable_irq: extirq=26, RISCV_IRQ_EXT=25
+up_enable_irq: irq=52
+up_enable_irq: extirq=27, RISCV_IRQ_EXT=25
+up_enable_irq: irq=53
+up_enable_irq: extirq=28, RISCV_IRQ_EXT=25
+up_enable_irq: irq=54
+up_enable_irq: extirq=29, RISCV_IRQ_EXT=25
+up_enable_irq: irq=55
+up_enable_irq: extirq=30, RISCV_IRQ_EXT=25
+up_enable_irq: irq=56
+up_enable_irq: extirq=31, RISCV_IRQ_EXT=25
+up_enable_irq: irq=57
+up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
+up_enable_irq: irq=58
+up_enable_irq: extirq=33, RISCV_IRQ_EXT=25
+up_enable_irq: irq=59
+up_enable_irq: extirq=34, RISCV_IRQ_EXT=25
+up_enable_irq: irq=60
+up_enable_irq: extirq=35, RISCV_IRQ_EXT=25
+up_enable_irq: irq=61
+up_enable_irq: extirq=36, RISCV_IRQ_EXT=25
+up_enable_irq: irq=62
+up_enable_irq: extirq=37, RISCV_IRQ_EXT=25
+up_enable_irq: irq=63
+up_enable_irq: extirq=38, RISCV_IRQ_EXT=25
+up_enable_irq: irq=64
+up_enable_irq: extirq=39, RISCV_IRQ_EXT=25
+up_enable_irq: irq=65
+up_enable_irq: extirq=40, RISCV_IRQ_EXT=25
+up_enable_irq: irq=66
+up_enable_irq: extirq=41, RISCV_IRQ_EXT=25
+up_enable_irq: irq=67
+up_enable_irq: extirq=42, RISCV_IRQ_EXT=25
+up_enable_irq: irq=68
+up_enable_irq: extirq=43, RISCV_IRQ_EXT=25
+up_enable_irq: irq=69
+up_enable_irq: extirq=44, RISCV_IRQ_EXT=25
+up_enable_irq: irq=70
+up_enable_irq: extirq=45, RISCV_IRQ_EXT=25
+up_enable_irq: irq=71
+up_enable_irq: extirq=46, RISCV_IRQ_EXT=25
+up_enable_irq: irq=72
+up_enable_irq: extirq=47, RISCV_IRQ_EXT=25
+up_enable_irq: irq=73
+up_enable_irq: extirq=48, RISCV_IRQ_EXT=25
+up_enable_irq: irq=74
+up_enable_irq: extirq=49, RISCV_IRQ_EXT=25
+up_enable_irq: irq=75
+up_enable_irq: extirq=50, RISCV_IRQ_EXT=25
+up_enable_irq: irq=76
+up_enable_irq: extirq=51, RISCV_IRQ_EXT=25
+up_enable_irq: irq=77
+up_enable_irq: extirq=52, RISCV_IRQ_EXT=25
+up_enable_irq: irq=78
+up_enable_irq: extirq=53, RISCV_IRQ_EXT=25
+up_enable_irq: irq=79
+up_enable_irq: extirq=54, RISCV_IRQ_EXT=25
+up_enable_irq: irq=80
+up_enable_irq: extirq=55, RISCV_IRQ_EXT=25
+up_enable_irq: irq=81
+up_enable_irq: extirq=56, RISCV_IRQ_EXT=25
+up_enable_irq: irq=82
+up_enable_irq: extirq=57, RISCV_IRQ_EXT=25
+up_enable_irq: irq=83
+up_enable_irq: extirq=58, RISCV_IRQ_EXT=25
+up_enable_irq: irq=84
+up_enable_irq: extirq=59, RISCV_IRQ_EXT=25
+up_enable_irq: irq=85
+up_enable_irq: extirq=60, RISCV_IRQ_EXT=25
+up_enable_irq: irq=86
+up_enable_irq: extirq=61, RISCV_IRQ_EXT=25
+up_enable_irq: irq=87
+up_enable_irq: extirq=62, RISCV_IRQ_EXT=25
+up_enable_irq: irq=88
+up_enable_irq: extirq=63, RISCV_IRQ_EXT=25
 up_enable_irq: irq=17
 up_enable_irq: RISCV_IRQ_SOFT=17
 uart_register: Registering /dev/console
@@ -3392,20 +3518,61 @@ elf_symname: Symbol has no name
 elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
 elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
 up_exit: TCB=0x802088d0 exiting
-$$$$$$$$$$$$$$$$$$$$$$uart_write (0xc0200428):
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+uart_write (0xc0200428):
 0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
 FAAAAAAAADEF*F*F*FmFaFiFnF
-$$$$$$$$$$$uart_write (0xc000a610):
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+uart_write (0xc000a610):
 0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
 0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
 FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADEF
 FNFuFtFtFSFhFeFlFlF F(FNFSFHF)F FNFuFtFtFXF-F1F2F.F0F.F3F
-$uart_write (0xc0015340):
+$%&riscv_doirq: irq=8
+uart_write (0xc0015340):
 0000  6e 73 68 3e 20                                   nsh>            
-AAAAADEFnFsFhF>F $uart_write (0xc0015318):
+AAAAADEFnFsFhF>F $%&riscv_doirq: irq=8
+uart_write (0xc0015318):
 0000  1b 5b 4b                                         .[K             
-AAADEF[FK$nx_start: CPU0: Beginning Idle Loop
-$#ADEFa$$#ADEFa$$#ADEFa$
+AAADEF[FK$%&riscv_doirq: irq=8
+nx_start: CPU0: Beginning Idle Loop
+$%^&riscv_doirq: irq=35
+#*ADEFa$%&riscv_doirq: irq=8
+$%^&riscv_doirq: irq=35
+#*ADEFa$%&riscv_doirq: irq=8
+$%^&riscv_doirq: irq=35
+#*ADEFa$%&riscv_doirq: irq=8
 ```
 
 [`uart_write`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/serial.c#L1172-L1341) calls...
@@ -3424,20 +3591,146 @@ $#ADEFa$$#ADEFa$$#ADEFa$
 
 QEMU UART is [RISC-V IRQ 10](https://github.com/lupyuen/nuttx-star64/blob/main/qemu-riscv64.dts#L225-L226), which becomes NuttX IRQ 35 (10 + 25).
 
-RISCV_IRQ_EXT = RISCV_IRQ_SEXT = 16 + 9
+(RISCV_IRQ_EXT = RISCV_IRQ_SEXT = 16 + 9)
 
 From Star64:
 
 ```text
 123067BCnx_start: Entry
 up_irq_enable: 
+up_enable_irq: irq=26
+up_enable_irq: extirq=1, RISCV_IRQ_EXT=25
+up_enable_irq: irq=27
+up_enable_irq: extirq=2, RISCV_IRQ_EXT=25
+up_enable_irq: irq=28
+up_enable_irq: extirq=3, RISCV_IRQ_EXT=25
+up_enable_irq: irq=29
+up_enable_irq: extirq=4, RISCV_IRQ_EXT=25
+up_enable_irq: irq=30
+up_enable_irq: extirq=5, RISCV_IRQ_EXT=25
+up_enable_irq: irq=31
+up_enable_irq: extirq=6, RISCV_IRQ_EXT=25
+up_enable_irq: irq=32
+up_enable_irq: extirq=7, RISCV_IRQ_EXT=25
+up_enable_irq: irq=33
+up_enable_irq: extirq=8, RISCV_IRQ_EXT=25
+up_enable_irq: irq=34
+up_enable_irq: extirq=9, RISCV_IRQ_EXT=25
+up_enable_irq: irq=35
+up_enable_irq: extirq=10, RISCV_IRQ_EXT=25
+up_enable_irq: irq=36
+up_enable_irq: extirq=11, RISCV_IRQ_EXT=25
+up_enable_irq: irq=37
+up_enable_irq: extirq=12, RISCV_IRQ_EXT=25
+up_enable_irq: irq=38
+up_enable_irq: extirq=13, RISCV_IRQ_EXT=25
+up_enable_irq: irq=39
+up_enable_irq: extirq=14, RISCV_IRQ_EXT=25
+up_enable_irq: irq=40
+up_enable_irq: extirq=15, RISCV_IRQ_EXT=25
+up_enable_irq: irq=41
+up_enable_irq: extirq=16, RISCV_IRQ_EXT=25
+up_enable_irq: irq=42
+up_enable_irq: extirq=17, RISCV_IRQ_EXT=25
+up_enable_irq: irq=43
+up_enable_irq: extirq=18, RISCV_IRQ_EXT=25
+up_enable_irq: irq=44
+up_enable_irq: extirq=19, RISCV_IRQ_EXT=25
+up_enable_irq: irq=45
+up_enable_irq: extirq=20, RISCV_IRQ_EXT=25
+up_enable_irq: irq=46
+up_enable_irq: extirq=21, RISCV_IRQ_EXT=25
+up_enable_irq: irq=47
+up_enable_irq: extirq=22, RISCV_IRQ_EXT=25
+up_enable_irq: irq=48
+up_enable_irq: extirq=23, RISCV_IRQ_EXT=25
+up_enable_irq: irq=49
+up_enable_irq: extirq=24, RISCV_IRQ_EXT=25
+up_enable_irq: irq=50
+up_enable_irq: extirq=25, RISCV_IRQ_EXT=25
+up_enable_irq: irq=51
+up_enable_irq: extirq=26, RISCV_IRQ_EXT=25
+up_enable_irq: irq=52
+up_enable_irq: extirq=27, RISCV_IRQ_EXT=25
+up_enable_irq: irq=53
+up_enable_irq: extirq=28, RISCV_IRQ_EXT=25
+up_enable_irq: irq=54
+up_enable_irq: extirq=29, RISCV_IRQ_EXT=25
+up_enable_irq: irq=55
+up_enable_irq: extirq=30, RISCV_IRQ_EXT=25
+up_enable_irq: irq=56
+up_enable_irq: extirq=31, RISCV_IRQ_EXT=25
+up_enable_irq: irq=57
+up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
+up_enable_irq: irq=58
+up_enable_irq: extirq=33, RISCV_IRQ_EXT=25
+up_enable_irq: irq=59
+up_enable_irq: extirq=34, RISCV_IRQ_EXT=25
+up_enable_irq: irq=60
+up_enable_irq: extirq=35, RISCV_IRQ_EXT=25
+up_enable_irq: irq=61
+up_enable_irq: extirq=36, RISCV_IRQ_EXT=25
+up_enable_irq: irq=62
+up_enable_irq: extirq=37, RISCV_IRQ_EXT=25
+up_enable_irq: irq=63
+up_enable_irq: extirq=38, RISCV_IRQ_EXT=25
+up_enable_irq: irq=64
+up_enable_irq: extirq=39, RISCV_IRQ_EXT=25
+up_enable_irq: irq=65
+up_enable_irq: extirq=40, RISCV_IRQ_EXT=25
+up_enable_irq: irq=66
+up_enable_irq: extirq=41, RISCV_IRQ_EXT=25
+up_enable_irq: irq=67
+up_enable_irq: extirq=42, RISCV_IRQ_EXT=25
+up_enable_irq: irq=68
+up_enable_irq: extirq=43, RISCV_IRQ_EXT=25
+up_enable_irq: irq=69
+up_enable_irq: extirq=44, RISCV_IRQ_EXT=25
+up_enable_irq: irq=70
+up_enable_irq: extirq=45, RISCV_IRQ_EXT=25
+up_enable_irq: irq=71
+up_enable_irq: extirq=46, RISCV_IRQ_EXT=25
+up_enable_irq: irq=72
+up_enable_irq: extirq=47, RISCV_IRQ_EXT=25
+up_enable_irq: irq=73
+up_enable_irq: extirq=48, RISCV_IRQ_EXT=25
+up_enable_irq: irq=74
+up_enable_irq: extirq=49, RISCV_IRQ_EXT=25
+up_enable_irq: irq=75
+up_enable_irq: extirq=50, RISCV_IRQ_EXT=25
+up_enable_irq: irq=76
+up_enable_irq: extirq=51, RISCV_IRQ_EXT=25
+up_enable_irq: irq=77
+up_enable_irq: extirq=52, RISCV_IRQ_EXT=25
+up_enable_irq: irq=78
+up_enable_irq: extirq=53, RISCV_IRQ_EXT=25
+up_enable_irq: irq=79
+up_enable_irq: extirq=54, RISCV_IRQ_EXT=25
+up_enable_irq: irq=80
+up_enable_irq: extirq=55, RISCV_IRQ_EXT=25
+up_enable_irq: irq=81
+up_enable_irq: extirq=56, RISCV_IRQ_EXT=25
+up_enable_irq: irq=82
+up_enable_irq: extirq=57, RISCV_IRQ_EXT=25
+up_enable_irq: irq=83
+up_enable_irq: extirq=58, RISCV_IRQ_EXT=25
+up_enable_irq: irq=84
+up_enable_irq: extirq=59, RISCV_IRQ_EXT=25
+up_enable_irq: irq=85
+up_enable_irq: extirq=60, RISCV_IRQ_EXT=25
+up_enable_irq: irq=86
+up_enable_irq: extirq=61, RISCV_IRQ_EXT=25
+up_enable_irq: irq=87
+up_enable_irq: extirq=62, RISCV_IRQ_EXT=25
+up_enable_irq: irq=88
+up_enable_irq: extirq=63, RISCV_IRQ_EXT=25
 up_enable_irq: irq=17
 up_enable_irq: RISCV_IRQ_SOFT=17
 uart_register: Registering /dev/console
 uart_register: Registering /dev/ttyS0
 up_enable_irq: irq=57
 up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
-work_start_lowpri: Starting low-priority kernel worker thread(s)
+work_start_lowpri: Starting low-priority kernel worker thread(s)
 board_late_initialize: 
 nx_start_application: Starting init task: /system/bin/init
 elf_symname: Symbol has no name
@@ -3445,16 +3738,52 @@ elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
 elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
 nx_start_application: ret=3
 up_exit: TCB=0x404088d0 exiting
-$$$$$$$$$$$$$$$uart_write (0xc0200428):
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+uart_write (0xc0200428):
 0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
-AAAAAAAAAD$$$$$uart_write (0xc000a610):
+AAAAAAAAAD$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+$%&riscv_doirq: irq=8
+uart_write (0xc000a610):
 0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
 0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
-AAAAAAAAAAAAAAAuart_write (0xc0015338):
+AAAAAAAAAAAAAAAriscv_doirq: irq=8
+uart_write (0xc0015338):
 0000  6e 73 68 3e 20                                   nsh>            
-AAAAAD$uart_write (0xc0015310):
+AAAAAD$%&riscv_doirq: irq=8
+uart_write (0xc0015310):
 0000  1b 5b 4b                                         .[K             
-AAAD$nx_start: CPU0: Beginning Idle Loop        
+AAAD$%&riscv_doirq: irq=8
+nx_start: CPU0: Beginning Idle Loop
 ```
 
 [`uart_txready`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/serial_io.c#L63-L68) is NOT Ready, that's why it doesn't call [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L1542-L1556)
