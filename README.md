@@ -3464,18 +3464,33 @@ CONFIG_16550_UART0_IRQ=57
 
 [JH7110 Interrupt Connections](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html) says that Global Interrupts are 0 to 126 (127 total interrupts)
 
-From [qemu-rv/irq.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/include/qemu-rv/irq.h#L31-L40)
+From [qemu-rv/irq.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/include/qemu-rv/irq.h#L31-L40):
 
 ```c
 /* Map RISC-V exception code to NuttX IRQ */
 
 //// "JH7110 Interrupt Connections" says that Global Interrupts are 0 to 126 (127 total interrupts)
 //// https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html
-#define NR_IRQS (127)
+#define NR_IRQS (RISCV_IRQ_SEXT + 127)
 
 // Previously:
 ////#define QEMU_RV_IRQ_UART0  (RISCV_IRQ_MEXT + 10)
 ////#define NR_IRQS (QEMU_RV_IRQ_UART0 + 1)
+```
+
+From [qemu_rv_irq.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L46-L72):
+
+```c
+void up_irqinitialize(void)
+{
+  ...
+  /* Set priority for all global interrupts to 1 (lowest) */
+  int id;
+  ////TODO: Why 52 PLIC Interrupts?
+  for (id = 1; id <= NR_IRQS; id++) //// Changed 52 to NR_IRQS
+    {
+      putreg32(1, (uintptr_t)(QEMU_RV_PLIC_PRIORITY + 4 * id));
+    }
 ```
 
 Check the Device Tree...
@@ -3543,6 +3558,12 @@ AAAAADuart_write (0xc0015310):
 0000  1b 5b 4b                                         .[K             
 AAADnx_start: CPU0: Beginning Idle Loop
 ```
+
+TODO: Check PolarFire Icicle 
+
+https://lupyuen.github.io/articles/privilege#other-risc-v-ports-of-nuttx
+
+TODO: Check Linux Boot Code
 
 [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf)
 
