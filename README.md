@@ -3613,11 +3613,21 @@ STIP: Supervisor Timer Interrupt
 
 SEIP: Supervisor External Interrupt
 
+[`__trap_vec`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/common/riscv_vectors.S#L38) calls...
+
+- [`exception_common`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/common/riscv_exception_common.S#L77)
+
+TODO: Log to UART in [`exception_common`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/common/riscv_exception_common.S#L77)
+
 TODO: Can OpenSBI handle mideleg?
 
 TODO: Linux SBI Interface
 
 https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/sbi.c
+
+TODO: Handle Machine Exception
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_exception_m.S#L64
 
 # RAM Disk Address for RISC-V QEMU
 
