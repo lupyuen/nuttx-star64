@@ -3856,19 +3856,19 @@ Which produces [jh7110-visionfive-v2.dts](https://github.com/lupyuen/nuttx-star6
 UART0 is indeed IRQ 32: [jh7110-visionfive-v2.dts](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dts#L619-L631)
 
 ```text
-		serial@10000000 {
-			compatible = "snps,dw-apb-uart";
-			reg = <0x00 0x10000000 0x00 0x10000>;
-			reg-io-width = <0x04>;
-			reg-shift = <0x02>;
-			clocks = <0x08 0x92 0x08 0x91>;
-			clock-names = "baudclk\0apb_pclk";
-			resets = <0x21 0x53 0x21 0x54>;
-			interrupts = <0x20>;
-			status = "okay";
-			pinctrl-names = "default";
-			pinctrl-0 = <0x24>;
-		};
+serial@10000000 {
+  compatible = "snps,dw-apb-uart";
+  reg = <0x00 0x10000000 0x00 0x10000>;
+  reg-io-width = <0x04>;
+  reg-shift = <0x02>;
+  clocks = <0x08 0x92 0x08 0x91>;
+  clock-names = "baudclk\0apb_pclk";
+  resets = <0x21 0x53 0x21 0x54>;
+  interrupts = <0x20>;
+  status = "okay";
+  pinctrl-names = "default";
+  pinctrl-0 = <0x24>;
+};
 ```
 
 Try [UART0 RISC-V IRQ 27](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html), which is NuttX IRQ 52.
