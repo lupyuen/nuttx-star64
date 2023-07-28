@@ -3370,6 +3370,35 @@ TODO: Check User Address Space
 
 TODO: Boot from MicroSD with Initial RAM Disk
 
+# No Console Output from NuttX Shell
+
+TODO
+
+From QEMU:
+
+```text
+uart_write (0xc0200428):
+0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
+AAAAAAAAAD***main
+uart_write (0xc000a610):
+0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
+0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD
+NuttShell (NSH) NuttX-12.0.3
+uart_write (0xc0015340):
+0000  6e 73 68 3e 20                                   nsh>            
+AAAAADnsh> uart_write (0xc0015318):
+0000  1b 5b 4b                                         .[K             
+AAADnx_start: CPU0: Beginning Idle Loop
+```
+
+[`uart_write`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial.c#L1172-L1341) calls...
+
+- `A`: [`uart_putxmitchar`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial.c#L150-L286) calls...
+
+- `D`: [`uart_xmitchars`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial_io.c#L42-L107)
+
+
 # RAM Disk Address for RISC-V QEMU
 
 Read the article...
