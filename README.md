@@ -3377,6 +3377,20 @@ TODO
 From QEMU:
 
 ```text
+ABCnx_start: Entry
+up_enable_irq: irq=17
+up_enable_irq: RISCV_IRQ_SOFT=17
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+up_enable_irq: irq=35
+up_enable_irq: extirq=10, RISCV_IRQ_EXT=25
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
+up_exit: TCB=0x802088d0 exiting
 uart_write (0xc0200428):
 0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
 FAAAAAAAADEF*F*F*FmFaFiFnF
@@ -3435,6 +3449,16 @@ AAADnx_start: CPU0: Beginning Idle Loop
   [(See the __JH7110 U74 Memory Map__)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html)
 
 No response to UART Input.
+
+[SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf)
+
+• Software Interrupt, Machine Mode, Interrupt ID: 3
+• Timer Interrupt, Machine Mode, Interrupt ID: 7
+• External Interrupt, Machine Mode, Interrupt ID: 11
+
+• Software Interrupt, Supervisor Mode, Interrupt ID: 1
+• Timer Interrupt, Supervisor Mode, Interrupt ID: 5
+• External Interrupt, Supervisor Mode, Interrupt ID: 9
 
 # RAM Disk Address for RISC-V QEMU
 
