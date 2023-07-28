@@ -3458,9 +3458,25 @@ No response to UART Input.
 
 Star64 UART is [RISC-V IRQ 32](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html), which becomes NuttX IRQ 57 (32 + 25).
 
-RISCV_IRQ_EXT = RISCV_IRQ_SEXT = 16 + 9
+```bash
+CONFIG_16550_UART0_IRQ=57
+```
 
 [JH7110 Interrupt Connections](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html) says that Global Interrupts are 0 to 126 (127 total interrupts)
+
+From [qemu-rv/irq.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/include/qemu-rv/irq.h#L31-L40)
+
+```c
+/* Map RISC-V exception code to NuttX IRQ */
+
+//// "JH7110 Interrupt Connections" says that Global Interrupts are 0 to 126 (127 total interrupts)
+//// https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html
+#define NR_IRQS (127)
+
+// Previously:
+////#define QEMU_RV_IRQ_UART0  (RISCV_IRQ_MEXT + 10)
+////#define NR_IRQS (QEMU_RV_IRQ_UART0 + 1)
+```
 
 Check the Device Tree...
 
@@ -3472,7 +3488,61 @@ dtc \
   jh7110-visionfive-v2.dtb
 ```
 
-Which produces [jh7110-visionfive-v2.dts]()
+Which produces [jh7110-visionfive-v2.dts](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dts)
+
+UART0 is indeed IRQ 32: [jh7110-visionfive-v2.dts](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dts#L619-L631)
+
+```text
+		serial@10000000 {
+			compatible = "snps,dw-apb-uart";
+			reg = <0x00 0x10000000 0x00 0x10000>;
+			reg-io-width = <0x04>;
+			reg-shift = <0x02>;
+			clocks = <0x08 0x92 0x08 0x91>;
+			clock-names = "baudclk\0apb_pclk";
+			resets = <0x21 0x53 0x21 0x54>;
+			interrupts = <0x20>;
+			status = "okay";
+			pinctrl-names = "default";
+			pinctrl-0 = <0x24>;
+		};
+```
+
+Try [UART0 RISC-V IRQ 27](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html), which is NuttX IRQ 52.
+
+```bash
+CONFIG_16550_UART0_IRQ=52
+```
+
+Also no response...
+
+```text
+123067BCnx_start: Entry
+up_enable_irq: irq=17
+up_enable_irq: RISCV_IRQ_SOFT=17
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+up_enable_irq: irq=52
+up_enable_irq: extirq=27, RISCV_IRQ_EXT=25
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
+nx_start_application: ret=3
+up_exit: TCB=0x404088d0 exiting
+uart_write (0xc0200428):
+0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
+AAAAAAAAADuart_write (0xc000a610):
+0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
+0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
+AAAAAAAAAAAAAAAuart_write (0xc0015338):
+0000  6e 73 68 3e 20                                   nsh>            
+AAAAADuart_write (0xc0015310):
+0000  1b 5b 4b                                         .[K             
+AAADnx_start: CPU0: Beginning Idle Loop
+```
 
 [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf)
 
