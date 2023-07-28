@@ -3910,20 +3910,16 @@ AAAAAD#uart_write (0xc0015310):
 AAAD#nx_start: CPU0: Beginning Idle Loop
 ```
 
-TODO: Check PolarFire Icicle 
-
-https://lupyuen.github.io/articles/privilege#other-risc-v-ports-of-nuttx
-
-TODO: Check Linux Boot Code
-
-https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S
+[PLIC Spec](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc)
 
 From [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf):
 
+Machine Mode:
 - Software Interrupt, Machine Mode, Interrupt ID: 3
 - Timer Interrupt, Machine Mode, Interrupt ID: 7
 - External Interrupt, Machine Mode, Interrupt ID: 11
 
+Supervisor Mode:
 - Software Interrupt, Supervisor Mode, Interrupt ID: 1
 - Timer Interrupt, Supervisor Mode, Interrupt ID: 5
 - External Interrupt, Supervisor Mode, Interrupt ID: 9
@@ -3935,11 +3931,32 @@ mode interrupt, unless the Machine mode interrupt has been delegated to Supervis
 through the mideleg register. On the contrary, Supervisor interrupts will not immediately trigger
 if a CPU is in Machine mode. While operating in Supervisor mode, a CPU does not have visibility to configure Machine mode interrupts.
 
-TODO: What is mideleg?
+[What is mideleg](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#machine-trap-delegation-registers-medeleg-and-mideleg)
 
-https://five-embeddev.com/riscv-isa-manual/latest/machine.html#machine-trap-delegation-registers-medeleg-and-mideleg
+From [OpenSBI Log](https://lupyuen.github.io/articles/linux#appendix-opensbi-log-for-star64):
 
-From NuttX SBI: [nuttsbi/sbi_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/nuttsbi/sbi_start.c#L91-L94)
+```bash
+Boot HART MIDELEG: 0x0000000000000222
+Boot HART MEDELEG: 0x000000000000b109
+```
+
+From [csr.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/include/csr.h#L343-L346):
+
+```c
+#define MIP_SSIP            (0x1 << 1)
+#define MIP_STIP            (0x1 << 5)
+#define MIP_MTIP            (0x1 << 7)
+#define MIP_SEIP            (0x1 << 9)
+```
+
+So `Boot HART MIDELEG: 0x0000000000000222` means...
+- SSIP: Supervisor Software Interrupt
+- STIP: Supervisor Timer Interrupt
+- SEIP: Supervisor External Interrupt
+
+(But not MTIP: Machine Timer Interrupt)
+
+Which is same as NuttX SBI: [nuttsbi/sbi_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/nuttsbi/sbi_start.c#L91-L94)
 
 ```c
   /* Delegate interrupts */
@@ -3957,19 +3974,13 @@ From NuttX SBI: [nuttsbi/sbi_start.c](https://github.com/lupyuen2/wip-pinephone-
   WRITE_CSR(medeleg, reg);
 ```
 
-SSIP: Supervisor Software Interrupt
+TODO: Check PolarFire Icicle 
 
-STIP: Supervisor Timer Interrupt
+https://lupyuen.github.io/articles/privilege#other-risc-v-ports-of-nuttx
 
-SEIP: Supervisor External Interrupt
+TODO: Check Linux Boot Code
 
-[`__trap_vec`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/common/riscv_vectors.S#L38) calls...
-
-- [`exception_common`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/common/riscv_exception_common.S#L77)
-
-TODO: Log to UART in [`exception_common`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/common/riscv_exception_common.S#L77)
-
-TODO: Can OpenSBI handle mideleg?
+https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S
 
 TODO: Linux SBI Interface
 
