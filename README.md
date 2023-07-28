@@ -3968,11 +3968,11 @@ From [csr.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/r
 ```
 
 So `Boot HART MIDELEG: 0x0000000000000222` means...
-- SSIP: Supervisor Software Interrupt
-- STIP: Supervisor Timer Interrupt
-- SEIP: Supervisor External Interrupt
+- SSIP: Delegate Supervisor Software Interrupt
+- STIP: Delegate Supervisor Timer Interrupt
+- SEIP: Delegate Supervisor External Interrupt
 
-(But not MTIP: Machine Timer Interrupt)
+(But not MTIP: Delegate Machine Timer Interrupt)
 
 Which is same as NuttX SBI: [nuttsbi/sbi_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/nuttsbi/sbi_start.c#L91-L94)
 
