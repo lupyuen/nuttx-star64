@@ -3584,6 +3584,23 @@ if a CPU is in Machine mode. While operating in Supervisor mode, a CPU does not 
 
 TODO: What is mideleg?
 
+https://five-embeddev.com/riscv-isa-manual/latest/machine.html#machine-trap-delegation-registers-medeleg-and-mideleg
+
+From NuttX SBI: [nuttsbi/sbi_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/nuttsbi/sbi_start.c#L91-L94)
+
+```c
+  /* Delegate interrupts */
+
+  reg = (MIP_SSIP | MIP_STIP | MIP_SEIP);
+  WRITE_CSR(mideleg, reg);
+```
+
+SSIP: Supervisor Software Interrupt
+
+STIP: Supervisor Timer Interrupt
+
+SEIP: Supervisor External Interrupt
+
 TODO: Can OpenSBI handle mideleg?
 
 # RAM Disk Address for RISC-V QEMU
