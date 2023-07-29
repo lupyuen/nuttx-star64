@@ -3478,6 +3478,10 @@ QEMU UART is [RISC-V IRQ 10](https://github.com/lupyuen/nuttx-star64/blob/main/q
 
 IRQ 8 is RISCV_IRQ_ECALLU: ECALL from User Mode to Supervisor Mode
 
+# Compare UART Output: Star64 vs QEMU
+
+TODO
+
 From Star64:
 
 ```text
