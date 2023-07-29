@@ -3859,6 +3859,8 @@ up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
 +++++++
 ```
 
+TODO: Why no UART Output, now that UART Input and Output Interrupts are OK
+
 TODO: Check PolarFire Icicle 
 
 https://lupyuen.github.io/articles/privilege#other-risc-v-ports-of-nuttx
