@@ -3390,6 +3390,8 @@ uart_write (0xc0015310):
 
 Just that the NuttX Shell couldn't produce any UART Output.
 
+(This happens to all NuttX Apps, but not to NuttX Kernel)
+
 Let's find out why, by tracing the UART Output in NuttX QEMU...
 
 # UART Output in NuttX QEMU
