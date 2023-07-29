@@ -3689,15 +3689,23 @@ Now we study the NuttX Code for Platform-Level Interrupt Controller...
 
 # Platform-Level Interrupt Controller for Star64
 
-TODO
+The Platform-Level Interrupt Controller (PLIC) handles Global Interrupts triggered by Peripherals (like UART).
 
-We update the [PLIC Code](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L45-L214) based on [PLIC Spec](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc)
+(PLIC works like Arm's Global Interrupt Controller)
+
+We update the [NuttX PLIC Code](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L45-L214) based on these docs...
+
+- [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf)
+
+- [PLIC Spec](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc)
 
 ![PLIC in JH7110 (U74) SoC](https://lupyuen.github.io/images/plic-hart.png)
 
-From [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf):
+_How to configure PLIC to forward Interrupts to the Harts?_
 
-Page 193: PLIC Memory Map
+The PLIC Memory Map is below...
+
+From [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf) Page 193 (PLIC Memory Map)
 
 | Address | Width | Attr | Description
 |---------|-------|------|------------
@@ -3722,27 +3730,15 @@ Page 193: PLIC Memory Map
 | 0x0C20_8000 | 4B | RW | Hart 4 S-Mode priority threshold
 | 0x0C20_8004 | 4B | RW | Hart 4 S-Mode claim/complete
 
-From the above doc...
-- Hart 0: S7 Core
-- Harts 1 to 4: U7 Cores
+There are 5 Harts in JH7110...
+- __Hart 0:__ S7 Core (the limited core, unused)
+- __Harts 1 to 4:__ U7 Cores (the full cores)
 
-According to OpenSBI, we are now running on Hart 1. (NuttX thinks it's Hart 0)
+According to OpenSBI, we are now running on Hart 1. (Sounds right)
 
-According to [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
+(We pass the Hart ID to NuttX as Hart 0, since NuttX expects Hart ID to start at 0)
 
-```text
-0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
-0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
-```
-
-Which is correct: [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L30-L32)
-
-```c
-#define QEMU_RV_CLINT_BASE   0x02000000
-#define QEMU_RV_PLIC_BASE    0x0c000000
-```
-
-We fix the PLIC Addresses: [qemu_rv_plic.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/hardware/qemu_rv_plic.h#L33-L59)
+Based on the above PLIC Memory Map, we fix the PLIC Addresses in NuttX to use Hart 1: [qemu_rv_plic.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/hardware/qemu_rv_plic.h#L33-L59)
 
 ```c
 // | 0x0C00_0004 | 4B | RW | Source 1 priority
@@ -3772,6 +3768,24 @@ We fix the PLIC Addresses: [qemu_rv_plic.h](https://github.com/lupyuen2/wip-pine
 // #  define QEMU_RV_PLIC_THRESHOLD (QEMU_RV_PLIC_BASE + 0x201000)
 // #  define QEMU_RV_PLIC_CLAIM     (QEMU_RV_PLIC_BASE + 0x201004)
 ```
+
+_What about the PLIC Base Address?_
+
+According to [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html), the Base Addresses are:
+
+```text
+0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
+0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
+```
+
+Which are correct in NuttX: [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L30-L32)
+
+```c
+#define QEMU_RV_CLINT_BASE   0x02000000
+#define QEMU_RV_PLIC_BASE    0x0c000000
+```
+
+Let's check that the RISC-V Traps are delegated correctly...
 
 # Delegate Machine-Mode Traps to Supervisor-Mode
 
