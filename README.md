@@ -3821,7 +3821,7 @@ Which is correct because [SiFive U74-MC Core Complex Manual](https://starfivetec
 
 Thus `u0_uart`(IRQ 32) is at `global_interrupts[27]`.
 
-IRQ 57 is now OK yay! But it's not triggered by UART Input. Why?
+IRQ 57 is now OK yay! But still not UART Output though.
 
 ```text
 123067BCnx_start: Entry
@@ -3845,7 +3845,7 @@ $%^&riscv_doirq: irq=57
 #*$%^&nx_start: CPU0: Beginning Idle Loop
 ```
 
-TODO: Check why no UART Output
+And it responds to UART Input yay!
 
 ```text
 123067BCnx_start: Entry
@@ -3856,6 +3856,7 @@ uart_register: Registering /dev/console
 uart_register: Registering /dev/ttyS0
 up_enable_irq: irq=57
 up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
++++++++
 ```
 
 TODO: Check PolarFire Icicle 
