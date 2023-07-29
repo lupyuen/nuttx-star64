@@ -3575,6 +3575,12 @@ CONFIG_16550_UART0_IRQ=57
 
 [(Source)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig#L10-L17)
 
+Also from [JH7110 Interrupt Connections](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html): `u0_uart`	is at `global_interrupts[27]`
+
+Which is correct because [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf) (Page 198) says that `global_interrupts[0]` is PLIC Interrupt ID 5.
+
+Thus `u0_uart`(IRQ 32) is at `global_interrupts[27]`.
+
 _Is it the same UART IRQ as Linux?_
 
 We check the Linux Device Tree...
@@ -3791,19 +3797,7 @@ Let's check that the RISC-V Traps are delegated correctly...
 
 TODO
 
-From [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf):
-
-Machine Mode:
-- Software Interrupt, Machine Mode, Interrupt ID: 3
-- Timer Interrupt, Machine Mode, Interrupt ID: 7
-- External Interrupt, Machine Mode, Interrupt ID: 11
-
-Supervisor Mode:
-- Software Interrupt, Supervisor Mode, Interrupt ID: 1
-- Timer Interrupt, Supervisor Mode, Interrupt ID: 5
-- External Interrupt, Supervisor Mode, Interrupt ID: 9
-
-From Page 15:
+From [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf), Page 15:
 
 > A CPU operating in Supervisor mode will trap to Machine mode upon the arrival of a Machine
 mode interrupt, unless the Machine mode interrupt has been delegated to Supervisor mode
@@ -3853,11 +3847,23 @@ Which is same as NuttX SBI: [nuttsbi/sbi_start.c](https://github.com/lupyuen2/wi
   WRITE_CSR(medeleg, reg);
 ```
 
-From [JH7110 Interrupt Connections](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html): `u0_uart`	is at `global_interrupts[27]`
+Also from [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf):
 
-Which is correct because [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf) (Page 198) says that `global_interrupts[0]` is PLIC Interrupt ID 5.
+Machine Mode Interrupts:
+- Software Interrupt: Interrupt ID: 3
+- Timer Interrupt: Interrupt ID: 7
+- External Interrupt: Interrupt ID: 11
 
-Thus `u0_uart`(IRQ 32) is at `global_interrupts[27]`.
+Supervisor Mode Interrupts:
+- Software Interrupt: Interrupt ID: 1
+- Timer Interrupt: Interrupt ID: 5
+- External Interrupt: Interrupt ID: 9
+
+# NuttX Star64 responds to UART Interrupts
+
+TODO
+
+_Does it work?_
 
 IRQ 57 is now OK yay! But still not UART Output though.
 
@@ -3900,6 +3906,8 @@ up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
 [(`+` means UART Input Interrupt)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L965-L978)
 
 TODO: Why no UART Output, now that UART Input and Output Interrupts are OK
+
+TODO: Why are we rushing? Might get stale and out of sync with mainline
 
 TODO: Check PolarFire Icicle 
 
