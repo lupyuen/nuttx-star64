@@ -3370,7 +3370,29 @@ TODO: Check User Address Space
 
 TODO: Boot from MicroSD with Initial RAM Disk
 
-# No Console Output from NuttX Shell
+# No UART Output from NuttX Shell
+
+From the previous section, we found out that NuttX Shell didn't appear on Star64 JH7110 SBC.
+
+When we log [`uart_write`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/serial.c#L1172-L1341), we see that the NuttX Shell is actually started!
+
+```text
+uart_write (0xc000a610):
+0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
+0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
+
+uart_write (0xc0015338):
+0000  6e 73 68 3e 20                                   nsh>            
+
+uart_write (0xc0015310):
+0000  1b 5b 4b                                         .[K             
+```
+
+Just that the NuttX Shell couldn't produce any UART Output.
+
+Let's find out why, by tracing the UART Output in NuttX QEMU...
+
+# UART Output in NuttX QEMU
 
 TODO
 
@@ -3395,22 +3417,7 @@ up_exit: TCB=0x802088d0 exiting
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
+...
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
@@ -3420,11 +3427,7 @@ FAAAAAAAADEF*F*F*FmFaFiFnF
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
+...
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
@@ -3497,22 +3500,7 @@ up_exit: TCB=0x404088d0 exiting
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
+...
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
@@ -3522,10 +3510,7 @@ AAAAAAAAAD$%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
-$%&riscv_doirq: irq=8
+...
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
 $%&riscv_doirq: irq=8
