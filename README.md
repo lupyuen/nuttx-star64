@@ -3902,12 +3902,15 @@ uart_register: Registering /dev/console
 uart_register: Registering /dev/ttyS0
 up_enable_irq: irq=57
 up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
+u16550_rxint: enable=1
 +++++++
 ```
 
 [(`+` means UART Input Interrupt)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L965-L978)
 
 TODO: Why no UART Output, now that UART Input and Output Interrupts are OK
+
+TODO: Why no txint enable?
 
 TODO: Why are we rushing? Might get stale and out of sync with mainline
 
