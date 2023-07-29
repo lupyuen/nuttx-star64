@@ -3488,6 +3488,8 @@ NuttX IRQ 8 is [`RISCV_IRQ_ECALLU`](https://github.com/lupyuen2/wip-pinephone-nu
 
 This happens when the NuttX App (User Mode) calls a System Function in NuttX Kernel (Supervisor Mode).
 
+![UART Output in NuttX QEMU](https://lupyuen.github.io/images/plic-qemu.png)
+
 Now we compare the above with Star64...
 
 # Compare UART Output: Star64 vs QEMU
@@ -3666,6 +3668,8 @@ up_enable_irq: extirq=63, RISCV_IRQ_EXT=25
 TODO
 
 We update the [PLIC Code](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L45-L214) based on [PLIC Spec](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc)
+
+![PLIC in JH7110 (U74) SoC](https://lupyuen.github.io/images/plic-hart.png)
 
 From [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf):
 
