@@ -3910,6 +3910,8 @@ u16550_rxint: enable=1
 
 TODO: Why UART Interrupt triggered repeatedly with [UART_IIR_INTSTATUS = 0](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L954-L966)?
 
+TODO: [Workaround for rx_timeout](https://github.com/torvalds/linux/blob/master/drivers/tty/serial/8250/8250_dw.c#L254-L274)
+
 TODO: Why no txint enable?
 
 TODO: Why are we rushing? Might get stale and out of sync with mainline
