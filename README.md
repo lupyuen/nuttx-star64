@@ -3791,11 +3791,11 @@ Which are correct in NuttX: [qemu_rv_memorymap.h](https://github.com/lupyuen2/wi
 #define QEMU_RV_PLIC_BASE    0x0c000000
 ```
 
-Let's check that the RISC-V Traps are delegated correctly...
+Let's check that the RISC-V Interrupts are delegated correctly...
 
-# Delegate Machine-Mode Traps to Supervisor-Mode
+# Delegate Machine-Mode Interrupts to Supervisor-Mode
 
-TODO
+_NuttX runs in RISC-V Supervisor Mode, which can't handle Interrupts directly. (Needs Machine Mode) How can we be sure that the RISC-V Interrupts are correctly handled in Supervisor Mode?_
 
 From [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf), Page 15:
 
@@ -3804,22 +3804,22 @@ mode interrupt, unless the Machine mode interrupt has been delegated to Supervis
 through the mideleg register. On the contrary, Supervisor interrupts will not immediately trigger
 if a CPU is in Machine mode. While operating in Supervisor mode, a CPU does not have visibility to configure Machine mode interrupts.
 
-[What is mideleg](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#machine-trap-delegation-registers-medeleg-and-mideleg)
+According to the [RISC-V Spec](https://five-embeddev.com/riscv-isa-manual/latest/machine.html#machine-trap-delegation-registers-medeleg-and-mideleg), MIDELEG needs to be configured orrectly to delegate Machine Mode Interrupts to Supervisor Mode.
 
-From [OpenSBI Log](https://lupyuen.github.io/articles/linux#appendix-opensbi-log-for-star64): MIDELEG and MEDELEG are...
+From [OpenSBI Log](https://lupyuen.github.io/articles/linux#appendix-opensbi-log-for-star64), we see the value of MIDELEG...
 
 ```bash
 Boot HART MIDELEG: 0x0000000000000222
 Boot HART MEDELEG: 0x000000000000b109
 ```
 
-Which have the following bits: [csr.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/include/csr.h#L343-L346):
+MIDELEG is defined by the following bits: [csr.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/include/csr.h#L343-L346):
 
 ```c
-#define MIP_SSIP            (0x1 << 1)
-#define MIP_STIP            (0x1 << 5)
-#define MIP_MTIP            (0x1 << 7)
-#define MIP_SEIP            (0x1 << 9)
+#define MIP_SSIP (0x1 << 1)
+#define MIP_STIP (0x1 << 5)
+#define MIP_MTIP (0x1 << 7)
+#define MIP_SEIP (0x1 << 9)
 ```
 
 So `Boot HART MIDELEG: 0x0000000000000222` means...
@@ -3829,7 +3829,9 @@ So `Boot HART MIDELEG: 0x0000000000000222` means...
 
 (But not MTIP: Delegate Machine Timer Interrupt)
 
-Which is same as NuttX SBI: [nuttsbi/sbi_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/nuttsbi/sbi_start.c#L91-L94)
+Thus we're good, the interrupts should be correctly delegated from Machine Mode to Supervisor Mode for NuttX.
+
+FYI: This is same for NuttX SBI: [nuttsbi/sbi_start.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/nuttsbi/sbi_start.c#L91-L94)
 
 ```c
   /* Delegate interrupts */
@@ -3847,7 +3849,7 @@ Which is same as NuttX SBI: [nuttsbi/sbi_start.c](https://github.com/lupyuen2/wi
   WRITE_CSR(medeleg, reg);
 ```
 
-Also from [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf):
+[SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf) states the Machine vs Supervisor Interrupt IDs:
 
 Machine Mode Interrupts:
 - Software Interrupt: Interrupt ID: 3
@@ -3859,7 +3861,7 @@ Supervisor Mode Interrupts:
 - Timer Interrupt: Interrupt ID: 5
 - External Interrupt: Interrupt ID: 9
 
-# NuttX Star64 responds to UART Interrupts
+# NuttX Star64 handles UART Interrupts
 
 TODO
 
