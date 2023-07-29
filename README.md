@@ -3379,132 +3379,6 @@ From QEMU:
 ```text
 ABCnx_start: Entry
 up_irq_enable: 
-up_enable_irq: irq=26
-up_enable_irq: extirq=1, RISCV_IRQ_EXT=25
-up_enable_irq: irq=27
-up_enable_irq: extirq=2, RISCV_IRQ_EXT=25
-up_enable_irq: irq=28
-up_enable_irq: extirq=3, RISCV_IRQ_EXT=25
-up_enable_irq: irq=29
-up_enable_irq: extirq=4, RISCV_IRQ_EXT=25
-up_enable_irq: irq=30
-up_enable_irq: extirq=5, RISCV_IRQ_EXT=25
-up_enable_irq: irq=31
-up_enable_irq: extirq=6, RISCV_IRQ_EXT=25
-up_enable_irq: irq=32
-up_enable_irq: extirq=7, RISCV_IRQ_EXT=25
-up_enable_irq: irq=33
-up_enable_irq: extirq=8, RISCV_IRQ_EXT=25
-up_enable_irq: irq=34
-up_enable_irq: extirq=9, RISCV_IRQ_EXT=25
-up_enable_irq: irq=35
-up_enable_irq: extirq=10, RISCV_IRQ_EXT=25
-up_enable_irq: irq=36
-up_enable_irq: extirq=11, RISCV_IRQ_EXT=25
-up_enable_irq: irq=37
-up_enable_irq: extirq=12, RISCV_IRQ_EXT=25
-up_enable_irq: irq=38
-up_enable_irq: extirq=13, RISCV_IRQ_EXT=25
-up_enable_irq: irq=39
-up_enable_irq: extirq=14, RISCV_IRQ_EXT=25
-up_enable_irq: irq=40
-up_enable_irq: extirq=15, RISCV_IRQ_EXT=25
-up_enable_irq: irq=41
-up_enable_irq: extirq=16, RISCV_IRQ_EXT=25
-up_enable_irq: irq=42
-up_enable_irq: extirq=17, RISCV_IRQ_EXT=25
-up_enable_irq: irq=43
-up_enable_irq: extirq=18, RISCV_IRQ_EXT=25
-up_enable_irq: irq=44
-up_enable_irq: extirq=19, RISCV_IRQ_EXT=25
-up_enable_irq: irq=45
-up_enable_irq: extirq=20, RISCV_IRQ_EXT=25
-up_enable_irq: irq=46
-up_enable_irq: extirq=21, RISCV_IRQ_EXT=25
-up_enable_irq: irq=47
-up_enable_irq: extirq=22, RISCV_IRQ_EXT=25
-up_enable_irq: irq=48
-up_enable_irq: extirq=23, RISCV_IRQ_EXT=25
-up_enable_irq: irq=49
-up_enable_irq: extirq=24, RISCV_IRQ_EXT=25
-up_enable_irq: irq=50
-up_enable_irq: extirq=25, RISCV_IRQ_EXT=25
-up_enable_irq: irq=51
-up_enable_irq: extirq=26, RISCV_IRQ_EXT=25
-up_enable_irq: irq=52
-up_enable_irq: extirq=27, RISCV_IRQ_EXT=25
-up_enable_irq: irq=53
-up_enable_irq: extirq=28, RISCV_IRQ_EXT=25
-up_enable_irq: irq=54
-up_enable_irq: extirq=29, RISCV_IRQ_EXT=25
-up_enable_irq: irq=55
-up_enable_irq: extirq=30, RISCV_IRQ_EXT=25
-up_enable_irq: irq=56
-up_enable_irq: extirq=31, RISCV_IRQ_EXT=25
-up_enable_irq: irq=57
-up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
-up_enable_irq: irq=58
-up_enable_irq: extirq=33, RISCV_IRQ_EXT=25
-up_enable_irq: irq=59
-up_enable_irq: extirq=34, RISCV_IRQ_EXT=25
-up_enable_irq: irq=60
-up_enable_irq: extirq=35, RISCV_IRQ_EXT=25
-up_enable_irq: irq=61
-up_enable_irq: extirq=36, RISCV_IRQ_EXT=25
-up_enable_irq: irq=62
-up_enable_irq: extirq=37, RISCV_IRQ_EXT=25
-up_enable_irq: irq=63
-up_enable_irq: extirq=38, RISCV_IRQ_EXT=25
-up_enable_irq: irq=64
-up_enable_irq: extirq=39, RISCV_IRQ_EXT=25
-up_enable_irq: irq=65
-up_enable_irq: extirq=40, RISCV_IRQ_EXT=25
-up_enable_irq: irq=66
-up_enable_irq: extirq=41, RISCV_IRQ_EXT=25
-up_enable_irq: irq=67
-up_enable_irq: extirq=42, RISCV_IRQ_EXT=25
-up_enable_irq: irq=68
-up_enable_irq: extirq=43, RISCV_IRQ_EXT=25
-up_enable_irq: irq=69
-up_enable_irq: extirq=44, RISCV_IRQ_EXT=25
-up_enable_irq: irq=70
-up_enable_irq: extirq=45, RISCV_IRQ_EXT=25
-up_enable_irq: irq=71
-up_enable_irq: extirq=46, RISCV_IRQ_EXT=25
-up_enable_irq: irq=72
-up_enable_irq: extirq=47, RISCV_IRQ_EXT=25
-up_enable_irq: irq=73
-up_enable_irq: extirq=48, RISCV_IRQ_EXT=25
-up_enable_irq: irq=74
-up_enable_irq: extirq=49, RISCV_IRQ_EXT=25
-up_enable_irq: irq=75
-up_enable_irq: extirq=50, RISCV_IRQ_EXT=25
-up_enable_irq: irq=76
-up_enable_irq: extirq=51, RISCV_IRQ_EXT=25
-up_enable_irq: irq=77
-up_enable_irq: extirq=52, RISCV_IRQ_EXT=25
-up_enable_irq: irq=78
-up_enable_irq: extirq=53, RISCV_IRQ_EXT=25
-up_enable_irq: irq=79
-up_enable_irq: extirq=54, RISCV_IRQ_EXT=25
-up_enable_irq: irq=80
-up_enable_irq: extirq=55, RISCV_IRQ_EXT=25
-up_enable_irq: irq=81
-up_enable_irq: extirq=56, RISCV_IRQ_EXT=25
-up_enable_irq: irq=82
-up_enable_irq: extirq=57, RISCV_IRQ_EXT=25
-up_enable_irq: irq=83
-up_enable_irq: extirq=58, RISCV_IRQ_EXT=25
-up_enable_irq: irq=84
-up_enable_irq: extirq=59, RISCV_IRQ_EXT=25
-up_enable_irq: irq=85
-up_enable_irq: extirq=60, RISCV_IRQ_EXT=25
-up_enable_irq: irq=86
-up_enable_irq: extirq=61, RISCV_IRQ_EXT=25
-up_enable_irq: irq=87
-up_enable_irq: extirq=62, RISCV_IRQ_EXT=25
-up_enable_irq: irq=88
-up_enable_irq: extirq=63, RISCV_IRQ_EXT=25
 up_enable_irq: irq=17
 up_enable_irq: RISCV_IRQ_SOFT=17
 uart_register: Registering /dev/console
@@ -3606,132 +3480,6 @@ From Star64:
 ```text
 123067BCnx_start: Entry
 up_irq_enable: 
-up_enable_irq: irq=26
-up_enable_irq: extirq=1, RISCV_IRQ_EXT=25
-up_enable_irq: irq=27
-up_enable_irq: extirq=2, RISCV_IRQ_EXT=25
-up_enable_irq: irq=28
-up_enable_irq: extirq=3, RISCV_IRQ_EXT=25
-up_enable_irq: irq=29
-up_enable_irq: extirq=4, RISCV_IRQ_EXT=25
-up_enable_irq: irq=30
-up_enable_irq: extirq=5, RISCV_IRQ_EXT=25
-up_enable_irq: irq=31
-up_enable_irq: extirq=6, RISCV_IRQ_EXT=25
-up_enable_irq: irq=32
-up_enable_irq: extirq=7, RISCV_IRQ_EXT=25
-up_enable_irq: irq=33
-up_enable_irq: extirq=8, RISCV_IRQ_EXT=25
-up_enable_irq: irq=34
-up_enable_irq: extirq=9, RISCV_IRQ_EXT=25
-up_enable_irq: irq=35
-up_enable_irq: extirq=10, RISCV_IRQ_EXT=25
-up_enable_irq: irq=36
-up_enable_irq: extirq=11, RISCV_IRQ_EXT=25
-up_enable_irq: irq=37
-up_enable_irq: extirq=12, RISCV_IRQ_EXT=25
-up_enable_irq: irq=38
-up_enable_irq: extirq=13, RISCV_IRQ_EXT=25
-up_enable_irq: irq=39
-up_enable_irq: extirq=14, RISCV_IRQ_EXT=25
-up_enable_irq: irq=40
-up_enable_irq: extirq=15, RISCV_IRQ_EXT=25
-up_enable_irq: irq=41
-up_enable_irq: extirq=16, RISCV_IRQ_EXT=25
-up_enable_irq: irq=42
-up_enable_irq: extirq=17, RISCV_IRQ_EXT=25
-up_enable_irq: irq=43
-up_enable_irq: extirq=18, RISCV_IRQ_EXT=25
-up_enable_irq: irq=44
-up_enable_irq: extirq=19, RISCV_IRQ_EXT=25
-up_enable_irq: irq=45
-up_enable_irq: extirq=20, RISCV_IRQ_EXT=25
-up_enable_irq: irq=46
-up_enable_irq: extirq=21, RISCV_IRQ_EXT=25
-up_enable_irq: irq=47
-up_enable_irq: extirq=22, RISCV_IRQ_EXT=25
-up_enable_irq: irq=48
-up_enable_irq: extirq=23, RISCV_IRQ_EXT=25
-up_enable_irq: irq=49
-up_enable_irq: extirq=24, RISCV_IRQ_EXT=25
-up_enable_irq: irq=50
-up_enable_irq: extirq=25, RISCV_IRQ_EXT=25
-up_enable_irq: irq=51
-up_enable_irq: extirq=26, RISCV_IRQ_EXT=25
-up_enable_irq: irq=52
-up_enable_irq: extirq=27, RISCV_IRQ_EXT=25
-up_enable_irq: irq=53
-up_enable_irq: extirq=28, RISCV_IRQ_EXT=25
-up_enable_irq: irq=54
-up_enable_irq: extirq=29, RISCV_IRQ_EXT=25
-up_enable_irq: irq=55
-up_enable_irq: extirq=30, RISCV_IRQ_EXT=25
-up_enable_irq: irq=56
-up_enable_irq: extirq=31, RISCV_IRQ_EXT=25
-up_enable_irq: irq=57
-up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
-up_enable_irq: irq=58
-up_enable_irq: extirq=33, RISCV_IRQ_EXT=25
-up_enable_irq: irq=59
-up_enable_irq: extirq=34, RISCV_IRQ_EXT=25
-up_enable_irq: irq=60
-up_enable_irq: extirq=35, RISCV_IRQ_EXT=25
-up_enable_irq: irq=61
-up_enable_irq: extirq=36, RISCV_IRQ_EXT=25
-up_enable_irq: irq=62
-up_enable_irq: extirq=37, RISCV_IRQ_EXT=25
-up_enable_irq: irq=63
-up_enable_irq: extirq=38, RISCV_IRQ_EXT=25
-up_enable_irq: irq=64
-up_enable_irq: extirq=39, RISCV_IRQ_EXT=25
-up_enable_irq: irq=65
-up_enable_irq: extirq=40, RISCV_IRQ_EXT=25
-up_enable_irq: irq=66
-up_enable_irq: extirq=41, RISCV_IRQ_EXT=25
-up_enable_irq: irq=67
-up_enable_irq: extirq=42, RISCV_IRQ_EXT=25
-up_enable_irq: irq=68
-up_enable_irq: extirq=43, RISCV_IRQ_EXT=25
-up_enable_irq: irq=69
-up_enable_irq: extirq=44, RISCV_IRQ_EXT=25
-up_enable_irq: irq=70
-up_enable_irq: extirq=45, RISCV_IRQ_EXT=25
-up_enable_irq: irq=71
-up_enable_irq: extirq=46, RISCV_IRQ_EXT=25
-up_enable_irq: irq=72
-up_enable_irq: extirq=47, RISCV_IRQ_EXT=25
-up_enable_irq: irq=73
-up_enable_irq: extirq=48, RISCV_IRQ_EXT=25
-up_enable_irq: irq=74
-up_enable_irq: extirq=49, RISCV_IRQ_EXT=25
-up_enable_irq: irq=75
-up_enable_irq: extirq=50, RISCV_IRQ_EXT=25
-up_enable_irq: irq=76
-up_enable_irq: extirq=51, RISCV_IRQ_EXT=25
-up_enable_irq: irq=77
-up_enable_irq: extirq=52, RISCV_IRQ_EXT=25
-up_enable_irq: irq=78
-up_enable_irq: extirq=53, RISCV_IRQ_EXT=25
-up_enable_irq: irq=79
-up_enable_irq: extirq=54, RISCV_IRQ_EXT=25
-up_enable_irq: irq=80
-up_enable_irq: extirq=55, RISCV_IRQ_EXT=25
-up_enable_irq: irq=81
-up_enable_irq: extirq=56, RISCV_IRQ_EXT=25
-up_enable_irq: irq=82
-up_enable_irq: extirq=57, RISCV_IRQ_EXT=25
-up_enable_irq: irq=83
-up_enable_irq: extirq=58, RISCV_IRQ_EXT=25
-up_enable_irq: irq=84
-up_enable_irq: extirq=59, RISCV_IRQ_EXT=25
-up_enable_irq: irq=85
-up_enable_irq: extirq=60, RISCV_IRQ_EXT=25
-up_enable_irq: irq=86
-up_enable_irq: extirq=61, RISCV_IRQ_EXT=25
-up_enable_irq: irq=87
-up_enable_irq: extirq=62, RISCV_IRQ_EXT=25
-up_enable_irq: irq=88
-up_enable_irq: extirq=63, RISCV_IRQ_EXT=25
 up_enable_irq: irq=17
 up_enable_irq: RISCV_IRQ_SOFT=17
 uart_register: Registering /dev/console
@@ -3891,6 +3639,143 @@ void up_enable_irq(int irq)
         }
 ```
 
+_Maybe the UART IRQ is incorrect?_
+
+Tried to enable a whole bunch of IRQs, but nothing got triggered...
+
+```text
+up_enable_irq: irq=26
+up_enable_irq: extirq=1, RISCV_IRQ_EXT=25
+up_enable_irq: irq=27
+up_enable_irq: extirq=2, RISCV_IRQ_EXT=25
+up_enable_irq: irq=28
+up_enable_irq: extirq=3, RISCV_IRQ_EXT=25
+up_enable_irq: irq=29
+up_enable_irq: extirq=4, RISCV_IRQ_EXT=25
+up_enable_irq: irq=30
+up_enable_irq: extirq=5, RISCV_IRQ_EXT=25
+up_enable_irq: irq=31
+up_enable_irq: extirq=6, RISCV_IRQ_EXT=25
+up_enable_irq: irq=32
+up_enable_irq: extirq=7, RISCV_IRQ_EXT=25
+up_enable_irq: irq=33
+up_enable_irq: extirq=8, RISCV_IRQ_EXT=25
+up_enable_irq: irq=34
+up_enable_irq: extirq=9, RISCV_IRQ_EXT=25
+up_enable_irq: irq=35
+up_enable_irq: extirq=10, RISCV_IRQ_EXT=25
+up_enable_irq: irq=36
+up_enable_irq: extirq=11, RISCV_IRQ_EXT=25
+up_enable_irq: irq=37
+up_enable_irq: extirq=12, RISCV_IRQ_EXT=25
+up_enable_irq: irq=38
+up_enable_irq: extirq=13, RISCV_IRQ_EXT=25
+up_enable_irq: irq=39
+up_enable_irq: extirq=14, RISCV_IRQ_EXT=25
+up_enable_irq: irq=40
+up_enable_irq: extirq=15, RISCV_IRQ_EXT=25
+up_enable_irq: irq=41
+up_enable_irq: extirq=16, RISCV_IRQ_EXT=25
+up_enable_irq: irq=42
+up_enable_irq: extirq=17, RISCV_IRQ_EXT=25
+up_enable_irq: irq=43
+up_enable_irq: extirq=18, RISCV_IRQ_EXT=25
+up_enable_irq: irq=44
+up_enable_irq: extirq=19, RISCV_IRQ_EXT=25
+up_enable_irq: irq=45
+up_enable_irq: extirq=20, RISCV_IRQ_EXT=25
+up_enable_irq: irq=46
+up_enable_irq: extirq=21, RISCV_IRQ_EXT=25
+up_enable_irq: irq=47
+up_enable_irq: extirq=22, RISCV_IRQ_EXT=25
+up_enable_irq: irq=48
+up_enable_irq: extirq=23, RISCV_IRQ_EXT=25
+up_enable_irq: irq=49
+up_enable_irq: extirq=24, RISCV_IRQ_EXT=25
+up_enable_irq: irq=50
+up_enable_irq: extirq=25, RISCV_IRQ_EXT=25
+up_enable_irq: irq=51
+up_enable_irq: extirq=26, RISCV_IRQ_EXT=25
+up_enable_irq: irq=52
+up_enable_irq: extirq=27, RISCV_IRQ_EXT=25
+up_enable_irq: irq=53
+up_enable_irq: extirq=28, RISCV_IRQ_EXT=25
+up_enable_irq: irq=54
+up_enable_irq: extirq=29, RISCV_IRQ_EXT=25
+up_enable_irq: irq=55
+up_enable_irq: extirq=30, RISCV_IRQ_EXT=25
+up_enable_irq: irq=56
+up_enable_irq: extirq=31, RISCV_IRQ_EXT=25
+up_enable_irq: irq=57
+up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
+up_enable_irq: irq=58
+up_enable_irq: extirq=33, RISCV_IRQ_EXT=25
+up_enable_irq: irq=59
+up_enable_irq: extirq=34, RISCV_IRQ_EXT=25
+up_enable_irq: irq=60
+up_enable_irq: extirq=35, RISCV_IRQ_EXT=25
+up_enable_irq: irq=61
+up_enable_irq: extirq=36, RISCV_IRQ_EXT=25
+up_enable_irq: irq=62
+up_enable_irq: extirq=37, RISCV_IRQ_EXT=25
+up_enable_irq: irq=63
+up_enable_irq: extirq=38, RISCV_IRQ_EXT=25
+up_enable_irq: irq=64
+up_enable_irq: extirq=39, RISCV_IRQ_EXT=25
+up_enable_irq: irq=65
+up_enable_irq: extirq=40, RISCV_IRQ_EXT=25
+up_enable_irq: irq=66
+up_enable_irq: extirq=41, RISCV_IRQ_EXT=25
+up_enable_irq: irq=67
+up_enable_irq: extirq=42, RISCV_IRQ_EXT=25
+up_enable_irq: irq=68
+up_enable_irq: extirq=43, RISCV_IRQ_EXT=25
+up_enable_irq: irq=69
+up_enable_irq: extirq=44, RISCV_IRQ_EXT=25
+up_enable_irq: irq=70
+up_enable_irq: extirq=45, RISCV_IRQ_EXT=25
+up_enable_irq: irq=71
+up_enable_irq: extirq=46, RISCV_IRQ_EXT=25
+up_enable_irq: irq=72
+up_enable_irq: extirq=47, RISCV_IRQ_EXT=25
+up_enable_irq: irq=73
+up_enable_irq: extirq=48, RISCV_IRQ_EXT=25
+up_enable_irq: irq=74
+up_enable_irq: extirq=49, RISCV_IRQ_EXT=25
+up_enable_irq: irq=75
+up_enable_irq: extirq=50, RISCV_IRQ_EXT=25
+up_enable_irq: irq=76
+up_enable_irq: extirq=51, RISCV_IRQ_EXT=25
+up_enable_irq: irq=77
+up_enable_irq: extirq=52, RISCV_IRQ_EXT=25
+up_enable_irq: irq=78
+up_enable_irq: extirq=53, RISCV_IRQ_EXT=25
+up_enable_irq: irq=79
+up_enable_irq: extirq=54, RISCV_IRQ_EXT=25
+up_enable_irq: irq=80
+up_enable_irq: extirq=55, RISCV_IRQ_EXT=25
+up_enable_irq: irq=81
+up_enable_irq: extirq=56, RISCV_IRQ_EXT=25
+up_enable_irq: irq=82
+up_enable_irq: extirq=57, RISCV_IRQ_EXT=25
+up_enable_irq: irq=83
+up_enable_irq: extirq=58, RISCV_IRQ_EXT=25
+up_enable_irq: irq=84
+up_enable_irq: extirq=59, RISCV_IRQ_EXT=25
+up_enable_irq: irq=85
+up_enable_irq: extirq=60, RISCV_IRQ_EXT=25
+up_enable_irq: irq=86
+up_enable_irq: extirq=61, RISCV_IRQ_EXT=25
+up_enable_irq: irq=87
+up_enable_irq: extirq=62, RISCV_IRQ_EXT=25
+up_enable_irq: irq=88
+up_enable_irq: extirq=63, RISCV_IRQ_EXT=25
+```
+
+# Platform-Level Interrupt Controller for Star64
+
+TODO
+
 We update the [PLIC Code](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L45-L214) based on [PLIC Spec](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc)
 
 From [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf):
@@ -3970,6 +3855,10 @@ We fix the PLIC Addresses: [qemu_rv_plic.h](https://github.com/lupyuen2/wip-pine
 // #  define QEMU_RV_PLIC_THRESHOLD (QEMU_RV_PLIC_BASE + 0x201000)
 // #  define QEMU_RV_PLIC_CLAIM     (QEMU_RV_PLIC_BASE + 0x201004)
 ```
+
+# Delegate Machine-Mode Traps to Supervisor-Mode
+
+TODO
 
 From [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf):
 
