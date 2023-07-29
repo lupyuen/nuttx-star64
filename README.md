@@ -3452,7 +3452,7 @@ $%^&riscv_doirq: irq=35
 #*ADEFa$%&riscv_doirq: irq=8
 ```
 
-This says that NuttX Apps will call [`uart_write`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial.c#L1172-L1341), which calls...
+This says that NuttX Apps call [`uart_write`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial.c#L1172-L1341), which calls...
 
 - `A`: [`uart_putxmitchar`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial.c#L150-L286) which calls...
 
@@ -3494,9 +3494,7 @@ Now we compare the above with Star64...
 
 # Compare UART Output: Star64 vs QEMU
 
-TODO
-
-From Star64:
+In the previous section we added logs to UART I/O in NuttX QEMU. We add the same logs to NuttX Star64 and compare...
 
 ```text
 123067BCnx_start: Entry
@@ -3545,23 +3543,41 @@ AAAD$%&riscv_doirq: irq=8
 nx_start: CPU0: Beginning Idle Loop
 ```
 
-[`uart_txready`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial_io.c#L63-L68) is NOT Ready, that's why it doesn't call [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/uart_16550.c#L1542-L1556)
+From the previous section, we know that [`uart_write`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial.c#L1172-L1341), should call...
 
-`$`: [`exception_common`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/arch/risc-v/src/common/riscv_exception_common.S#L63-L189) is called for IRQ 8 RISCV_IRQ_ECALLU: ECALL from User Mode to Supervisor Mode
+- `A`: [`uart_putxmitchar`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial.c#L150-L286) which calls...
 
-- Is our [__Interrupt Controller__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64c/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33) OK?
+- `D`: [`uart_xmitchars`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial_io.c#L42-L107) which calls...
 
-  [(See the __JH7110 U74 Memory Map__)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html)
+- `E`: [`uart_txready`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial_io.c#L63-L68) and...
 
-No response to UART Input.
+  `F`: [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/uart_16550.c#L1542-L1556)
+
+BUT from the above Star64 Log, we see that [`uart_txready`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial_io.c#L63-L68) is NOT Ready.
+
+That's why NuttX Star64 doesn't call [`u16550_send`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/uart_16550.c#L1542-L1556) to print the output.
+
+_Is our [__Interrupt Controller__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64c/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33) OK?_
+
+NuttX Star64 doesn't respond to UART Input. We'll check why in a while.
+
+[(See the __JH7110 U74 Memory Map__)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html)
+
+_Is the UART IRQ Number correct?_
 
 Star64 UART is [RISC-V IRQ 32](https://doc-en.rvspace.org/VisionFive2/DG_UART/JH7110_SDK/general_uart_controller.html), which becomes NuttX IRQ 57 (32 + 25).
+
+[(RISCV_IRQ_EXT = RISCV_IRQ_SEXT = 16 + 9 = 25)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/arch/risc-v/include/irq.h#L75-L86)
 
 ```bash
 CONFIG_16550_UART0_IRQ=57
 ```
 
-Check the Device Tree...
+[(Source)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig#L10-L17)
+
+_Is it the same UART IRQ as Linux?_
+
+We check the Linux Device Tree...
 
 ```text
 dtc \
@@ -3573,7 +3589,7 @@ dtc \
 
 Which produces [jh7110-visionfive-v2.dts](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dts)
 
-UART0 is indeed IRQ 32: [jh7110-visionfive-v2.dts](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dts#L619-L631)
+UART0 is indeed RISC-V IRQ 32: [jh7110-visionfive-v2.dts](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dts#L619-L631)
 
 ```text
 serial@10000000 {
@@ -3591,7 +3607,34 @@ serial@10000000 {
 };
 ```
 
-[JH7110 Interrupt Connections](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html) says that Global Interrupts are 0 to 126 (127 total interrupts)
+_Maybe the IRQ Numbers are different for NuttX vs Linux?_
+
+We tried to enable a whole bunch of IRQs, but nothing got triggered...
+
+```text
+up_enable_irq: irq=26
+up_enable_irq: extirq=1, RISCV_IRQ_EXT=25
+up_enable_irq: irq=27
+up_enable_irq: extirq=2, RISCV_IRQ_EXT=25
+up_enable_irq: irq=28
+up_enable_irq: extirq=3, RISCV_IRQ_EXT=25
+up_enable_irq: irq=29
+...
+up_enable_irq: irq=86
+up_enable_irq: extirq=61, RISCV_IRQ_EXT=25
+up_enable_irq: irq=87
+up_enable_irq: extirq=62, RISCV_IRQ_EXT=25
+up_enable_irq: irq=88
+up_enable_irq: extirq=63, RISCV_IRQ_EXT=25
+```
+
+So there's definitely a problem with our Interrupt Controller.
+
+_Maybe IRQ 32 is too high? (QEMU IRQ is only 10)_
+
+[JH7110 Interrupt Connections](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html) says that Global Interrupts are numbered 0 to 126 (127 total interrupts). That's a lot more than NuttX QEMU can handle.
+
+Let's fix NuttX Star64 to support more IRQs.
 
 From [qemu-rv/irq.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/include/qemu-rv/irq.h#L31-L40):
 
@@ -3622,7 +3665,7 @@ void up_irqinitialize(void)
     }
 ```
 
-Needs fixing: [qemu_rv_irq.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L143-L198)
+This is hardcoded to 64 IRQs, we should fix in future: [qemu_rv_irq.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L143-L198)
 
 ```c
 void up_enable_irq(int irq)
@@ -3642,26 +3685,7 @@ void up_enable_irq(int irq)
         }
 ```
 
-_Maybe the UART IRQ is incorrect?_
-
-Tried to enable a whole bunch of IRQs, but nothing got triggered...
-
-```text
-up_enable_irq: irq=26
-up_enable_irq: extirq=1, RISCV_IRQ_EXT=25
-up_enable_irq: irq=27
-up_enable_irq: extirq=2, RISCV_IRQ_EXT=25
-up_enable_irq: irq=28
-up_enable_irq: extirq=3, RISCV_IRQ_EXT=25
-up_enable_irq: irq=29
-...
-up_enable_irq: irq=86
-up_enable_irq: extirq=61, RISCV_IRQ_EXT=25
-up_enable_irq: irq=87
-up_enable_irq: extirq=62, RISCV_IRQ_EXT=25
-up_enable_irq: irq=88
-up_enable_irq: extirq=63, RISCV_IRQ_EXT=25
-```
+Now we study the NuttX Code for Platform-Level Interrupt Controller...
 
 # Platform-Level Interrupt Controller for Star64
 
