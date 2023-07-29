@@ -3845,7 +3845,7 @@ $%^&riscv_doirq: irq=57
 #*$%^&nx_start: CPU0: Beginning Idle Loop
 ```
 
-And it responds to UART Input yay!
+And it triggers UART Input Interrupts when we type yay!
 
 ```text
 123067BCnx_start: Entry
@@ -3858,6 +3858,8 @@ up_enable_irq: irq=57
 up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
 +++++++
 ```
+
+[(`+` means UART Input Interrupt)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L965-L978)
 
 TODO: Why no UART Output, now that UART Input and Output Interrupts are OK
 
