@@ -3964,7 +3964,9 @@ u16550_rxint: enable=1
 nx_start: CPU0: Beginning Idle Loop
 ```
 
-TODO: Are we claiming too soon?
+_Are we Claiming the Interrupt too soon?_
+
+Let's slow down the Interrupt Claiming with a Logging Delay:
 
 From [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88):
 
