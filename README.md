@@ -3863,11 +3863,9 @@ Supervisor Mode Interrupts:
 
 # NuttX Star64 handles UART Interrupts
 
-TODO
+_After fixing PLIC Interrupts on Star64... Does it work for UART Interrupts?_
 
-_Does it work?_
-
-IRQ 57 is now OK yay! But still not UART Output though.
+UART Interrupt at RISC-V IRQ 32 (NuttX IRQ 57) is now OK yay! But still not UART Output though.
 
 ```text
 123067BCnx_start: Entry
@@ -3912,13 +3910,13 @@ Why is UART Interrupt triggered repeatedly with [UART_IIR_INTSTATUS = 0](https:/
 
 _What happens if we don't Claim an Interrupt?_
 
-From [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88):
+Claiming an Interrupt happens here: [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88)
 
 ```c
   if (RISCV_IRQ_EXT <= irq)
     {
       /* Then write PLIC_CLAIM to clear pending in PLIC */
-      ////putreg32(irq - RISCV_IRQ_EXT, QEMU_RV_PLIC_CLAIM);
+      putreg32(irq - RISCV_IRQ_EXT, QEMU_RV_PLIC_CLAIM);
     }
 ```
 
@@ -3964,11 +3962,11 @@ u16550_rxint: enable=1
 nx_start: CPU0: Beginning Idle Loop
 ```
 
+So it seems we are Claiming Interrupts correctly. We also check the other RISC-V NuttX Ports, they Claim Interrupts the exact same way.
+
 _Are we Claiming the Interrupt too soon?_
 
-Let's slow down the Interrupt Claiming with a Logging Delay:
-
-From [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88):
+Let's slow down the Interrupt Claiming with a Logging Delay: [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88)
 
 ```c
   if (RISCV_IRQ_EXT <= irq)
@@ -3980,7 +3978,7 @@ From [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/bl
     }
 ```
 
-Seems to work...
+Seems to work better...
 
 ```text
 123067BCnx_start: Entry
@@ -4004,7 +4002,7 @@ riscv_dispatch_irq: irq=57, RISCV_IRQ_EXT=25
 nx_start: CPU0: Beginning Idle Loop
 ```
 
-Increase the System Delay (to match PinePhone): System Type > Delay loops per millisecond = 116524
+Also we increase the System Delay (to match PinePhone): System Type > Delay loops per millisecond = 116524
 
 ```bash
 CONFIG_BOARD_LOOPSPERMSEC=116524
@@ -4012,13 +4010,14 @@ CONFIG_BOARD_LOOPSPERMSEC=116524
 
 [(Source)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig#L47)
 
+_UART might need some time to start up? Maybe we should enable the IRQ later?_
+
 Let's delay the enabling of IRQ to later...
 
-From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L860-L871):
+We comment out the Enable IRQ in [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L860-L871):
 
 ```c
   /* Attach and enable the IRQ */
-
   ret = irq_attach(priv->irq, u16550_interrupt, dev);
 #ifndef CONFIG_ARCH_NOINTC
   if (ret == OK)
@@ -4026,24 +4025,17 @@ From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d
       /* Enable the interrupt (RX and TX interrupts are still disabled
        * in the UART
        */
-
+      ////Enable later:
       ////up_enable_irq(priv->irq);
 ```
 
-From [serial.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/serial.c#L1177-L1188):
+And add it to `uart_write`: [serial.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/serial.c#L1177-L1188)
 
 ```c
 static ssize_t uart_write(FAR struct file *filep, FAR const char *buffer,
                           size_t buflen)
 {
-  infodumpbuffer("uart_write", (const uint8_t *)buffer, buflen);////
-  static bool first_time = true; if (first_time) { up_enable_irq(57); first_time = false; }////
-  FAR struct inode *inode    = filep->f_inode;
-  FAR uart_dev_t   *dev      = inode->i_private;
-  ssize_t           nwritten = buflen;
-  bool              oktoblock;
-  int               ret;
-  char              ch;
+  static int count = 0; if (count++ == 3) { up_enable_irq(57); }////
 ```
 
 Seems better...
