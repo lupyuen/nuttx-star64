@@ -4075,6 +4075,8 @@ up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
 
 After removing logs, NSH works OK yay!
 
+[(Watch the Demo on YouTube)](https://youtu.be/TdSJdiQFsv8)
+
 ```text
 123067BCnx_start: Entry
 up_irq_enable: 
