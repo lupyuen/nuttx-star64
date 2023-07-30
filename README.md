@@ -3910,9 +3910,61 @@ u16550_rxint: enable=1
 
 TODO: Why UART Interrupt triggered repeatedly with [UART_IIR_INTSTATUS = 0](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L954-L966)?
 
-TODO: [Workaround for rx_timeout](https://github.com/torvalds/linux/blob/master/drivers/tty/serial/8250/8250_dw.c#L254-L274)
+_What happens if we don't Claim an Interrupt?_
 
-TODO: Why no txint enable?
+From [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88):
+
+```c
+  if (RISCV_IRQ_EXT <= irq)
+    {
+      /* Then write PLIC_CLAIM to clear pending in PLIC */
+      ////putreg32(irq - RISCV_IRQ_EXT, QEMU_RV_PLIC_CLAIM);
+    }
+```
+
+If we don't Claim an Interrupt, we won't receive any subsequent Interrupts (like UART Input)...
+
+```text
+123067BCnx_start: Entry
+up_irq_enable: 
+up_enable_irq: irq=17
+up_enable_irq: RISCV_IRQ_SOFT=17
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+up_enable_irq: irq=57
+up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
+u16550_rxint: enable=1
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
+nx_start_application: ret=3
+up_exit: TCB=0x404088d0 exiting
+uart_write (0xc0200428):
+0000  2a 2a 2a 6d 61 69 6e 0a                          ***main.        
+u16550_txint: enable=0
+AAAAAAAAAu16550_txint: enable=1
+Duart_write (0xc000a610):
+0000  0a 4e 75 74 74 53 68 65 6c 6c 20 28 4e 53 48 29  .NuttShell (NSH)
+0010  20 4e 75 74 74 58 2d 31 32 2e 30 2e 33 0a         NuttX-12.0.3.  
+u16550_txint: enable=0
+AAAAAAAAAAAAAAAu16550_txint: enable=1
+Duart_write (0xc0015338):
+0000  6e 73 68 3e 20                                   nsh>            
+u16550_txint: enable=0
+AAAAAu16550_txint: enable=1
+Duart_write (0xc0015310):
+0000  1b 5b 4b                                         .[K             
+u16550_txint: enable=0
+AAAu16550_txint: enable=1
+Du16550_rxint: enable=0
+u16550_rxint: enable=1
+nx_start: CPU0: Beginning Idle Loop
+```
+
+TODO: Are we claiming too soon?
 
 TODO: Why are we rushing? Might get stale and out of sync with mainline
 
