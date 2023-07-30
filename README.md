@@ -3863,9 +3863,9 @@ Supervisor Mode Interrupts:
 
 # NuttX Star64 handles UART Interrupts
 
-_After fixing PLIC Interrupts on Star64... Does it work for UART Interrupts?_
+_After fixing PLIC Interrupts on Star64... Are UART Interrupts OK?_
 
-UART Interrupt at RISC-V IRQ 32 (NuttX IRQ 57) is now OK yay! But still not UART Output though.
+UART Interrupts at RISC-V IRQ 32 (NuttX IRQ 57) are now OK yay! But still no UART Output though...
 
 ```text
 123067BCnx_start: Entry
@@ -3889,7 +3889,7 @@ $%^&riscv_doirq: irq=57
 #*$%^&nx_start: CPU0: Beginning Idle Loop
 ```
 
-And it triggers UART Input Interrupts when we type yay!
+And NuttX detects the UART Input Interrupts when we type yay!
 
 ```text
 123067BCnx_start: Entry
@@ -3907,7 +3907,9 @@ u16550_rxint: enable=1
 
 [(`+` means UART Input Interrupt)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L965-L978)
 
-Why is UART Interrupt triggered repeatedly with [UART_IIR_INTSTATUS = 0](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L954-L966)?
+But why is UART Interrupt triggered repeatedly with [UART_IIR_INTSTATUS = 0](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L954-L966)?
+
+Is it because we didn't Claim a RISC-V Interrupt correctly?
 
 _What happens if we don't Claim an Interrupt?_
 
@@ -3963,9 +3965,13 @@ u16550_rxint: enable=1
 nx_start: CPU0: Beginning Idle Loop
 ```
 
-So it seems we are Claiming Interrupts correctly. We check the other RISC-V NuttX Ports, they Claim Interrupts the exact same way.
+(No response to UART Input)
 
-_Are we Claiming the Interrupt too soon?_
+So it seems we are Claiming Interrupts correctly.
+
+We checked the other RISC-V NuttX Ports, they Claim Interrupts the exact same way.
+
+_Are we Claiming the Interrupt too soon? Maybe we should slow down?_
 
 Let's slow down the Interrupt Claiming with a Logging Delay: [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88)
 
@@ -4002,7 +4008,9 @@ riscv_dispatch_irq: irq=57, RISCV_IRQ_EXT=25
 nx_start: CPU0: Beginning Idle Loop
 ```
 
-Also we increase the System Delay (to match PinePhone): System Type > Delay loops per millisecond = 116524
+Also we increase the System Delay (to match PinePhone):
+
+- System Type > Delay loops per millisecond = 116524
 
 ```bash
 CONFIG_BOARD_LOOPSPERMSEC=116524
