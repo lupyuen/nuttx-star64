@@ -4138,6 +4138,17 @@ if ((status & UART_IIR_INTSTATUS) != 0)
 
 TODO: Why is UART Interrupt triggered repeatedly with [UART_IIR_INTSTATUS = 0](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L954-L966)?
 
+https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L58-L63
+
+```c
+  // Disable All Global Interrupts for Hart 1 Machine-Mode
+  // | 0x0C00_2080 | 4B | RW | Start Hart 1 M-Mode interrupt enables
+  #define QEMU_RV_PLIC_ENABLE1_MMODE   (QEMU_RV_PLIC_BASE + 0x002080)
+  #define QEMU_RV_PLIC_ENABLE2_MMODE   (QEMU_RV_PLIC_BASE + 0x002084)
+  putreg32(0x0, QEMU_RV_PLIC_ENABLE1_MMODE);
+  putreg32(0x0, QEMU_RV_PLIC_ENABLE2_MMODE);
+```
+
 TODO: Did we configure 16550 UART Interrupt Register correctly?
 
 TODO: Is NuttX 16550 UART Driver any different from Linux?
