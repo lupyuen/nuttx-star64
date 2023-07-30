@@ -3913,11 +3913,11 @@ _What happens if we don't Claim an Interrupt?_
 Claiming an Interrupt happens here: [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88)
 
 ```c
-  if (RISCV_IRQ_EXT <= irq)
-    {
-      /* Then write PLIC_CLAIM to clear pending in PLIC */
-      putreg32(irq - RISCV_IRQ_EXT, QEMU_RV_PLIC_CLAIM);
-    }
+if (RISCV_IRQ_EXT <= irq)
+  {
+    /* Then write PLIC_CLAIM to clear pending in PLIC */
+    putreg32(irq - RISCV_IRQ_EXT, QEMU_RV_PLIC_CLAIM);
+  }
 ```
 
 If we don't Claim an Interrupt, we won't receive any subsequent Interrupts (like UART Input)...
@@ -3969,13 +3969,12 @@ _Are we Claiming the Interrupt too soon?_
 Let's slow down the Interrupt Claiming with a Logging Delay: [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88)
 
 ```c
-  if (RISCV_IRQ_EXT <= irq)
-    {
-      _info("irq=%d, RISCV_IRQ_EXT=%d\n", irq, RISCV_IRQ_EXT);////
-      /* Then write PLIC_CLAIM to clear pending in PLIC */
-
-      putreg32(irq - RISCV_IRQ_EXT, QEMU_RV_PLIC_CLAIM);
-    }
+if (RISCV_IRQ_EXT <= irq)
+  {
+    _info("irq=%d, RISCV_IRQ_EXT=%d\n", irq, RISCV_IRQ_EXT);////
+    /* Then write PLIC_CLAIM to clear pending in PLIC */
+    putreg32(irq - RISCV_IRQ_EXT, QEMU_RV_PLIC_CLAIM);
+  }
 ```
 
 Seems to work better...
@@ -4010,7 +4009,7 @@ CONFIG_BOARD_LOOPSPERMSEC=116524
 
 [(Source)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig#L47)
 
-_UART might need some time to start up? Maybe we should enable the IRQ later?_
+_UART might need some time to warm up? Maybe we enable the IRQ later?_
 
 Let's delay the enabling of IRQ to later...
 
@@ -4023,9 +4022,8 @@ We comment out the Enable IRQ in [uart_16550.c](https://github.com/lupyuen2/wip-
   if (ret == OK)
     {
       /* Enable the interrupt (RX and TX interrupts are still disabled
-       * in the UART
-       */
-      ////Enable later:
+       * in the UART */
+      ////Enable Interrupt later:
       ////up_enable_irq(priv->irq);
 ```
 
@@ -4065,7 +4063,9 @@ up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
 056789D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-D-
 ```
 
-After removing logs, NSH works OK yay!
+After removing the logs, NSH works OK yay!
+
+Watch what happens when we enter `ls` at the NSH Shell...
 
 [(Watch the Demo on YouTube)](https://youtu.be/TdSJdiQFsv8)
 
@@ -4101,32 +4101,32 @@ nsh> ......++.+.l......s......
 ..........................
 ```
 
-But super slow. Each dot is 10 Million Calls to Interrupt Handler with UART Interrupt Status 0! [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L948-L967)
+But it's super slow. Each dot is 1 Million Calls to the UART Interrupt Handler, with UART Interrupt Status [UART_IIR_INTSTATUS = 0](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L954-L966)! 
+
+From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L948-L967):
 
 ```c
-      /* Get the current UART status and check for loop
-       * termination conditions
-       */
+/* Get the current UART status and check for loop
+  * termination conditions */
+status = u16550_serialin(priv, UART_IIR_OFFSET);
 
-      status = u16550_serialin(priv, UART_IIR_OFFSET);
-
-      /* The UART_IIR_INTSTATUS bit should be zero if there are pending
-       * interrupts
-       */
-
-      if ((status & UART_IIR_INTSTATUS) != 0)
-        {
-          /* Break out of the loop when there is no longer a
-           * pending interrupt
-           */
-
-          ////Begin
-          static int i = 0; if (i++ % 1000000 == 1) {
-            *(volatile uint8_t *)0x10000000 = '.';
-            // *(volatile uint8_t *)0x10000000 = '0';
+/* The UART_IIR_INTSTATUS bit should be zero if there are pending
+  * interrupts */
+if ((status & UART_IIR_INTSTATUS) != 0)
+  {
+    /* Break out of the loop when there is no longer a
+      * pending interrupt
+      */
+    //// Print after every 1 million interrupts:
+    static int i = 0; if (i++ % 1000000 == 1) {
+      *(volatile uint8_t *)0x10000000 = '.';
 ```
 
 TODO: Why is UART Interrupt triggered repeatedly with [UART_IIR_INTSTATUS = 0](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L954-L966)?
+
+TODO: Did we configure 16550 UART Interrupt Register correctly?
+
+TODO: Is NuttX 16550 UART Driver any different from Linux?
 
 TODO: Why are we rushing? Might get stale and out of sync with mainline
 
