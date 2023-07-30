@@ -3901,7 +3901,8 @@ uart_register: Registering /dev/ttyS0
 up_enable_irq: irq=57
 up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
 u16550_rxint: enable=1
-056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789w056789o056789r056789k056789_056789s056789t056789a056789r056789t056789_056789l056789o056789w056789p056789r056789i056789:056789 056789S056789t056789a056789r056789056789t056789i056789n056789g056789 056789l056789o056789w056789-056789p056789r056789i056789o056789r056789i056789t056789y056789 056789k056789e056789r056789n056789e056789l056789 056789w056789o056789r056789k056789e056789r056789 056789t056789h056789r056789e+056789a+++056789d++++056789(+++056789s+056789)056789
+056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789056789w056789o056789r056789k056789_056789s056789t056789a056789r056789t056789_056789l056789o056789w056789p056789r056789i056789:056789 056789S056789t056789a056789r056789056789t056789i056789n056789g056789 056789l056789o056789w056789-056789p056789r056789i056789o056789r056789i056789t056789y056789 056789k056789e056789r056789n056789e056789l056789 056789w056789o056789r056789k056789e056789r056789 056789t056789h056789r056789e+056789a
++++056789d++++056789(+++056789s+056789)056789
 ```
 
 [(`+` means UART Input Interrupt)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L965-L978)
@@ -3962,7 +3963,7 @@ u16550_rxint: enable=1
 nx_start: CPU0: Beginning Idle Loop
 ```
 
-So it seems we are Claiming Interrupts correctly. We also check the other RISC-V NuttX Ports, they Claim Interrupts the exact same way.
+So it seems we are Claiming Interrupts correctly. We check the other RISC-V NuttX Ports, they Claim Interrupts the exact same way.
 
 _Are we Claiming the Interrupt too soon?_
 
@@ -4016,6 +4017,8 @@ Let's delay the enabling of IRQ to later...
 We comment out the Enable IRQ in [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L860-L871):
 
 ```c
+static int u16550_attach(struct uart_dev_s *dev) {
+  ...
   /* Attach and enable the IRQ */
   ret = irq_attach(priv->irq, u16550_interrupt, dev);
 #ifndef CONFIG_ARCH_NOINTC
@@ -4031,9 +4034,9 @@ And add it to `uart_write`: [serial.c](https://github.com/lupyuen2/wip-pinephone
 
 ```c
 static ssize_t uart_write(FAR struct file *filep, FAR const char *buffer,
-                          size_t buflen)
-{
-  static int count = 0; if (count++ == 3) { up_enable_irq(57); }////
+                          size_t buflen) {
+  static int count = 0;
+  if (count++ == 3) { up_enable_irq(57); }////
 ```
 
 Seems better...
@@ -4118,7 +4121,8 @@ if ((status & UART_IIR_INTSTATUS) != 0)
       * pending interrupt
       */
     //// Print after every 1 million interrupts:
-    static int i = 0; if (i++ % 1000000 == 1) {
+    static int i = 0;
+    if (i++ % 1000000 == 1) {
       *(volatile uint8_t *)0x10000000 = '.';
 ```
 
