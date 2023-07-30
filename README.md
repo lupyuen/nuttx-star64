@@ -4581,6 +4581,14 @@ riscv_dispatch_irq: irq=57, RISCV_IRQ_EXT=25
 nx_start: CPU0: Beginning Idle Loop
 ```
 
+TODO: System Type > Delay loops per millisecond = 116524
+
+```bash
+CONFIG_BOARD_LOOPSPERMSEC=116524
+```
+
+[(Source)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig#L47)
+
 TODO: Why are we rushing? Might get stale and out of sync with mainline
 
 TODO: Check PolarFire Icicle 
