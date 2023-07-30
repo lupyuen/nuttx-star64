@@ -4080,6 +4080,8 @@ Watch what happens when we enter `ls` at the NSH Shell...
 
 [(Watch the Demo on YouTube)](https://youtu.be/TdSJdiQFsv8)
 
+![NSH on Star64](https://lupyuen.github.io/images/plic-nsh2.png)
+
 ```text
 123067BCnx_start: Entry
 up_irq_enable: 
