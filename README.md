@@ -3705,7 +3705,7 @@ We update the [NuttX PLIC Code](https://github.com/lupyuen2/wip-pinephone-nuttx/
 
 - [PLIC Spec](https://github.com/riscv/riscv-plic-spec/blob/master/riscv-plic.adoc)
 
-![PLIC in JH7110 (U74) SoC](https://lupyuen.github.io/images/plic-hart.png)
+![PLIC in JH7110 (U74) SoC](https://lupyuen.github.io/images/plic-title.jpg)
 
 _How to configure PLIC to forward Interrupts to the Harts?_
 
@@ -3790,6 +3790,12 @@ Which are correct in NuttX: [qemu_rv_memorymap.h](https://github.com/lupyuen2/wi
 #define QEMU_RV_CLINT_BASE   0x02000000
 #define QEMU_RV_PLIC_BASE    0x0c000000
 ```
+
+Note that there's a Core-Local Interruptor (CLINT) that handles Local Interrupts...
+
+![PLIC in JH7110 (U74) SoC](https://lupyuen.github.io/images/plic-hart.png)
+
+TODO: Do we need to handle CLINT?
 
 Let's check that the RISC-V Interrupts are delegated correctly...
 
