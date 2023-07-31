@@ -4,7 +4,7 @@
 
 Read the articles...
 
--   ["Star64 JH7110 + NuttX RTOS: Console I/O and PLIC Interrupts"](https://lupyuen.github.io/articles/plic)
+-   ["Star64 JH7110 + NuttX RTOS: Serial I/O and PLIC Interrupts"](https://lupyuen.github.io/articles/plic)
 
 -   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
 
