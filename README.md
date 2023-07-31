@@ -4120,6 +4120,8 @@ nsh> ......++.+.l......s......
 ..........................
 ```
 
+(So amazing that NuttX Apps and Context Switching are OK... Even though we haven't implemented the RISC-V Timer!)
+
 But it's super slow. Each dot is 1 Million Calls to the UART Interrupt Handler, with UART Interrupt Status [UART_IIR_INTSTATUS = 0](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L954-L966)! 
 
 From [uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L948-L967):
@@ -4144,7 +4146,9 @@ if ((status & UART_IIR_INTSTATUS) != 0)
 
 TODO: Why is UART Interrupt triggered repeatedly with [UART_IIR_INTSTATUS = 0](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L954-L966)?
 
-https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L58-L63
+_Maybe because OpenSBI is still handling UART Interrupts in Machine Mode?_
+
+We tried to disable PLIC Interrupts for Machine Mode: [qemu_rv_irq.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq.c#L58-L63)
 
 ```c
   // Disable All Global Interrupts for Hart 1 Machine-Mode
@@ -4154,6 +4158,14 @@ https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qem
   putreg32(0x0, QEMU_RV_PLIC_ENABLE1_MMODE);
   putreg32(0x0, QEMU_RV_PLIC_ENABLE2_MMODE);
 ```
+
+But we still see spurious UART interrupts.
+
+TODO: How does OpenSBI handle UART I/O? Are the UART Interrupts still routed to OpenSBI? Can we remove them from OpenSBI?
+
+TODO: [Robert Lipe](https://twitter.com/robertlipe/status/1685830584688340992?t=wTD98qn0WfhUCDho6px6gw) suggests that we check for floating inputs on the control signals
+
+TODO: Throttle interrupts (for now) in [riscv_dispatch_irq](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L56-L91)
 
 TODO: Did we configure 16550 UART Interrupt Register correctly?
 
