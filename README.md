@@ -3793,9 +3793,9 @@ Which are correct in NuttX: [qemu_rv_memorymap.h](https://github.com/lupyuen2/wi
 #define QEMU_RV_PLIC_BASE    0x0c000000
 ```
 
-Note that there's a Core-Local Interruptor (CLINT) that handles Local Interrupts...
+Note that there's a Core-Local Interruptor (CLINT) that handles Software Interrupt and Timer Interrupt...
 
-![PLIC in JH7110 (U74) SoC](https://lupyuen.github.io/images/plic-hart.png)
+![PLIC and CLINT in JH7110 (U74) SoC](https://lupyuen.github.io/images/plic-clint.jpg)
 
 TODO: Do we need to handle CLINT?
 
