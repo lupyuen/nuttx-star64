@@ -3917,11 +3917,11 @@ u16550_rxint: enable=1
 
 But why is UART Interrupt triggered repeatedly with [UART_IIR_INTSTATUS = 0](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/drivers/serial/uart_16550.c#L954-L966)?
 
-Is it because we didn't Claim a RISC-V Interrupt correctly?
+Is it because we didn't Complete a RISC-V Interrupt correctly?
 
-_What happens if we don't Claim an Interrupt?_
+_What happens if we don't Complete an Interrupt?_
 
-Claiming an Interrupt happens here: [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88)
+Completing an Interrupt happens here: [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88)
 
 ```c
 if (RISCV_IRQ_EXT <= irq)
@@ -3931,7 +3931,7 @@ if (RISCV_IRQ_EXT <= irq)
   }
 ```
 
-If we don't Claim an Interrupt, we won't receive any subsequent Interrupts (like UART Input)...
+If we don't Complete an Interrupt, we won't receive any subsequent Interrupts (like UART Input)...
 
 ```text
 123067BCnx_start: Entry
@@ -3975,13 +3975,13 @@ nx_start: CPU0: Beginning Idle Loop
 
 (No response to UART Input)
 
-So it seems we are Claiming Interrupts correctly.
+So it seems we are Completing Interrupts correctly.
 
-We checked the other RISC-V NuttX Ports, they Claim Interrupts the exact same way.
+We checked the other RISC-V NuttX Ports, they Claim and Complete Interrupts the exact same way.
 
-_Are we Claiming the Interrupt too soon? Maybe we should slow down?_
+_Are we Completing the Interrupt too soon? Maybe we should slow down?_
 
-Let's slow down the Interrupt Claiming with a Logging Delay: [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88)
+Let's slow down the Interrupt Completion with a Logging Delay: [qemu_rv_irq_dispatch.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_irq_dispatch.c#L81-L88)
 
 ```c
 if (RISCV_IRQ_EXT <= irq)
