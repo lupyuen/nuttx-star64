@@ -4329,6 +4329,8 @@ up_enable_irq: irq=17
 up_enable_irq: RISCV_IRQ_SOFT=17
 uart_register: Registering /dev/console
 uart_register: Registering /dev/ttyS0
+up_enable_irq: irq=57
+up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
 work_start_lowpri: Starting low-priority kernel worker thread(s)
 board_late_initialize: 
 nx_start_application: Starting init task: /system/bin/init
@@ -4337,30 +4339,23 @@ elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
 elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
 nx_start_application: ret=3
 up_exit: TCB=0x404088d0 exiting
-up_enable_irq: irq=57
-up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
-n.x_start: CPU0: Beginning Idle Loop
+nx_start: CPU0: Beginning Idle Loop
 ***main
 
 NuttShell (NSH) NuttX-12.0.3
-posix_spawn: pid=0xc0202978 path=unme file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-exec_spawn: ERROR: Failed to load program 'unme': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-
-nsh: unme: command not found
+nsh> uname -a
 posix_spawn: pid=0xc0202978 path=uname file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
 exec_spawn: ERROR: Failed to load program 'uname': -2
 nxposix_spawn_exec: ERROR: exec failed: 2
-
 NuttX 12.0.3 2ff7d88 Jul 28 2023 12:35:31 risc-v rv-virt
+nsh> ls -l
 posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
 exec_spawn: ERROR: Failed to load program 'ls': -2
 nxposix_spawn_exec: ERROR: exec failed: 2
-
 /:
- dev/
- proc/
- system/
+ dr--r--r--       0 dev/
+ dr--r--r--       0 proc/
+ dr--r--r--       0 system/
 nsh> 
 ```
 
