@@ -4304,7 +4304,15 @@ The fix is to wait for the UART to be not busy before writing to LCR. Here's my 
 
 We're all ready to merge NuttX for JH7110! :-)
 
-[Synopsys DesignWare DW_apb_uart Databook](https://linux-sunxi.org/images/d/d2/Dw_apb_uart_db.pdf)
+[UART Wait LCR Disabled](https://gist.github.com/lupyuen/6b5803e2b3697e96233267f6cd89c593)
+
+[UART Wait LCR Enabled](https://gist.github.com/lupyuen/9325fee202d38a671cd0eb3cfd35a1db)
+
+[Synopsys DesignWare DW_apb_uart Databook](https://linux-sunxi.org/images/d/d2/Dw_apb_uart_db.pdf), Page 100
+
+> "DLAB: Divisor Latch Access Bit. Writeable only when UART is not busy (USR[0] is zero)"
+
+[Similar to PinePhone](https://github.com/apache/nuttx/blob/master/arch/arm64/src/a64/a64_serial.c#L529-L549)
 
 UART Clock for JH7110:
 
