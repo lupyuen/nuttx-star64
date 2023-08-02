@@ -4296,6 +4296,74 @@ Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 # TODO
 
+UART Clock for JH7110:
+
+```text
+dlm = 0 (div >> 8)
+dll = 13 (div & 0xff)
+div = 13
+baud=115200
+
+div = (uartclk + (baud << 3)) / (baud << 4)
+13  = (uartclk + 921600) / 1843200
+uartclk = (13 * 1843200) - 921600
+        = 23040000
+```
+
+Fix UART Clock:
+
+```bash
+CONFIG_16550_UART0_CLOCK=23040000
+```
+
+NuttX Shell OK yay!
+
+```text
+Starting kernel ...
+
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067BCnx_start: Entry
+up_irq_enable: 
+up_enable_irq: irq=17
+up_enable_irq: RISCV_IRQ_SOFT=17
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
+nx_start_application: ret=3
+up_exit: TCB=0x404088d0 exiting
+up_enable_irq: irq=57
+up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
+n.x_start: CPU0: Beginning Idle Loop
+***main
+
+NuttShell (NSH) NuttX-12.0.3
+posix_spawn: pid=0xc0202978 path=unme file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+exec_spawn: ERROR: Failed to load program 'unme': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+
+nsh: unme: command not found
+posix_spawn: pid=0xc0202978 path=uname file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+exec_spawn: ERROR: Failed to load program 'uname': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+
+NuttX 12.0.3 2ff7d88 Jul 28 2023 12:35:31 risc-v rv-virt
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+
+/:
+ dev/
+ proc/
+ system/
+nsh> 
+```
+
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
 
 TODO: Check [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/include/board_memorymap.h#L34-L37)
