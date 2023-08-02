@@ -3374,6 +3374,10 @@ TODO: Boot from MicroSD with Initial RAM Disk
 
 # No UART Output from NuttX Shell
 
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V PLIC Interrupts and Serial I/O"](https://lupyuen.github.io/articles/plic)
+
 From the previous section, we found out that NuttX Shell didn't appear on Star64 JH7110 SBC.
 
 When we log [`uart_write`](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk2/drivers/serial/serial.c#L1172-L1341), we see that the NuttX Shell is actually started!
@@ -3397,6 +3401,10 @@ Just that the NuttX Shell couldn't produce any UART Output.
 Let's find out why, by tracing the UART Output in NuttX QEMU...
 
 # UART Output in NuttX QEMU
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V PLIC Interrupts and Serial I/O"](https://lupyuen.github.io/articles/plic)
 
 To understand how UART Output (`printf`) works in NuttX Apps (and NuttX Shell), we add logs to NuttX QEMU...
 
@@ -3495,6 +3503,10 @@ This happens when the NuttX App (User Mode) calls a System Function in NuttX Ker
 Now we compare the above with Star64...
 
 # Compare UART Output: Star64 vs QEMU
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V PLIC Interrupts and Serial I/O"](https://lupyuen.github.io/articles/plic)
 
 In the previous section we added logs to UART I/O in NuttX QEMU. We add the same logs to NuttX Star64 and compare...
 
@@ -3697,6 +3709,10 @@ Now we study the NuttX Code for Platform-Level Interrupt Controller...
 
 # Platform-Level Interrupt Controller for Star64
 
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V PLIC Interrupts and Serial I/O"](https://lupyuen.github.io/articles/plic)
+
 The Platform-Level Interrupt Controller (PLIC) handles Global Interrupts triggered by Peripherals (like UART).
 
 (PLIC works like Arm's Global Interrupt Controller)
@@ -3803,6 +3819,10 @@ Let's check that the RISC-V Interrupts are delegated correctly...
 
 # Delegate Machine-Mode Interrupts to Supervisor-Mode
 
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V PLIC Interrupts and Serial I/O"](https://lupyuen.github.io/articles/plic)
+
 _NuttX runs in RISC-V Supervisor Mode, which can't handle Interrupts directly. (Needs Machine Mode) How can we be sure that the RISC-V Interrupts are correctly handled in Supervisor Mode?_
 
 From [SiFive Interrupt Cookbook](https://sifive.cdn.prismic.io/sifive/0d163928-2128-42be-a75a-464df65e04e0_sifive-interrupt-cookbook.pdf), Page 15:
@@ -3870,6 +3890,10 @@ Supervisor Mode Interrupts:
 - External Interrupt: Interrupt ID: 9
 
 # NuttX Star64 handles UART Interrupts
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V PLIC Interrupts and Serial I/O"](https://lupyuen.github.io/articles/plic)
 
 _After fixing PLIC Interrupts on Star64... Are UART Interrupts OK?_
 
