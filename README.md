@@ -4296,6 +4296,16 @@ Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 # TODO
 
+I found out (from Hacker News) that JH7110 uses a Synopsys DesignWare 8250 UART that has a peculiar problem with the Line Control Register (LCR)... If we write to LCR while the UART is busy, it will trigger spurious UART Interrupts.
+
+The fix is to wait for the UART to be not busy before writing to LCR. Here's my proposed patch for the NuttX 16550 UART Driver:
+
+[drivers/serial/uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/36/files#diff-f208234edbfb636de240a0fef1c85f9cecb37876d5bc91ffb759f70a1e96b1d1)
+
+We're all ready to merge NuttX for JH7110! :-)
+
+[DesignWare DW_apb_uart Databook](https://linux-sunxi.org/images/d/d2/Dw_apb_uart_db.pdf)
+
 UART Clock for JH7110:
 
 ```text
