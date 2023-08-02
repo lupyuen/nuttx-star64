@@ -4304,7 +4304,7 @@ The fix is to wait for the UART to be not busy before writing to LCR. Here's my 
 
 We're all ready to merge NuttX for JH7110! :-)
 
-[DesignWare DW_apb_uart Databook](https://linux-sunxi.org/images/d/d2/Dw_apb_uart_db.pdf)
+[Synopsys DesignWare DW_apb_uart Databook](https://linux-sunxi.org/images/d/d2/Dw_apb_uart_db.pdf)
 
 UART Clock for JH7110:
 
