@@ -4296,6 +4296,41 @@ Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 # TODO
 
+Star64 port ready yay!
+
+```text
+Starting kernel ...
+
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+BCnx_start: Entry
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
+up_exit: TCB=0x40409890 exiting
+nx_start: CPU0: Beginning Idle Loop
+
+NuttShell (NSH) NuttX-12.0.3
+nsh> uname -a
+posix_spawn: pid=0xc0202978 path=uname file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+exec_spawn: ERROR: Failed to load program 'uname': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+NuttX 12.0.3 7a92743-dirty Aug  3 2023 18:06:04 risc-v star64
+nsh> ls -l
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+/:
+ dr--r--r--       0 dev/
+ dr--r--r--       0 proc/
+ dr--r--r--       0 system/
+nsh> 
+```
+
 I found out (from Hacker News) that JH7110 uses a Synopsys DesignWare 8250 UART that has a peculiar problem with the Line Control Register (LCR)... If we write to LCR while the UART is busy, it will trigger spurious UART Interrupts.
 
 The fix is to wait for the UART to be not busy before writing to LCR. Here's my proposed patch for the NuttX 16550 UART Driver:
