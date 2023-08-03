@@ -4302,6 +4302,13 @@ https://github.com/starfive-tech/VisionFive2/releases
 
 https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/sdcard.img
 
+Boots OK: https://gist.github.com/lupyuen/030e4feb2fa95319290f3027032c24a8
+
+```text
+buildroot login:root
+Password: starfive
+```
+
 TODO: Add JH7110
 nuttx/arch/risc-v/Kconfig:
 
