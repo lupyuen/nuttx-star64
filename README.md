@@ -4296,7 +4296,31 @@ Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 # TODO
 
-Star64 port ready yay!
+TODO: MicroSD Image
+
+https://github.com/starfive-tech/VisionFive2/releases
+
+https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/sdcard.img
+
+TODO: Add JH7110
+nuttx/arch/risc-v/Kconfig:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-9c348f27c59e1ed0d1d9c24e172d233747ee09835ab0aa7f156da1b7caa6a5fb
+
+nuttx/arch/risc-v/src/jh7110/Kconfig:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-36a3009882ced77a24e9a7fd7ce3cf481ded4655f1adc366e7722a87ceab293b
+
+TODO: Add Star64
+nuttx/boards/Kconfig:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-60cc096e3a9b22a769602cbbc3b0f5e7731e72db7b0338da04fcf665ed753b64
+
+nuttx/boards/risc-v/jh7110/star64/Kconfig:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-76f41ff047f7cc79980a18f527aa05f1337be8416d3d946048b099743f10631c
+
+TODO: Star64 port ready yay!
 
 ```text
 Starting kernel ...
