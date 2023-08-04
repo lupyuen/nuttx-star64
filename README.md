@@ -4199,21 +4199,20 @@ TODO: Is NuttX 16550 UART Driver any different from Linux?
 
 # NuttX boots OK on Star64 JH7110
 
-TODO: Star64 port ready yay!
+From the previous section we saw that JH7110 triggers too many spurious UART interrupts...
+
+- ["Spurious UART Interrupts"](https://lupyuen.github.io/articles/plic#spurious-uart-interrupts)
 
 JH7110 uses a Synopsys DesignWare 8250 UART that has a peculiar problem with the Line Control Register (LCR)... If we write to LCR while the UART is busy, it will trigger spurious UART Interrupts.
 
-The fix is to wait for the UART to be not busy before writing to LCR. Here's my proposed patch for the NuttX 16550 UART Driver:
+The fix is to wait for the UART to be not busy before writing to LCR. Here's my proposed patch for the NuttX 16550 UART Driver...
 
-[drivers/serial/uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/36/files#diff-f208234edbfb636de240a0fef1c85f9cecb37876d5bc91ffb759f70a1e96b1d1)
+- ["Fix the Spurious UART Interrupts"](https://lupyuen.github.io/articles/plic#appendix-fix-the-spurious-uart-interrupts)
 
-We're all ready to merge NuttX for JH7110! :-)
-
-Boot OK yay!
+After fixing the spurious UART interrupts, now NuttX boots OK on Star64 yay!
 
 ```text
 Starting kernel ...
-
 clk u5_dw_i2c_clk_core already disabled
 clk u5_dw_i2c_clk_apb already disabled
 BCnx_start: Entry
@@ -4244,199 +4243,144 @@ nxposix_spawn_exec: ERROR: exec failed: 2
 nsh> 
 ```
 
-[UART Wait LCR Disabled](https://gist.github.com/lupyuen/6b5803e2b3697e96233267f6cd89c593)
-
-[UART Wait LCR Enabled](https://gist.github.com/lupyuen/9325fee202d38a671cd0eb3cfd35a1db)
-
-[Synopsys DesignWare DW_apb_uart Databook](https://linux-sunxi.org/images/d/d2/Dw_apb_uart_db.pdf), Page 100
-
-> "DLAB: Divisor Latch Access Bit. Writeable only when UART is not busy (USR[0] is zero)"
-
-[Similar to PinePhone](https://github.com/apache/nuttx/blob/master/arch/arm64/src/a64/a64_serial.c#L529-L549)
-
-UART Clock for JH7110:
-
-```text
-dlm = 0 (div >> 8)
-dll = 13 (div & 0xff)
-div = 13
-baud=115200
-
-div = (uartclk + (baud << 3)) / (baud << 4)
-13  = (uartclk + 921600) / 1843200
-uartclk = (13 * 1843200) - 921600
-        = 23040000
-```
-
-Fix UART Clock:
-
-```bash
-CONFIG_16550_UART0_CLOCK=23040000
-```
-
-NuttX Shell OK yay!
-
-```text
-Starting kernel ...
-
-clk u5_dw_i2c_clk_core already disabled
-clk u5_dw_i2c_clk_apb already disabled
-123067BCnx_start: Entry
-up_irq_enable: 
-up_enable_irq: irq=17
-up_enable_irq: RISCV_IRQ_SOFT=17
-uart_register: Registering /dev/console
-uart_register: Registering /dev/ttyS0
-up_enable_irq: irq=57
-up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
-work_start_lowpri: Starting low-priority kernel worker thread(s)
-board_late_initialize: 
-nx_start_application: Starting init task: /system/bin/init
-elf_symname: Symbol has no name
-elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
-elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
-nx_start_application: ret=3
-up_exit: TCB=0x404088d0 exiting
-nx_start: CPU0: Beginning Idle Loop
-***main
-
-NuttShell (NSH) NuttX-12.0.3
-nsh> uname -a
-posix_spawn: pid=0xc0202978 path=uname file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-exec_spawn: ERROR: Failed to load program 'uname': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-NuttX 12.0.3 2ff7d88 Jul 28 2023 12:35:31 risc-v rv-virt
-nsh> ls -l
-posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-exec_spawn: ERROR: Failed to load program 'ls': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-/:
- dr--r--r--       0 dev/
- dr--r--r--       0 proc/
- dr--r--r--       0 system/
-nsh> 
-```
-
-# Bootable MicroSD for NuttX
-
-TODO: MicroSD Image
-
-Building
-========
-
-To build NuttX for Star64, :doc:`install the prerequisites </quickstart/install>` and
-:doc:`clone the git repositories </quickstart/install>` for ``nuttx`` and ``apps``.
+To build NuttX for Star64, [install the prerequisites](https://nuttx.apache.org/docs/latest/quickstart/install.html) and [clone the git repositories](https://nuttx.apache.org/docs/latest/quickstart/install.html) for ``nuttx`` and ``apps``.
 
 Configure the NuttX project and build the project:
 
-.. code:: console
-
-   $ cd nuttx
-   $ tools/configure.sh star64:nsh
-   $ make
-   $ riscv64-unknown-elf-objcopy -O binary nuttx nuttx.bin
+```bash
+$ cd nuttx
+$ tools/configure.sh star64:nsh
+$ make
+$ riscv64-unknown-elf-objcopy -O binary nuttx nuttx.bin
+```
 
 This produces the NuttX Kernel ``nuttx.bin``.  Next, build the NuttX Apps Filesystem:
 
-.. code:: console
-
-   $ make export
-   $ pushd ../apps
-   $ tools/mkimport.sh -z -x ../nuttx/nuttx-export-*.tar.gz
-   $ make import
-   $ popd
-   $ genromfs -f initrd -d ../apps/bin -V "NuttXBootVol"
+```bash
+$ make export
+$ pushd ../apps
+$ tools/mkimport.sh -z -x ../nuttx/nuttx-export-*.tar.gz
+$ make import
+$ popd
+$ genromfs -f initrd -d ../apps/bin -V "NuttXBootVol"
+```
 
 This generates the Initial RAM Disk ``initrd``.
 
-Download the `Device Tree jh7110-visionfive-v2.dtb <https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/jh7110-visionfive-v2.dtb>`_
-from `StarFive VisionFive2 Software Releases <https://github.com/starfive-tech/VisionFive2/releases>`_
-into the ``nuttx`` folder.
+Download the [Device Tree jh7110-visionfive-v2.dtb](https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/jh7110-visionfive-v2.dtb) from [StarFive VisionFive2 Software Releases](https://github.com/starfive-tech/VisionFive2/releases) into the ``nuttx`` folder.
+
+Now we create a Bootable MicroSD...
+
+# Bootable MicroSD for NuttX
+
+_How do we create a Bootable MicroSD for NuttX?_
+
+From the previous section, we have the NuttX Kernel ``nuttx.bin``, Initial RAM Disk ``initrd`` and Device Tree `jh7110-visionfive-v2.dtb`.
+
+We'll pack all 3 files into a Flat Image Tree (FIT).
 
 Inside the ``nuttx`` folder, create a Text File named ``nuttx.its``
-with the following content:
+with the following content: [nuttx.its](https://github.com/lupyuen/nuttx-star64/blob/main/nuttx.its)
 
-::
+```text
+/dts-v1/;
 
-   /dts-v1/;
+/ {
+  description = "NuttX FIT image";
+  #address-cells = <2>;
 
-   / {
-     description = "NuttX FIT image";
-     #address-cells = <2>;
+  images {
+    vmlinux {
+      description = "vmlinux";
+      data = /incbin/("./nuttx.bin");
+      type = "kernel";
+      arch = "riscv";
+      os = "linux";
+      load = <0x0 0x40200000>;
+      entry = <0x0 0x40200000>;
+      compression = "none";
+    };
 
-     images {
-       vmlinux {
-         description = "vmlinux";
-         data = /incbin/("./nuttx.bin");
-         type = "kernel";
-         arch = "riscv";
-         os = "linux";
-         load = <0x0 0x40200000>;
-         entry = <0x0 0x40200000>;
-         compression = "none";
-       };
+    ramdisk {
+      description = "buildroot initramfs";
+      data = /incbin/("./initrd");
+      type = "ramdisk";
+      arch = "riscv";
+      os = "linux";
+      load = <0x0 0x46100000>;
+      compression = "none";
+      hash-1 {
+        algo = "sha256";
+      };
+    };
 
-       ramdisk {
-         description = "buildroot initramfs";
-         data = /incbin/("./initrd");
-         type = "ramdisk";
-         arch = "riscv";
-         os = "linux";
-         load = <0x0 0x46100000>;
-         compression = "none";
-         hash-1 {
-           algo = "sha256";
-         };
-       };
+    fdt {
+      data = /incbin/("./jh7110-visionfive-v2.dtb");
+      type = "flat_dt";
+      arch = "riscv";
+      load = <0x0 0x46000000>;
+      compression = "none";
+      hash-1 {
+        algo = "sha256";
+      };
+    };
+  };
 
-       fdt {
-         data = /incbin/("./jh7110-visionfive-v2.dtb");
-         type = "flat_dt";
-         arch = "riscv";
-         load = <0x0 0x46000000>;
-         compression = "none";
-         hash-1 {
-           algo = "sha256";
-         };
-       };
-     };
+  configurations {
+    default = "nuttx";
 
-     configurations {
-       default = "nuttx";
+    nuttx {
+      description = "NuttX";
+      kernel = "vmlinux";
+      fdt = "fdt";
+      loadables = "ramdisk";
+    };
+  };
+};
+```
 
-       nuttx {
-         description = "NuttX";
-         kernel = "vmlinux";
-         fdt = "fdt";
-         loadables = "ramdisk";
-       };
-     };
-   };
+[(Based on visionfive2-fit-image.its)](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/visionfive2-fit-image.its):
 
 Package the NuttX Kernel, Initial RAM Disk and Device Tree into a
 Flat Image Tree:
 
-.. code:: console
+```bash
+## For macOS:
+brew install u-boot-tools
+## For Linux:
+sudo apt install u-boot-tools
 
-   $ sudo apt install u-boot-tools
-   $ mkimage -f nuttx.its -A riscv -O linux -T flat_dt starfiveu.fit
+## Generate FIT Image from `nuttx.bin`, `initrd` and `jh7110-visionfive-v2.dtb`.
+## `nuttx.its` must be in the same directory as the NuttX binaries!
+mkimage \
+  -f nuttx.its \
+  -A riscv \
+  -O linux \
+  -T flat_dt \
+  starfiveu.fit
+
+## To check FIT image
+mkimage -l starfiveu.fit
+```
 
 The Flat Image Tree ``starfiveu.fit`` will be copied to a microSD Card
 in the next step.
 
-Booting
-=======
+To prepare the microSD Card, download the [microSD Image sdcard.img](https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/sdcard.img) from [StarFive VisionFive2 Software Releases](https://github.com/starfive-tech/VisionFive2/releases)
 
-NuttX boots on Star64 via a microSD Card. To prepare the microSD Card, download the
-`microSD Image sdcard.img <https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/sdcard.img>`_
-from `StarFive VisionFive2 Software Releases <https://github.com/starfive-tech/VisionFive2/releases>`_.
+Write the downloaded image to a microSD Card with [Balena Etcher](https://www.balena.io/etcher/) or [GNOME Disks](https://wiki.gnome.org/Apps/Disks).
 
-Write the downloaded image to a microSD Card with
-`Balena Etcher <https://www.balena.io/etcher/>`_ or 
-`GNOME Disks <https://wiki.gnome.org/Apps/Disks>`_.
+Copy the file ``starfiveu.fit`` from the previous section and overwrite the file on the microSD Card.
 
-Copy the file ``starfiveu.fit`` from the previous section
-and overwrite the file on the microSD Card.
+```bash
+## Copy to microSD
+cp starfiveu.fit "/Volumes/NO NAME"
+ls -l "/Volumes/NO NAME/starfiveu.fit"
+
+## Unmount microSD
+## TODO: Verify that /dev/disk2 is microSD
+diskutil unmountDisk /dev/disk2
+```
 
 Check that Star64 is connected to our computer via a USB Serial Adapter.
 
@@ -4445,12 +4389,23 @@ NuttX boots on Star64 and NuttShell (nsh) appears in the Serial Console.
 
 To see the available commands in NuttShell:
 
-.. code:: console
+```bash
+$ help
+```
 
-   $ help
+[Booting NuttX over TFTP](https://lupyuen.github.io/articles/tftp) is also supported on Star64.
 
-`Booting NuttX over TFTP <https://lupyuen.github.io/articles/tftp>`_
-is also supported on Star64.
+More about Flat Image Tree...
+
+- [Flattened Image Tree (FIT) Format](https://u-boot.readthedocs.io/en/latest/usage/fit/source_file_format.html)
+
+- [Single kernel and FDT blob](https://u-boot.readthedocs.io/en/latest/usage/fit/kernel_fdt.html)
+
+- [Multiple kernels, ramdisks and FDT blobs](https://u-boot.readthedocs.io/en/latest/usage/fit/multi.html)
+
+# StarFive VisionFive2 Software Release
+
+TODO: StarFive VisionFive2 Software Releases seem to work fine on Star64
 
 Releases: https://github.com/starfive-tech/VisionFive2/releases
 
@@ -4465,52 +4420,29 @@ Password: starfive
 
 Generate FIT: https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/Makefile#L279-L283
 
-```bash
-brew install u-boot-tools
-sudo apt install u-boot-tools
-
-## Generate FIT Image from `nuttx.bin`, `initrd` and `jh7110-visionfive-v2.dtb`.
-## `nuttx.its` must be in the same directory as the NuttX binaries!
-cp ../nuttx-star64/nuttx.its .
-cp ../jh7110-visionfive-v2.dtb .
-mkimage \
-  -f nuttx.its \
-  -A riscv \
-  -O linux \
-  -T flat_dt \
-  starfiveu.fit
-rm nuttx.its
-rm jh7110-visionfive-v2.dtb
-
-## Copy to microSD
-cp starfiveu.fit "/Volumes/NO NAME"
-ls -l "/Volumes/NO NAME/starfiveu.fit"
-
-## Unmount microSD
-## TODO: Verify that /dev/disk2 is microSD
-diskutil unmountDisk /dev/disk2
-
-## To check FIT image
-mkimage -l starfiveu.fit
-
-## TODO: Overwrite starfiveu.fit on MicroSD
-```
-
 Boot OK from MicroSD yay! https://gist.github.com/lupyuen/eef8de0817ceed2072b2bacc925cdd96
 
-Needs [jh7110-visionfive-v2.dtb](https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/jh7110-visionfive-v2.dtb)
+# UART Clock for JH7110
 
-And [nuttx.its](https://github.com/lupyuen/nuttx-star64/blob/main/nuttx.its)
+TODO
 
-About FIT:
+Fix UART Clock:
 
-https://u-boot.readthedocs.io/en/latest/usage/fit/source_file_format.html
+```bash
+CONFIG_16550_UART0_CLOCK=23040000
+```
 
-https://u-boot.readthedocs.io/en/latest/usage/fit/kernel_fdt.html
+```text
+dlm = 0 (div >> 8)
+dll = 13 (div & 0xff)
+div = 13
+baud=115200
 
-https://u-boot.readthedocs.io/en/latest/usage/fit/multi.html
-
-From [visionfive2-fit-image.its](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/visionfive2-fit-image.its):
+div = (uartclk + (baud << 3)) / (baud << 4)
+13  = (uartclk + 921600) / 1843200
+uartclk = (13 * 1843200) - 921600
+        = 23040000
+```
 
 # RAM Disk Address for RISC-V QEMU
 
