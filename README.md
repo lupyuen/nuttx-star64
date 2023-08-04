@@ -4324,10 +4324,21 @@ mkimage \
   starfiveu.fit
 rm nuttx.its
 
+## Copy to microSD
+cp starfiveu.fit "/Volumes/NO NAME"
+ls -l "/Volumes/NO NAME/starfiveu.fit"
+
+## Unmount microSD
+## TODO: Verify that /dev/disk2 is microSD
+diskutil unmountDisk /dev/disk2
+
+## To check FIT image
 mkimage -l starfiveu.fit
 
 ## TODO: Overwrite starfiveu.fit on MicroSD
 ```
+
+Boot OK from MicroSD yay! https://gist.github.com/lupyuen/eef8de0817ceed2072b2bacc925cdd96
 
 From [visionfive2-fit-image.its](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/visionfive2-fit-image.its):
 
