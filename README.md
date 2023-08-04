@@ -4315,7 +4315,7 @@ Generate FIT: https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFiv
 brew install u-boot-tools
 sudo apt install u-boot-tools
 
-## Generate FIT Image.
+## Generate FIT Image from `nuttx.bin`, `initrd` and `jh7110-visionfive-v2.dtb`.
 ## `nuttx.its` must be in the same directory as the NuttX binaries!
 cp ../nuttx-star64/nuttx.its .
 cp ../jh7110-visionfive-v2.dtb .
@@ -4345,6 +4345,8 @@ mkimage -l starfiveu.fit
 Boot OK from MicroSD yay! https://gist.github.com/lupyuen/eef8de0817ceed2072b2bacc925cdd96
 
 Needs [jh7110-visionfive-v2.dtb](https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/jh7110-visionfive-v2.dtb)
+
+And [nuttx.its](https://github.com/lupyuen/nuttx-star64/blob/main/nuttx.its)
 
 About FIT:
 
