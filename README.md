@@ -4339,7 +4339,7 @@ with the following content: [nuttx.its](https://github.com/lupyuen/nuttx-star64/
 };
 ```
 
-[(Based on visionfive2-fit-image.its)](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/visionfive2-fit-image.its):
+[(Based on visionfive2-fit-image.its)](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/visionfive2-fit-image.its)
 
 Package the NuttX Kernel, Initial RAM Disk and Device Tree into a
 Flat Image Tree:
