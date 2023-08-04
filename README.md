@@ -4365,6 +4365,52 @@ mkimage \
 mkimage -l starfiveu.fit
 ```
 
+We will see...
+
+```text
+→ mkimage -f nuttx.its -A riscv -O linux -T flat_dt starfiveu.fit
+FIT description: NuttX FIT image
+Created:         Fri Aug  4 23:20:52 2023
+ Image 0 (vmlinux)
+  Description:  vmlinux
+  Created:      Fri Aug  4 23:20:52 2023
+  Type:         Kernel Image
+  Compression:  uncompressed
+  Data Size:    2097800 Bytes = 2048.63 KiB = 2.00 MiB
+  Architecture: RISC-V
+  OS:           Linux
+  Load Address: 0x40200000
+  Entry Point:  0x40200000
+ Image 1 (ramdisk)
+  Description:  buildroot initramfs
+  Created:      Fri Aug  4 23:20:52 2023
+  Type:         RAMDisk Image
+  Compression:  uncompressed
+  Data Size:    8086528 Bytes = 7897.00 KiB = 7.71 MiB
+  Architecture: RISC-V
+  OS:           Linux
+  Load Address: 0x46100000
+  Entry Point:  unavailable
+  Hash algo:    sha256
+  Hash value:   44b3603e6e611ade7361a936aab09def23651399d4a0a3c284f47082d788e877
+ Image 2 (fdt)
+  Description:  unavailable
+  Created:      Fri Aug  4 23:20:52 2023
+  Type:         Flat Device Tree
+  Compression:  uncompressed
+  Data Size:    50235 Bytes = 49.06 KiB = 0.05 MiB
+  Architecture: RISC-V
+  Load Address: 0x46000000
+  Hash algo:    sha256
+  Hash value:   42767c996f0544f513280805b41f996446df8b3956c656bdbb782125ae8ffeec
+ Default Configuration: 'nuttx220569'
+ Configuration 0 (nuttx220569)
+  Description:  NuttX
+  Kernel:       vmlinux
+  FDT:          fdt
+  Loadables:    ramdisk
+```
+
 The Flat Image Tree ``starfiveu.fit`` will be copied to a microSD Card
 in the next step.
 
