@@ -4588,6 +4588,14 @@ nuttx/boards/risc-v/jh7110/star64/Kconfig:
 
 https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-76f41ff047f7cc79980a18f527aa05f1337be8416d3d946048b099743f10631c
 
+TODO: Add Doc
+
+nuttx/Documentation/introduction/detailed_support.rst
+
+nuttx/Documentation/platforms/risc-v/jh7110/index.rst
+
+nuttx/Documentation/platforms/risc-v/jh7110/boards/star64/index.rst
+
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
 
 TODO: Check [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/include/board_memorymap.h#L34-L37)
