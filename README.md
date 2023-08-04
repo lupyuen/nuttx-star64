@@ -4315,7 +4315,8 @@ Generate FIT: https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFiv
 brew install u-boot-tools
 sudo apt install u-boot-tools
 
-## Generate FIT Image
+## Generate FIT Image.
+## `nuttx.its` must be in the same directory as the NuttX binaries!
 cp ../nuttx-star64/nuttx.its .
 cp ../jh7110-visionfive-v2.dtb .
 mkimage \
