@@ -4539,7 +4539,7 @@ We logged the values of DLM and DLL in the UART Driver during startup...
 
 ```c
 uint32_t dlm = u16550_serialin(priv, UART_DLM_OFFSET);
-uint32_t dll = u16550_serialout(priv, UART_DLL_OFFSET, div & 0xff);
+uint32_t dll = u16550_serialin(priv, UART_DLL_OFFSET);
 ```
 
 [(We capture DLM and DLL only when DLAB=1)](https://github.com/apache/nuttx/blob/master/drivers/serial/uart_16550.c#L817-L851)
@@ -4553,7 +4553,7 @@ dlm =  0 = (div >> 8)
 dll = 13 = (div & 0xff)
 ```
 
-Which gives `div = 13`. Now since `baud = 115200` at startup...
+Which gives `div=13`. Now since `baud=115200` at startup...
 
 ```text
 div = (uartclk + (baud << 3)) / (baud << 4)
@@ -4562,7 +4562,7 @@ uartclk = (13 * 1843200) - 921600
         = 23040000
 ```
 
-Thus `uartclk = 23040000`. And that's why we set...
+Thus `uartclk=23040000`. And that's why we set...
 
 ```bash
 CONFIG_16550_UART0_CLOCK=23040000
