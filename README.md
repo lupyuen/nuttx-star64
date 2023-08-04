@@ -4321,6 +4321,137 @@ nsh>
 
 TODO: MicroSD Image
 
+Building
+========
+
+To build NuttX for Star64, :doc:`install the prerequisites </quickstart/install>` and
+:doc:`clone the git repositories </quickstart/install>` for ``nuttx`` and ``apps``.
+
+Configure the NuttX project and build the project:
+
+.. code:: console
+
+   $ cd nuttx
+   $ tools/configure.sh star64:nsh
+   $ make
+   $ riscv64-unknown-elf-objcopy -O binary nuttx nuttx.bin
+
+This produces the NuttX Kernel ``nuttx.bin``.  Next, build the NuttX Apps Filesystem:
+
+.. code:: console
+
+   $ make export
+   $ pushd ../apps
+   $ tools/mkimport.sh -z -x ../nuttx/nuttx-export-*.tar.gz
+   $ make import
+   $ popd
+   $ genromfs -f initrd -d ../apps/bin -V "NuttXBootVol"
+
+This generates the Initial RAM Disk ``initrd``.
+
+Download the `Device Tree jh7110-visionfive-v2.dtb <https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/jh7110-visionfive-v2.dtb>`_
+from `StarFive VisionFive2 Software Releases <https://github.com/starfive-tech/VisionFive2/releases>`_
+into the ``nuttx`` folder.
+
+Inside the ``nuttx`` folder, create a Text File named ``nuttx.its``
+with the following content:
+
+::
+
+   /dts-v1/;
+
+   / {
+     description = "NuttX FIT image";
+     #address-cells = <2>;
+
+     images {
+       vmlinux {
+         description = "vmlinux";
+         data = /incbin/("./nuttx.bin");
+         type = "kernel";
+         arch = "riscv";
+         os = "linux";
+         load = <0x0 0x40200000>;
+         entry = <0x0 0x40200000>;
+         compression = "none";
+       };
+
+       ramdisk {
+         description = "buildroot initramfs";
+         data = /incbin/("./initrd");
+         type = "ramdisk";
+         arch = "riscv";
+         os = "linux";
+         load = <0x0 0x46100000>;
+         compression = "none";
+         hash-1 {
+           algo = "sha256";
+         };
+       };
+
+       fdt {
+         data = /incbin/("./jh7110-visionfive-v2.dtb");
+         type = "flat_dt";
+         arch = "riscv";
+         load = <0x0 0x46000000>;
+         compression = "none";
+         hash-1 {
+           algo = "sha256";
+         };
+       };
+     };
+
+     configurations {
+       default = "nuttx";
+
+       nuttx {
+         description = "NuttX";
+         kernel = "vmlinux";
+         fdt = "fdt";
+         loadables = "ramdisk";
+       };
+     };
+   };
+
+Package the NuttX Kernel, Initial RAM Disk and Device Tree into a
+Flat Image Tree:
+
+.. code:: console
+
+   $ sudo apt install u-boot-tools
+   $ mkimage -f nuttx.its -A riscv -O linux -T flat_dt starfiveu.fit
+
+The Flat Image Tree ``starfiveu.fit`` will be copied to a microSD Card
+in the next step.
+
+Booting
+=======
+
+NuttX boots on Star64 via a microSD Card. To prepare the microSD Card, download the
+`microSD Image sdcard.img <https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/sdcard.img>`_
+from `StarFive VisionFive2 Software Releases <https://github.com/starfive-tech/VisionFive2/releases>`_.
+
+Write the downloaded image to a microSD Card with
+`Balena Etcher <https://www.balena.io/etcher/>`_ or 
+`GNOME Disks <https://wiki.gnome.org/Apps/Disks>`_.
+
+Copy the file ``starfiveu.fit`` from the previous section
+and overwrite the file on the microSD Card.
+
+Check that Star64 is connected to our computer via a USB Serial Adapter.
+
+Insert the microSD Card into Star64 and power up Star64.
+NuttX boots on Star64 and NuttShell (nsh) appears in the Serial Console.
+
+To see the available commands in NuttShell:
+
+.. code:: console
+
+   $ help
+
+`Booting NuttX over TFTP <https://lupyuen.github.io/articles/tftp>`_
+is also supported on Star64.
+
 Releases: https://github.com/starfive-tech/VisionFive2/releases
 
 SD Card Image: https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/sdcard.img
@@ -4380,63 +4511,6 @@ https://u-boot.readthedocs.io/en/latest/usage/fit/kernel_fdt.html
 https://u-boot.readthedocs.io/en/latest/usage/fit/multi.html
 
 From [visionfive2-fit-image.its](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/visionfive2-fit-image.its):
-
-```text
-/dts-v1/;
-
-/ {
-        description = "U-boot FIT image for visionfive2";
-        #address-cells = <2>;
-
-        images {
-                vmlinux {
-                        description = "vmlinux";
-                        data = /incbin/("../work/linux/arch/riscv/boot/Image");
-                        type = "kernel";
-                        arch = "riscv";
-                        os = "linux";
-                        load = <0x0 0x40200000>;
-                        entry = <0x0 0x40200000>;
-                        compression = "none";
-                };
-
-                ramdisk {
-                        description = "buildroot initramfs";
-                        data = /incbin/("../work/initramfs.cpio.gz");
-                        type = "ramdisk";
-                        arch = "riscv";
-                        os = "linux";
-                        load = <0x0 0x46100000>;
-                        compression = "none";
-                        hash-1 {
-                                algo = "sha256";
-                        };
-                };
-
-                fdt {
-                        data = /incbin/("../work/linux/arch/riscv/boot/dts/starfive/jh7110-visionfive-v2.dtb");
-                        type = "flat_dt";
-                        arch = "riscv";
-                        load = <0x0 0x46000000>;
-                        compression = "none";
-                        hash-1 {
-                                algo = "sha256";
-                        };
-                };
-        };
-
-        configurations {
-                default = "config-1";
-
-                config-1 {
-                        description = "visionfive2 with opensbi";
-						kernel = "vmlinux";
-                        fdt = "fdt";
-                        loadables = "ramdisk";
-                };
-        };
-};
-```
 
 # RAM Disk Address for RISC-V QEMU
 
