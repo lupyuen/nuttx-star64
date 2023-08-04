@@ -4311,15 +4311,22 @@ Password: starfive
 
 Generate FIT: https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/Makefile#L279-L283
 
-```text
+```bash
 brew install u-boot-tools
+sudo apt install u-boot-tools
 
+cp ../nuttx-star64/nuttx.its .
 mkimage \
-  -f ../nuttx-star64/nuttx.its \
+  -f nuttx.its \
   -A riscv \
   -O linux \
   -T flat_dt \
   starfiveu.fit
+rm nuttx.its
+
+mkimage -l starfiveu.fit
+
+## TODO: Overwrite starfiveu.fit on MicroSD
 ```
 
 From [visionfive2-fit-image.its](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/visionfive2-fit-image.its):
