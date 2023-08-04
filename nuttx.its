@@ -30,7 +30,7 @@
     };
 
     fdt {
-      data = /incbin/("../jh7110-visionfive-v2.dtb");
+      data = /incbin/("./jh7110-visionfive-v2.dtb");
       type = "flat_dt";
       arch = "riscv";
       load = <0x0 0x46000000>;
@@ -42,9 +42,9 @@
   };
 
   configurations {
-    default = "config-1";
+    default = "nuttx";
 
-    config-1 {
+    nuttx {
       description = "NuttX";
       kernel = "vmlinux";
       fdt = "fdt";

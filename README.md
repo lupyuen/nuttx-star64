@@ -4315,7 +4315,9 @@ Generate FIT: https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFiv
 brew install u-boot-tools
 sudo apt install u-boot-tools
 
+## Generate FIT Image
 cp ../nuttx-star64/nuttx.its .
+cp ../jh7110-visionfive-v2.dtb .
 mkimage \
   -f nuttx.its \
   -A riscv \
@@ -4323,6 +4325,7 @@ mkimage \
   -T flat_dt \
   starfiveu.fit
 rm nuttx.its
+rm jh7110-visionfive-v2.dtb
 
 ## Copy to microSD
 cp starfiveu.fit "/Volumes/NO NAME"
