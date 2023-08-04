@@ -4197,104 +4197,127 @@ TODO: Did we configure 16550 UART Interrupt Register correctly?
 
 TODO: Is NuttX 16550 UART Driver any different from Linux?
 
-TODO: Why are we rushing? Might get stale and out of sync with mainline
+# NuttX boots OK on Star64 JH7110
 
-TODO: Check PolarFire Icicle 
+TODO: Star64 port ready yay!
 
-https://lupyuen.github.io/articles/privilege#other-risc-v-ports-of-nuttx
+JH7110 uses a Synopsys DesignWare 8250 UART that has a peculiar problem with the Line Control Register (LCR)... If we write to LCR while the UART is busy, it will trigger spurious UART Interrupts.
 
-TODO: Check Linux Boot Code
+The fix is to wait for the UART to be not busy before writing to LCR. Here's my proposed patch for the NuttX 16550 UART Driver:
 
-https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S
+[drivers/serial/uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/36/files#diff-f208234edbfb636de240a0fef1c85f9cecb37876d5bc91ffb759f70a1e96b1d1)
 
-TODO: Linux SBI Interface
+We're all ready to merge NuttX for JH7110! :-)
 
-https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/sbi.c
-
-TODO: Handle Machine Exception
-
-https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_exception_m.S#L64
-
-# RAM Disk Address for RISC-V QEMU
-
-Read the article...
-
--   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
-
-_Can we enable logging for RISC-V QEMU?_
-
-Yep we use the `-trace "*"` option like this...
-
-```bash
-qemu-system-riscv64 \
-  -semihosting \
-  -M virt,aclint=on \
-  -cpu rv64 \
-  -smp 8 \
-  -bios none \
-  -kernel nuttx \
-  -initrd initrd \
-  -nographic \
-  -trace "*"
-```
-
-In the QEMU Command above we loaded the Initial RAM Disk `initrd`.
-
-To discover the RAM Address of the Initial RAM Disk, we check the QEMU Trace Log:
+Boot OK yay!
 
 ```text
-resettablloader_write_rom nuttx
-  ELF program header segment 0:
-  @0x80000000 size=0x2b374 ROM=0
-loader_write_rom nuttx
-  ELF program header segment 1:
-  @0x80200000 size=0x2a1 ROM=0
-loader_write_rom initrd:
-  @0x84000000 size=0x2fc3e8 ROM=0
-loader_write_rom fdt:
-  @0x87000000 size=0x100000 ROM=0
+Starting kernel ...
+
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+BCnx_start: Entry
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
+up_exit: TCB=0x40409890 exiting
+nx_start: CPU0: Beginning Idle Loop
+
+NuttShell (NSH) NuttX-12.0.3
+nsh> uname -a
+posix_spawn: pid=0xc0202978 path=uname file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+exec_spawn: ERROR: Failed to load program 'uname': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+NuttX 12.0.3 7a92743-dirty Aug  3 2023 18:06:04 risc-v star64
+nsh> ls -l
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+/:
+ dr--r--r--       0 dev/
+ dr--r--r--       0 proc/
+ dr--r--r--       0 system/
+nsh> 
 ```
 
-So Initial RAM Disk is loaded at `0x8400` `0000`
+[UART Wait LCR Disabled](https://gist.github.com/lupyuen/6b5803e2b3697e96233267f6cd89c593)
 
-(`__ramdisk_start` from the previous section)
+[UART Wait LCR Enabled](https://gist.github.com/lupyuen/9325fee202d38a671cd0eb3cfd35a1db)
 
-Also we see that Kernel is loaded at `0x8000` `0000`, Device Tree at `0x8700` `0000`.
+[Synopsys DesignWare DW_apb_uart Databook](https://linux-sunxi.org/images/d/d2/Dw_apb_uart_db.pdf), Page 100
 
-# Device Tree for RISC-V QEMU
+> "DLAB: Divisor Latch Access Bit. Writeable only when UART is not busy (USR[0] is zero)"
 
-Read the article...
+[Similar to PinePhone](https://github.com/apache/nuttx/blob/master/arch/arm64/src/a64/a64_serial.c#L529-L549)
 
--   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
+UART Clock for JH7110:
 
-To dump the Device Tree for QEMU RISC-V, we specify `dumpdtb`...
+```text
+dlm = 0 (div >> 8)
+dll = 13 (div & 0xff)
+div = 13
+baud=115200
+
+div = (uartclk + (baud << 3)) / (baud << 4)
+13  = (uartclk + 921600) / 1843200
+uartclk = (13 * 1843200) - 921600
+        = 23040000
+```
+
+Fix UART Clock:
 
 ```bash
-## Dump Device Tree for QEMU RISC-V
-qemu-system-riscv64 \
-  -semihosting \
-  -M virt,aclint=on,dumpdtb=qemu-riscv64.dtb \
-  -cpu rv64 \
-  -smp 8 \
-  -bios none \
-  -kernel nuttx \
-  -nographic
-
-## Convert Device Tree to text format
-dtc \
-  -o qemu-riscv64.dts \
-  -O dts \
-  -I dtb \
-  qemu-riscv64.dtb
+CONFIG_16550_UART0_CLOCK=23040000
 ```
 
-This produces the Device Tree for QEMU RISC-V...
+NuttX Shell OK yay!
 
-- [qemu-riscv64.dts: Device Tree for QEMU RISC-V](https://github.com/lupyuen/nuttx-star64/blob/main/qemu-riscv64.dts)
+```text
+Starting kernel ...
 
-Which is helpful for browsing the Memory Addresses of I/O Peripherals.
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+123067BCnx_start: Entry
+up_irq_enable: 
+up_enable_irq: irq=17
+up_enable_irq: RISCV_IRQ_SOFT=17
+uart_register: Registering /dev/console
+uart_register: Registering /dev/ttyS0
+up_enable_irq: irq=57
+up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
+work_start_lowpri: Starting low-priority kernel worker thread(s)
+board_late_initialize: 
+nx_start_application: Starting init task: /system/bin/init
+elf_symname: Symbol has no name
+elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
+elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
+nx_start_application: ret=3
+up_exit: TCB=0x404088d0 exiting
+nx_start: CPU0: Beginning Idle Loop
+***main
 
-# TODO
+NuttShell (NSH) NuttX-12.0.3
+nsh> uname -a
+posix_spawn: pid=0xc0202978 path=uname file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+exec_spawn: ERROR: Failed to load program 'uname': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+NuttX 12.0.3 2ff7d88 Jul 28 2023 12:35:31 risc-v rv-virt
+nsh> ls -l
+posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
+exec_spawn: ERROR: Failed to load program 'ls': -2
+nxposix_spawn_exec: ERROR: exec failed: 2
+/:
+ dr--r--r--       0 dev/
+ dr--r--r--       0 proc/
+ dr--r--r--       0 system/
+nsh> 
+```
+
+# Bootable MicroSD for NuttX
 
 TODO: MicroSD Image
 
@@ -4415,7 +4438,88 @@ From [visionfive2-fit-image.its](https://github.com/starfive-tech/VisionFive2/bl
 };
 ```
 
-Generate Image: https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/genimage.sh
+# RAM Disk Address for RISC-V QEMU
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
+
+_Can we enable logging for RISC-V QEMU?_
+
+Yep we use the `-trace "*"` option like this...
+
+```bash
+qemu-system-riscv64 \
+  -semihosting \
+  -M virt,aclint=on \
+  -cpu rv64 \
+  -smp 8 \
+  -bios none \
+  -kernel nuttx \
+  -initrd initrd \
+  -nographic \
+  -trace "*"
+```
+
+In the QEMU Command above we loaded the Initial RAM Disk `initrd`.
+
+To discover the RAM Address of the Initial RAM Disk, we check the QEMU Trace Log:
+
+```text
+resettablloader_write_rom nuttx
+  ELF program header segment 0:
+  @0x80000000 size=0x2b374 ROM=0
+loader_write_rom nuttx
+  ELF program header segment 1:
+  @0x80200000 size=0x2a1 ROM=0
+loader_write_rom initrd:
+  @0x84000000 size=0x2fc3e8 ROM=0
+loader_write_rom fdt:
+  @0x87000000 size=0x100000 ROM=0
+```
+
+So Initial RAM Disk is loaded at `0x8400` `0000`
+
+(`__ramdisk_start` from the previous section)
+
+Also we see that Kernel is loaded at `0x8000` `0000`, Device Tree at `0x8700` `0000`.
+
+# Device Tree for RISC-V QEMU
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: RISC-V Semihosting and Initial RAM Disk"](https://lupyuen.github.io/articles/semihost)
+
+To dump the Device Tree for QEMU RISC-V, we specify `dumpdtb`...
+
+```bash
+## Dump Device Tree for QEMU RISC-V
+qemu-system-riscv64 \
+  -semihosting \
+  -M virt,aclint=on,dumpdtb=qemu-riscv64.dtb \
+  -cpu rv64 \
+  -smp 8 \
+  -bios none \
+  -kernel nuttx \
+  -nographic
+
+## Convert Device Tree to text format
+dtc \
+  -o qemu-riscv64.dts \
+  -O dts \
+  -I dtb \
+  qemu-riscv64.dtb
+```
+
+This produces the Device Tree for QEMU RISC-V...
+
+- [qemu-riscv64.dts: Device Tree for QEMU RISC-V](https://github.com/lupyuen/nuttx-star64/blob/main/qemu-riscv64.dts)
+
+Which is helpful for browsing the Memory Addresses of I/O Peripherals.
+
+# TODO
+
+TODO: Generate Image: https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/genimage.sh
 
 ```bash
 genimage \
@@ -4484,122 +4588,6 @@ nuttx/boards/risc-v/jh7110/star64/Kconfig:
 
 https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-76f41ff047f7cc79980a18f527aa05f1337be8416d3d946048b099743f10631c
 
-TODO: Star64 port ready yay!
-
-```text
-Starting kernel ...
-
-clk u5_dw_i2c_clk_core already disabled
-clk u5_dw_i2c_clk_apb already disabled
-BCnx_start: Entry
-uart_register: Registering /dev/console
-uart_register: Registering /dev/ttyS0
-work_start_lowpri: Starting low-priority kernel worker thread(s)
-nx_start_application: Starting init task: /system/bin/init
-elf_symname: Symbol has no name
-elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
-elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
-up_exit: TCB=0x40409890 exiting
-nx_start: CPU0: Beginning Idle Loop
-
-NuttShell (NSH) NuttX-12.0.3
-nsh> uname -a
-posix_spawn: pid=0xc0202978 path=uname file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-exec_spawn: ERROR: Failed to load program 'uname': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-NuttX 12.0.3 7a92743-dirty Aug  3 2023 18:06:04 risc-v star64
-nsh> ls -l
-posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-exec_spawn: ERROR: Failed to load program 'ls': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-/:
- dr--r--r--       0 dev/
- dr--r--r--       0 proc/
- dr--r--r--       0 system/
-nsh> 
-```
-
-I found out (from Hacker News) that JH7110 uses a Synopsys DesignWare 8250 UART that has a peculiar problem with the Line Control Register (LCR)... If we write to LCR while the UART is busy, it will trigger spurious UART Interrupts.
-
-The fix is to wait for the UART to be not busy before writing to LCR. Here's my proposed patch for the NuttX 16550 UART Driver:
-
-[drivers/serial/uart_16550.c](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/36/files#diff-f208234edbfb636de240a0fef1c85f9cecb37876d5bc91ffb759f70a1e96b1d1)
-
-We're all ready to merge NuttX for JH7110! :-)
-
-[UART Wait LCR Disabled](https://gist.github.com/lupyuen/6b5803e2b3697e96233267f6cd89c593)
-
-[UART Wait LCR Enabled](https://gist.github.com/lupyuen/9325fee202d38a671cd0eb3cfd35a1db)
-
-[Synopsys DesignWare DW_apb_uart Databook](https://linux-sunxi.org/images/d/d2/Dw_apb_uart_db.pdf), Page 100
-
-> "DLAB: Divisor Latch Access Bit. Writeable only when UART is not busy (USR[0] is zero)"
-
-[Similar to PinePhone](https://github.com/apache/nuttx/blob/master/arch/arm64/src/a64/a64_serial.c#L529-L549)
-
-UART Clock for JH7110:
-
-```text
-dlm = 0 (div >> 8)
-dll = 13 (div & 0xff)
-div = 13
-baud=115200
-
-div = (uartclk + (baud << 3)) / (baud << 4)
-13  = (uartclk + 921600) / 1843200
-uartclk = (13 * 1843200) - 921600
-        = 23040000
-```
-
-Fix UART Clock:
-
-```bash
-CONFIG_16550_UART0_CLOCK=23040000
-```
-
-NuttX Shell OK yay!
-
-```text
-Starting kernel ...
-
-clk u5_dw_i2c_clk_core already disabled
-clk u5_dw_i2c_clk_apb already disabled
-123067BCnx_start: Entry
-up_irq_enable: 
-up_enable_irq: irq=17
-up_enable_irq: RISCV_IRQ_SOFT=17
-uart_register: Registering /dev/console
-uart_register: Registering /dev/ttyS0
-up_enable_irq: irq=57
-up_enable_irq: extirq=32, RISCV_IRQ_EXT=25
-work_start_lowpri: Starting low-priority kernel worker thread(s)
-board_late_initialize: 
-nx_start_application: Starting init task: /system/bin/init
-elf_symname: Symbol has no name
-elf_symvalue: SHN_UNDEF: Failed to get symbol name: -3
-elf_relocateadd: Section 2 reloc 2: Undefined symbol[0] has no name: -3
-nx_start_application: ret=3
-up_exit: TCB=0x404088d0 exiting
-nx_start: CPU0: Beginning Idle Loop
-***main
-
-NuttShell (NSH) NuttX-12.0.3
-nsh> uname -a
-posix_spawn: pid=0xc0202978 path=uname file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-exec_spawn: ERROR: Failed to load program 'uname': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-NuttX 12.0.3 2ff7d88 Jul 28 2023 12:35:31 risc-v rv-virt
-nsh> ls -l
-posix_spawn: pid=0xc0202978 path=ls file_actions=0xc0202980 attr=0xc0202988 argv=0xc0202a28
-exec_spawn: ERROR: Failed to load program 'ls': -2
-nxposix_spawn_exec: ERROR: exec failed: 2
-/:
- dr--r--r--       0 dev/
- dr--r--r--       0 proc/
- dr--r--r--       0 system/
-nsh> 
-```
-
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
 
 TODO: Check [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/include/board_memorymap.h#L34-L37)
@@ -4636,6 +4624,22 @@ TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-
 #define QEMU_RV_ACLINT_BASE  0x02f00000
 #define QEMU_RV_PLIC_BASE    0x0c000000
 ```
+
+TODO: Check PolarFire Icicle 
+
+https://lupyuen.github.io/articles/privilege#other-risc-v-ports-of-nuttx
+
+TODO: Check Linux Boot Code
+
+https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S
+
+TODO: Linux SBI Interface
+
+https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/sbi.c
+
+TODO: Handle Machine Exception
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_exception_m.S#L64
 
 # U-Boot Bootloader Log for TFTP
 
