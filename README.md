@@ -4243,6 +4243,8 @@ nxposix_spawn_exec: ERROR: exec failed: 2
 nsh> 
 ```
 
+_How did we build NuttX for Star64?_
+
 To build NuttX for Star64, [install the prerequisites](https://nuttx.apache.org/docs/latest/quickstart/install.html) and [clone the git repositories](https://nuttx.apache.org/docs/latest/quickstart/install.html) for ``nuttx`` and ``apps``.
 
 Configure the NuttX project and build the project:
