@@ -4340,6 +4340,14 @@ mkimage -l starfiveu.fit
 
 Boot OK from MicroSD yay! https://gist.github.com/lupyuen/eef8de0817ceed2072b2bacc925cdd96
 
+About FIT:
+
+https://u-boot.readthedocs.io/en/latest/usage/fit/source_file_format.html
+
+https://u-boot.readthedocs.io/en/latest/usage/fit/kernel_fdt.html
+
+https://u-boot.readthedocs.io/en/latest/usage/fit/multi.html
+
 From [visionfive2-fit-image.its](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/visionfive2-fit-image.its):
 
 ```text
