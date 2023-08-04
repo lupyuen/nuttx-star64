@@ -4470,6 +4470,61 @@ Password: starfive
 
 Based on the files above, we figured out how to generate the Flat Image Tree for NuttX: [Makefile](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/Makefile#L279-L283)
 
+Also we see the script that generates the SD Card Image: [genimage.sh](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/genimage.sh)
+
+```bash
+genimage \
+	--rootpath "${ROOTPATH_TMP}"     \
+	--tmppath "${GENIMAGE_TMP}"    \
+	--inputpath "${INPUT_DIR}"  \
+	--outputpath "${OUTPUT_DIR}" \
+	--config genimage-vf2.cfg
+```
+
+The SD Card Partitions are defined in [genimage-vf2.cfg](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/genimage-vf2.cfg):
+
+```text
+image sdcard.img {
+	hdimage {
+		gpt = true
+	}
+
+	partition spl {
+		image = "work/u-boot-spl.bin.normal.out"
+		partition-type-uuid = 2E54B353-1271-4842-806F-E436D6AF6985
+		offset = 2M
+		size = 2M
+	}
+
+	partition uboot {
+		image = "work/visionfive2_fw_payload.img"
+		partition-type-uuid = 5B193300-FC78-40CD-8002-E86C45580B47
+		offset = 4M
+		size = 4M
+	}
+
+	partition image {
+		# partition-type = 0xC
+		partition-type-uuid = EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
+		image = "work/starfive-visionfive2-vfat.part"
+		offset = 8M
+		size = 292M
+	}
+
+	partition root {
+		# partition-type = 0x83
+		partition-type-uuid = 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+		image = "work/buildroot_rootfs/images/rootfs.ext4"
+		offset = 300M
+		bootable = true
+	}
+}
+```
+
+Useful for creating our own SD Card Partitions!
+
+(We won't need the `spl`, `uboot` and `root` partitions for NuttX)
+
 # UART Clock for JH7110
 
 _How did we figure out the UART Clock for JH7110?_
@@ -4596,82 +4651,39 @@ Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 # TODO
 
-TODO: Generate Image: https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/genimage.sh
-
-```bash
-genimage \
-	--rootpath "${ROOTPATH_TMP}"     \
-	--tmppath "${GENIMAGE_TMP}"    \
-	--inputpath "${INPUT_DIR}"  \
-	--outputpath "${OUTPUT_DIR}" \
-	--config genimage-vf2.cfg
-```
-
-From [genimage-vf2.cfg](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/genimage-vf2.cfg):
-
-```text
-image sdcard.img {
-	hdimage {
-		gpt = true
-	}
-
-	partition spl {
-		image = "work/u-boot-spl.bin.normal.out"
-		partition-type-uuid = 2E54B353-1271-4842-806F-E436D6AF6985
-		offset = 2M
-		size = 2M
-	}
-
-	partition uboot {
-		image = "work/visionfive2_fw_payload.img"
-		partition-type-uuid = 5B193300-FC78-40CD-8002-E86C45580B47
-		offset = 4M
-		size = 4M
-	}
-
-	partition image {
-		# partition-type = 0xC
-		partition-type-uuid = EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
-		image = "work/starfive-visionfive2-vfat.part"
-		offset = 8M
-		size = 292M
-	}
-
-	partition root {
-		# partition-type = 0x83
-		partition-type-uuid = 0FC63DAF-8483-4772-8E79-3D69D8477DE4
-		image = "work/buildroot_rootfs/images/rootfs.ext4"
-		offset = 300M
-		bootable = true
-	}
-}
-```
-
 TODO: Add JH7110
-nuttx/arch/risc-v/Kconfig:
+
+Modify nuttx/arch/risc-v/Kconfig:
 
 https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-9c348f27c59e1ed0d1d9c24e172d233747ee09835ab0aa7f156da1b7caa6a5fb
 
-nuttx/arch/risc-v/src/jh7110/Kconfig:
+Create nuttx/arch/risc-v/src/jh7110/Kconfig:
 
 https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-36a3009882ced77a24e9a7fd7ce3cf481ded4655f1adc366e7722a87ceab293b
 
 TODO: Add Star64
-nuttx/boards/Kconfig:
+
+Modify nuttx/boards/Kconfig:
 
 https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-60cc096e3a9b22a769602cbbc3b0f5e7731e72db7b0338da04fcf665ed753b64
 
-nuttx/boards/risc-v/jh7110/star64/Kconfig:
+Create nuttx/boards/risc-v/jh7110/star64/Kconfig:
 
 https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-76f41ff047f7cc79980a18f527aa05f1337be8416d3d946048b099743f10631c
 
 TODO: Add Doc
 
-nuttx/Documentation/introduction/detailed_support.rst
+Modify nuttx/Documentation/introduction/detailed_support.rst:
 
-nuttx/Documentation/platforms/risc-v/jh7110/index.rst
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-d8a0e68fcb8fcb7e919c4b01226b6a25f888ed297145b82c719875cf8e6f5ae4
 
-nuttx/Documentation/platforms/risc-v/jh7110/boards/star64/index.rst
+Create nuttx/Documentation/platforms/risc-v/jh7110/index.rst:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-79d8d013e3cbf7600551f1ac23beb5db8bd234a0067576bfe0997b16e5d5c148
+
+Create nuttx/Documentation/platforms/risc-v/jh7110/boards/star64/index.rst:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-a57fa454397c544c8a717c35212a88d3e3e0c77c9c6e402f5bb52dfeb62e1349
 
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
 
