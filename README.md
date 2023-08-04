@@ -4298,15 +4298,138 @@ Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 TODO: MicroSD Image
 
-https://github.com/starfive-tech/VisionFive2/releases
+Releases: https://github.com/starfive-tech/VisionFive2/releases
 
-https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/sdcard.img
+SD Card Image: https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/sdcard.img
 
 Boots OK: https://gist.github.com/lupyuen/030e4feb2fa95319290f3027032c24a8
 
 ```text
 buildroot login:root
 Password: starfive
+```
+
+Generate FIT: https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/Makefile#L279-L283
+
+```text
+brew install u-boot-tools
+
+mkimage \
+  -f ../nuttx-star64/nuttx.its \
+  -A riscv \
+  -O linux \
+  -T flat_dt \
+  starfiveu.fit
+```
+
+From [visionfive2-fit-image.its](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/visionfive2-fit-image.its):
+
+```text
+/dts-v1/;
+
+/ {
+        description = "U-boot FIT image for visionfive2";
+        #address-cells = <2>;
+
+        images {
+                vmlinux {
+                        description = "vmlinux";
+                        data = /incbin/("../work/linux/arch/riscv/boot/Image");
+                        type = "kernel";
+                        arch = "riscv";
+                        os = "linux";
+                        load = <0x0 0x40200000>;
+                        entry = <0x0 0x40200000>;
+                        compression = "none";
+                };
+
+                ramdisk {
+                        description = "buildroot initramfs";
+                        data = /incbin/("../work/initramfs.cpio.gz");
+                        type = "ramdisk";
+                        arch = "riscv";
+                        os = "linux";
+                        load = <0x0 0x46100000>;
+                        compression = "none";
+                        hash-1 {
+                                algo = "sha256";
+                        };
+                };
+
+                fdt {
+                        data = /incbin/("../work/linux/arch/riscv/boot/dts/starfive/jh7110-visionfive-v2.dtb");
+                        type = "flat_dt";
+                        arch = "riscv";
+                        load = <0x0 0x46000000>;
+                        compression = "none";
+                        hash-1 {
+                                algo = "sha256";
+                        };
+                };
+        };
+
+        configurations {
+                default = "config-1";
+
+                config-1 {
+                        description = "visionfive2 with opensbi";
+						kernel = "vmlinux";
+                        fdt = "fdt";
+                        loadables = "ramdisk";
+                };
+        };
+};
+```
+
+Generate Image: https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/genimage.sh
+
+```bash
+genimage \
+	--rootpath "${ROOTPATH_TMP}"     \
+	--tmppath "${GENIMAGE_TMP}"    \
+	--inputpath "${INPUT_DIR}"  \
+	--outputpath "${OUTPUT_DIR}" \
+	--config genimage-vf2.cfg
+```
+
+From [genimage-vf2.cfg](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/genimage-vf2.cfg):
+
+```text
+image sdcard.img {
+	hdimage {
+		gpt = true
+	}
+
+	partition spl {
+		image = "work/u-boot-spl.bin.normal.out"
+		partition-type-uuid = 2E54B353-1271-4842-806F-E436D6AF6985
+		offset = 2M
+		size = 2M
+	}
+
+	partition uboot {
+		image = "work/visionfive2_fw_payload.img"
+		partition-type-uuid = 5B193300-FC78-40CD-8002-E86C45580B47
+		offset = 4M
+		size = 4M
+	}
+
+	partition image {
+		# partition-type = 0xC
+		partition-type-uuid = EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
+		image = "work/starfive-visionfive2-vfat.part"
+		offset = 8M
+		size = 292M
+	}
+
+	partition root {
+		# partition-type = 0x83
+		partition-type-uuid = 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+		image = "work/buildroot_rootfs/images/rootfs.ext4"
+		offset = 300M
+		bootable = true
+	}
+}
 ```
 
 TODO: Add JH7110

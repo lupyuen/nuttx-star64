@@ -1,0 +1,54 @@
+/dts-v1/;
+
+/ {
+  description = "NuttX FIT image";
+  #address-cells = <2>;
+
+  images {
+    vmlinux {
+      description = "vmlinux";
+      data = /incbin/("./nuttx.bin");
+      type = "kernel";
+      arch = "riscv";
+      os = "linux";
+      load = <0x0 0x40200000>;
+      entry = <0x0 0x40200000>;
+      compression = "none";
+    };
+
+    ramdisk {
+      description = "buildroot initramfs";
+      data = /incbin/("./initrd");
+      type = "ramdisk";
+      arch = "riscv";
+      os = "linux";
+      load = <0x0 0x46100000>;
+      compression = "none";
+      hash-1 {
+        algo = "sha256";
+      };
+    };
+
+    fdt {
+      data = /incbin/("../jh7110-visionfive-v2.dtb");
+      type = "flat_dt";
+      arch = "riscv";
+      load = <0x0 0x46000000>;
+      compression = "none";
+      hash-1 {
+        algo = "sha256";
+      };
+    };
+  };
+
+  configurations {
+    default = "config-1";
+
+    config-1 {
+      description = "NuttX";
+      kernel = "vmlinux";
+      fdt = "fdt";
+      loadables = "ramdisk";
+    };
+  };
+};
