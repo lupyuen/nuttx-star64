@@ -4243,6 +4243,8 @@ nxposix_spawn_exec: ERROR: exec failed: 2
 nsh> 
 ```
 
+[(See the Complete Log)](https://gist.github.com/lupyuen/eef8de0817ceed2072b2bacc925cdd96)
+
 _How did we build NuttX for Star64?_
 
 To build NuttX for Star64, [install the prerequisites](https://nuttx.apache.org/docs/latest/quickstart/install.html) and [clone the git repositories](https://nuttx.apache.org/docs/latest/quickstart/install.html) for ``nuttx`` and ``apps``.
@@ -4272,6 +4274,12 @@ This generates the Initial RAM Disk ``initrd``.
 Download the [Device Tree jh7110-visionfive-v2.dtb](https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/jh7110-visionfive-v2.dtb) from [StarFive VisionFive2 Software Releases](https://github.com/starfive-tech/VisionFive2/releases) into the ``nuttx`` folder.
 
 Now we create a Bootable MicroSD...
+
+[(See the Build Outputs)](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/jh7110b-0.0.1)
+
+[(See the Build Steps)](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/jh7110b-0.0.1)
+
+[(See the Build Log)](https://gist.github.com/lupyuen/c6dc9aeec74d399029ebaf46ac16ef79)
 
 # Bootable MicroSD for NuttX
 
@@ -4442,6 +4450,12 @@ $ help
 ```
 
 [Booting NuttX over TFTP](https://lupyuen.github.io/articles/tftp) is also supported on Star64.
+
+[(See the Build Outputs)](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/jh7110b-0.0.1)
+
+[(See the Build Steps)](https://github.com/lupyuen2/wip-pinephone-nuttx/releases/tag/jh7110b-0.0.1)
+
+[(See the Build Log)](https://gist.github.com/lupyuen/c6dc9aeec74d399029ebaf46ac16ef79)
 
 More about Flat Image Tree...
 
