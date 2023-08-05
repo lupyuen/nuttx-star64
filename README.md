@@ -4465,7 +4465,7 @@ More about Flat Image Tree...
 
 - [Multiple kernels, ramdisks and FDT blobs](https://u-boot.readthedocs.io/en/latest/usage/fit/multi.html)
 
-# Add the Star64 JH7110 Arch and Board to NuttX
+# Add Star64 JH7110 Arch and Board to NuttX
 
 _How did we add Star64 JH7110 to NuttX as a new Arch and Board?_
 
