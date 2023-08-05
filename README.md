@@ -4253,6 +4253,16 @@ _How did we build NuttX for Star64?_
 
 To build NuttX for Star64, [install the prerequisites](https://nuttx.apache.org/docs/latest/quickstart/install.html) and [clone the git repositories](https://nuttx.apache.org/docs/latest/quickstart/install.html) for ``nuttx`` and ``apps``.
 
+Before building NuttX for Star64, download the __RISC-V Toolchain riscv64-unknown-elf__ from [SiFive RISC-V Tools](https://github.com/sifive/freedom-tools/releases/tag/v2020.12.0).
+
+Add the downloaded toolchain `riscv64-unknown-elf-toolchain-.../bin` to the `PATH` Environment Variable.
+
+Check the RISC-V Toolchain:
+
+```bash
+$ riscv64-unknown-elf-gcc -v
+```
+
 Configure the NuttX project and build the project:
 
 ```bash
