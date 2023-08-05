@@ -4243,6 +4243,8 @@ nxposix_spawn_exec: ERROR: exec failed: 2
 nsh> 
 ```
 
+[(Watch the Demo Video on YouTube)](https://youtu.be/6vQ-TXXojbQ)
+
 [(See the Complete Log)](https://gist.github.com/lupyuen/eef8de0817ceed2072b2bacc925cdd96)
 
 _How did we build NuttX for Star64?_
