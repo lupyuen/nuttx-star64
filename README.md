@@ -4471,25 +4471,53 @@ More about Flat Image Tree...
 
 _How did we add Star64 JH7110 to NuttX as a new Arch and Board?_
 
-TODO: Add NuttX Arch for JH7110
+We added Star64 JH7110 to NuttX with 3 Pull Requests...
 
-[Fix any dependencies](https://github.com/apache/nuttx/pull/10019)
+1.  First we fix any dependencies needed by Star64 JH7110. This PR fixes the 16550 UART Driver used by JH7110...
 
-[First PR](https://github.com/apache/nuttx/pull/10069)
+    [Fix 16550 UART](https://github.com/apache/nuttx/pull/10019)
 
-Modify [nuttx/arch/risc-v/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-9c348f27c59e1ed0d1d9c24e172d233747ee09835ab0aa7f156da1b7caa6a5fb)
+1.  Next we submit the PR that implements the JH7110 SoC as a __NuttX Arch__...
 
-Create [nuttx/arch/risc-v/src/jh7110/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-36a3009882ced77a24e9a7fd7ce3cf481ded4655f1adc366e7722a87ceab293b)
+    [Add support for JH7110 SoC](https://github.com/apache/nuttx/pull/10069)
 
-TODO: Add NuttX Board Star64
+    We add JH7110 to the Kconfig for the RISC-V SoCs: [nuttx/arch/risc-v/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-9c348f27c59e1ed0d1d9c24e172d233747ee09835ab0aa7f156da1b7caa6a5fb)
 
-[Second PR](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/40)
+    And we create a Kconfig for JH7110: [nuttx/arch/risc-v/src/jh7110/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-36a3009882ced77a24e9a7fd7ce3cf481ded4655f1adc366e7722a87ceab293b)
 
-Modify [nuttx/boards/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-60cc096e3a9b22a769602cbbc3b0f5e7731e72db7b0338da04fcf665ed753b64)
+    Then we add the source files for JH7110.
 
-Create [nuttx/boards/risc-v/jh7110/star64/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-76f41ff047f7cc79980a18f527aa05f1337be8416d3d946048b099743f10631c)
+1.  Finally we submit the PR that implements Star64 SBC as a __NuttX Board__...
 
-TODO: Generate defconfig
+    [Add support for Star64 SBC](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/40)
+
+    We add Star64 to the Kconfig for the NuttX Boards: [nuttx/boards/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-60cc096e3a9b22a769602cbbc3b0f5e7731e72db7b0338da04fcf665ed753b64)
+
+    We create a Kconfig for Star64: [nuttx/boards/risc-v/jh7110/star64/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-76f41ff047f7cc79980a18f527aa05f1337be8416d3d946048b099743f10631c)
+
+    And we add the source files for Star64.
+
+1.  In the same PR, update the __NuttX Docs__...
+
+    Add JH7110 and Star64 to the list of supported platforms:
+    
+    [nuttx/Documentation/introduction/detailed_support.rst](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-d8a0e68fcb8fcb7e919c4b01226b6a25f888ed297145b82c719875cf8e6f5ae4)
+
+    Create a page for the JH7110 NuttX Arch:
+
+    [nuttx/Documentation/platforms/risc-v/jh7110/index.rst](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-79d8d013e3cbf7600551f1ac23beb5db8bd234a0067576bfe0997b16e5d5c148)
+
+    Under JH7110, create a page for the Star64 NuttX Board:
+    
+    [nuttx/Documentation/platforms/risc-v/jh7110/boards/star64/index.rst](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-a57fa454397c544c8a717c35212a88d3e3e0c77c9c6e402f5bb52dfeb62e1349)
+
+_How did we generate the NuttX Build Configuration?_
+
+The NuttX Build Configuration for Star64 is at...
+
+[boards/risc-v/jh7110/star64/configs/nsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/40/files#diff-cdbd91013d0074f15d469491b707d1d6576752bd7b7b9ec6ed311edba8ab4b53)
+
+We generated the `defconfig` with this command...
 
 ```bash
 make menuconfig \
@@ -4498,7 +4526,7 @@ make menuconfig \
   >boards/risc-v/jh7110/star64/configs/nsh/defconfig
 ```
 
-TODO: Debug Config
+During development, we should enable additional debug options...
 
 ```text
 CONFIG_DEBUG_ASSERTIONS=y
@@ -4524,19 +4552,15 @@ CONFIG_DEBUG_SYMBOLS=y
 CONFIG_DEBUG_WARN=y
 ```
 
-TODO: Add Doc
+- BINFMT is the Binary Loader, good for troubleshooting NuttX App ELF loading issues
 
-Modify nuttx/Documentation/introduction/detailed_support.rst:
+- SCHED is for Task Scheduler, which will show the spawning of NuttX App Tasks
 
-(https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-d8a0e68fcb8fcb7e919c4b01226b6a25f888ed297145b82c719875cf8e6f5ae4)
+- MM is for Memory Management, for troubleshooting Memory Mapping issues
 
-Create nuttx/Documentation/platforms/risc-v/jh7110/index.rst:
+- FS is for File System
 
-(https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-79d8d013e3cbf7600551f1ac23beb5db8bd234a0067576bfe0997b16e5d5c148)
-
-Create nuttx/Documentation/platforms/risc-v/jh7110/boards/star64/index.rst:
-
-(https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-a57fa454397c544c8a717c35212a88d3e3e0c77c9c6e402f5bb52dfeb62e1349)
+Before merging with NuttX Mainline, remove the BINFMT, FS, MM and SCHED debug options.
 
 # StarFive VisionFive2 Software Release
 
