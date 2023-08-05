@@ -4211,6 +4211,8 @@ The fix is to wait for the UART to be not busy before writing to LCR. Here's my 
 
 After fixing the spurious UART interrupts, now NuttX boots OK on Star64 yay!
 
+![NuttX boots OK on Star64 JH7110](https://lupyuen.github.io/images/star64-bootok.png)
+
 ```text
 Starting kernel ...
 clk u5_dw_i2c_clk_core already disabled
