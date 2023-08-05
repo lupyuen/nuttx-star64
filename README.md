@@ -4465,6 +4465,79 @@ More about Flat Image Tree...
 
 - [Multiple kernels, ramdisks and FDT blobs](https://u-boot.readthedocs.io/en/latest/usage/fit/multi.html)
 
+# Add the Star64 JH7110 Arch and Board to NuttX
+
+_How did we add Star64 JH7110 to NuttX as a new Arch and Board?_
+
+TODO: Add JH7110
+
+Modify nuttx/arch/risc-v/Kconfig:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-9c348f27c59e1ed0d1d9c24e172d233747ee09835ab0aa7f156da1b7caa6a5fb
+
+Create nuttx/arch/risc-v/src/jh7110/Kconfig:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-36a3009882ced77a24e9a7fd7ce3cf481ded4655f1adc366e7722a87ceab293b
+
+TODO: Add Star64
+
+Modify nuttx/boards/Kconfig:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-60cc096e3a9b22a769602cbbc3b0f5e7731e72db7b0338da04fcf665ed753b64
+
+Create nuttx/boards/risc-v/jh7110/star64/Kconfig:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-76f41ff047f7cc79980a18f527aa05f1337be8416d3d946048b099743f10631c
+
+TODO: Generate defconfig
+
+```bash
+make menuconfig \
+  && make savedefconfig \
+  && grep -v CONFIG_HOST defconfig \
+  >boards/risc-v/jh7110/star64/configs/nsh/defconfig
+```
+
+TODO: Debug Config
+
+```text
+CONFIG_DEBUG_ASSERTIONS=y
+CONFIG_DEBUG_ASSERTIONS_EXPRESSION=y
+CONFIG_DEBUG_BINFMT=y
+CONFIG_DEBUG_BINFMT_ERROR=y
+CONFIG_DEBUG_BINFMT_WARN=y
+CONFIG_DEBUG_ERROR=y
+CONFIG_DEBUG_FEATURES=y
+CONFIG_DEBUG_FS=y
+CONFIG_DEBUG_FS_ERROR=y
+CONFIG_DEBUG_FS_WARN=y
+CONFIG_DEBUG_FULLOPT=y
+CONFIG_DEBUG_INFO=y
+CONFIG_DEBUG_MM=y
+CONFIG_DEBUG_MM_ERROR=y
+CONFIG_DEBUG_MM_WARN=y
+CONFIG_DEBUG_SCHED=y
+CONFIG_DEBUG_SCHED_ERROR=y
+CONFIG_DEBUG_SCHED_INFO=y
+CONFIG_DEBUG_SCHED_WARN=y
+CONFIG_DEBUG_SYMBOLS=y
+CONFIG_DEBUG_WARN=y
+```
+
+TODO: Add Doc
+
+Modify nuttx/Documentation/introduction/detailed_support.rst:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-d8a0e68fcb8fcb7e919c4b01226b6a25f888ed297145b82c719875cf8e6f5ae4
+
+Create nuttx/Documentation/platforms/risc-v/jh7110/index.rst:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-79d8d013e3cbf7600551f1ac23beb5db8bd234a0067576bfe0997b16e5d5c148
+
+Create nuttx/Documentation/platforms/risc-v/jh7110/boards/star64/index.rst:
+
+https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-a57fa454397c544c8a717c35212a88d3e3e0c77c9c6e402f5bb52dfeb62e1349
+
 # StarFive VisionFive2 Software Release
 
 StarFive VisionFive2 Software Releases seem to boot OK on Star64...
@@ -4665,106 +4738,13 @@ Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
 # TODO
 
-TODO: Debug Config
-
-```text
-CONFIG_DEBUG_ASSERTIONS=y
-CONFIG_DEBUG_ASSERTIONS_EXPRESSION=y
-CONFIG_DEBUG_BINFMT=y
-CONFIG_DEBUG_BINFMT_ERROR=y
-CONFIG_DEBUG_BINFMT_WARN=y
-CONFIG_DEBUG_ERROR=y
-CONFIG_DEBUG_FEATURES=y
-CONFIG_DEBUG_FS=y
-CONFIG_DEBUG_FS_ERROR=y
-CONFIG_DEBUG_FS_WARN=y
-CONFIG_DEBUG_FULLOPT=y
-CONFIG_DEBUG_INFO=y
-CONFIG_DEBUG_MM=y
-CONFIG_DEBUG_MM_ERROR=y
-CONFIG_DEBUG_MM_WARN=y
-CONFIG_DEBUG_SCHED=y
-CONFIG_DEBUG_SCHED_ERROR=y
-CONFIG_DEBUG_SCHED_INFO=y
-CONFIG_DEBUG_SCHED_WARN=y
-CONFIG_DEBUG_SYMBOLS=y
-CONFIG_DEBUG_WARN=y
-```
-
-TODO: Generate defconfig
-
-make menuconfig && make savedefconfig && grep -v CONFIG_HOST defconfig >boards/risc-v/jh7110/star64/configs/nsh/defconfig
-
-TODO: Add JH7110
-
-Modify nuttx/arch/risc-v/Kconfig:
-
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-9c348f27c59e1ed0d1d9c24e172d233747ee09835ab0aa7f156da1b7caa6a5fb
-
-Create nuttx/arch/risc-v/src/jh7110/Kconfig:
-
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-36a3009882ced77a24e9a7fd7ce3cf481ded4655f1adc366e7722a87ceab293b
-
-TODO: Add Star64
-
-Modify nuttx/boards/Kconfig:
-
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-60cc096e3a9b22a769602cbbc3b0f5e7731e72db7b0338da04fcf665ed753b64
-
-Create nuttx/boards/risc-v/jh7110/star64/Kconfig:
-
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-76f41ff047f7cc79980a18f527aa05f1337be8416d3d946048b099743f10631c
-
-TODO: Add Doc
-
-Modify nuttx/Documentation/introduction/detailed_support.rst:
-
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-d8a0e68fcb8fcb7e919c4b01226b6a25f888ed297145b82c719875cf8e6f5ae4
-
-Create nuttx/Documentation/platforms/risc-v/jh7110/index.rst:
-
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-79d8d013e3cbf7600551f1ac23beb5db8bd234a0067576bfe0997b16e5d5c148
-
-Create nuttx/Documentation/platforms/risc-v/jh7110/boards/star64/index.rst:
-
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-a57fa454397c544c8a717c35212a88d3e3e0c77c9c6e402f5bb52dfeb62e1349
-
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
-
-TODO: Check [board_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/boards/risc-v/qemu-rv/rv-virt/include/board_memorymap.h#L34-L37)
-
-```c
-/* DDR start address */
-#define QEMURV_DDR_BASE   (0x80000000)
-#define QEMURV_DDR_SIZE   (0x40000000)
-```
-
-TODO: Check [qemu_rv_mm_init.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ramdisk/arch/risc-v/src/qemu-rv/qemu_rv_mm_init.c#L43-L46)
-
-```c
-/* Map the whole I/O memory with vaddr = paddr mappings */
-#define MMU_IO_BASE     (0x00000000)
-#define MMU_IO_SIZE     (0x80000000)
-```
 
 TODO: RISC-V Exceptions [riscv_exception_common.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/common/riscv_exception_common.S#L77)
 
-TODO: Set CLINT and PLIC Addresses
+TODO: Handle Machine Exception
 
-From [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html):
-
-```text
-0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
-0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
-```
-
-TODO: We update [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L27-L33):
-
-```c
-#define QEMU_RV_CLINT_BASE   0x02000000
-#define QEMU_RV_ACLINT_BASE  0x02f00000
-#define QEMU_RV_PLIC_BASE    0x0c000000
-```
+https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_exception_m.S#L64
 
 TODO: Check PolarFire Icicle 
 
@@ -4777,10 +4757,6 @@ https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/head.S
 TODO: Linux SBI Interface
 
 https://github.com/torvalds/linux/blob/master/arch/riscv/kernel/sbi.c
-
-TODO: Handle Machine Exception
-
-https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/qemu_rv_exception_m.S#L64
 
 # U-Boot Bootloader Log for TFTP
 
