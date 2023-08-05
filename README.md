@@ -4479,6 +4479,8 @@ More about Flat Image Tree...
 
 - [Multiple kernels, ramdisks and FDT blobs](https://u-boot.readthedocs.io/en/latest/usage/fit/multi.html)
 
+TODO: Why use sdcard.img
+
 # Add Star64 JH7110 Arch and Board to NuttX
 
 _How did we add Star64 JH7110 to NuttX as a new Arch and Board?_
@@ -4493,11 +4495,13 @@ We added Star64 JH7110 to NuttX with 3 Pull Requests...
 
     [Add support for JH7110 SoC](https://github.com/apache/nuttx/pull/10069)
 
-    We add JH7110 to the Kconfig for the RISC-V SoCs: [nuttx/arch/risc-v/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-9c348f27c59e1ed0d1d9c24e172d233747ee09835ab0aa7f156da1b7caa6a5fb)
+    We add JH7110 to the Kconfig for the RISC-V SoCs: [arch/risc-v/Kconfig](https://github.com/apache/nuttx/pull/10069/files#diff-9c348f27c59e1ed0d1d9c24e172d233747ee09835ab0aa7f156da1b7caa6a5fb)
 
-    And we create a Kconfig for JH7110: [nuttx/arch/risc-v/src/jh7110/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-36a3009882ced77a24e9a7fd7ce3cf481ded4655f1adc366e7722a87ceab293b)
+    And we create a Kconfig for JH7110: [arch/risc-v/src/jh7110/Kconfig](https://github.com/apache/nuttx/pull/10069/files#diff-36a3009882ced77a24e9a7fd7ce3cf481ded4655f1adc366e7722a87ceab293b)
 
-    Then we add the source files for JH7110.
+    Then we add the source files for JH7110 at...
+
+    [arch/risc-v/src/jh7110](https://github.com/apache/nuttx/tree/master/arch/risc-v/src/jh7110)
 
 1.  Finally we submit the PR that implements Star64 SBC as a __NuttX Board__...
 
@@ -4507,7 +4511,9 @@ We added Star64 JH7110 to NuttX with 3 Pull Requests...
 
     We create a Kconfig for Star64: [nuttx/boards/risc-v/jh7110/star64/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-76f41ff047f7cc79980a18f527aa05f1337be8416d3d946048b099743f10631c)
 
-    And we add the source files for Star64.
+    And we add the source files for Star64 at...
+
+    [boards/risc-v/jh7110/star64](https://github.com/apache/nuttx/tree/master/boards/risc-v/jh7110/star64)
 
 1.  In the same PR, update the __NuttX Docs__...
 
@@ -4522,6 +4528,50 @@ We added Star64 JH7110 to NuttX with 3 Pull Requests...
     Under JH7110, create a page for the Star64 NuttX Board:
     
     [nuttx/Documentation/platforms/risc-v/jh7110/boards/star64/index.rst](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-a57fa454397c544c8a717c35212a88d3e3e0c77c9c6e402f5bb52dfeb62e1349)
+
+_Seems we need to copy a bunch of source files across branches?_
+
+No sweat! Suppose we created a staging PR in our own repo...
+
+- [github.com/lupyuen2/wip-pinephone-nuttx/pull/40](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/40)
+
+This command produces a list of changed files...
+
+```bash
+## TODO: Change this to your PR
+pr=https://github.com/lupyuen2/wip-pinephone-nuttx/pull/40
+curl -L $pr.diff \
+  | grep "diff --git" \
+  | sort \
+  | cut -d" " -f3 \
+  | cut -c3-
+```
+
+Like this...
+
+```text
+boards/risc-v/jh7110/star64/include/board.h
+boards/risc-v/jh7110/star64/include/board_memorymap.h
+boards/risc-v/jh7110/star64/scripts/Make.defs
+boards/risc-v/jh7110/star64/scripts/ld.script
+```
+
+That we can copy to another branch in a script...
+
+```bash
+b=$HOME/new_branch
+mkdir -p $b/boards/risc-v/jh7110/star64/include
+mkdir -p $b/boards/risc-v/jh7110/star64/scripts
+
+a=boards/risc-v/jh7110/star64/include/board.h
+cp $a $b/$a
+a=boards/risc-v/jh7110/star64/include/board_memorymap.h
+cp $a $b/$a
+a=boards/risc-v/jh7110/star64/scripts/Make.defs
+cp $a $b/$a
+a=boards/risc-v/jh7110/star64/scripts/ld.script
+cp $a $b/$a
+```
 
 _How did we generate the NuttX Build Configuration?_
 
@@ -4573,6 +4623,8 @@ CONFIG_DEBUG_WARN=y
 - FS is for File System
 
 Before merging with NuttX Mainline, remove the BINFMT, FS, MM and SCHED debug options.
+
+TODO: GPIO next
 
 # StarFive VisionFive2 Software Release
 
