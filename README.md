@@ -4469,25 +4469,23 @@ More about Flat Image Tree...
 
 _How did we add Star64 JH7110 to NuttX as a new Arch and Board?_
 
-TODO: Add JH7110
+TODO: Add NuttX Arch for JH7110
 
-Modify nuttx/arch/risc-v/Kconfig:
+[Fix any dependencies](https://github.com/apache/nuttx/pull/10019)
 
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-9c348f27c59e1ed0d1d9c24e172d233747ee09835ab0aa7f156da1b7caa6a5fb
+[First PR](https://github.com/apache/nuttx/pull/10069)
 
-Create nuttx/arch/risc-v/src/jh7110/Kconfig:
+Modify [nuttx/arch/risc-v/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-9c348f27c59e1ed0d1d9c24e172d233747ee09835ab0aa7f156da1b7caa6a5fb)
 
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-36a3009882ced77a24e9a7fd7ce3cf481ded4655f1adc366e7722a87ceab293b
+Create [nuttx/arch/risc-v/src/jh7110/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-36a3009882ced77a24e9a7fd7ce3cf481ded4655f1adc366e7722a87ceab293b)
 
-TODO: Add Star64
+TODO: Add NuttX Board Star64
 
-Modify nuttx/boards/Kconfig:
+[Second PR](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/40)
 
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-60cc096e3a9b22a769602cbbc3b0f5e7731e72db7b0338da04fcf665ed753b64
+Modify [nuttx/boards/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-60cc096e3a9b22a769602cbbc3b0f5e7731e72db7b0338da04fcf665ed753b64)
 
-Create nuttx/boards/risc-v/jh7110/star64/Kconfig:
-
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-76f41ff047f7cc79980a18f527aa05f1337be8416d3d946048b099743f10631c
+Create [nuttx/boards/risc-v/jh7110/star64/Kconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-76f41ff047f7cc79980a18f527aa05f1337be8416d3d946048b099743f10631c)
 
 TODO: Generate defconfig
 
@@ -4528,15 +4526,15 @@ TODO: Add Doc
 
 Modify nuttx/Documentation/introduction/detailed_support.rst:
 
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-d8a0e68fcb8fcb7e919c4b01226b6a25f888ed297145b82c719875cf8e6f5ae4
+(https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-d8a0e68fcb8fcb7e919c4b01226b6a25f888ed297145b82c719875cf8e6f5ae4)
 
 Create nuttx/Documentation/platforms/risc-v/jh7110/index.rst:
 
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-79d8d013e3cbf7600551f1ac23beb5db8bd234a0067576bfe0997b16e5d5c148
+(https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-79d8d013e3cbf7600551f1ac23beb5db8bd234a0067576bfe0997b16e5d5c148)
 
 Create nuttx/Documentation/platforms/risc-v/jh7110/boards/star64/index.rst:
 
-https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-a57fa454397c544c8a717c35212a88d3e3e0c77c9c6e402f5bb52dfeb62e1349
+(https://github.com/lupyuen2/wip-pinephone-nuttx/pull/38/files#diff-a57fa454397c544c8a717c35212a88d3e3e0c77c9c6e402f5bb52dfeb62e1349)
 
 # StarFive VisionFive2 Software Release
 
