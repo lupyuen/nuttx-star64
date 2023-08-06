@@ -4,7 +4,7 @@
 
 Read the articles...
 
--   ["Star64 JH7110 + NuttX RTOS: Star64 JH7110 + NuttX RTOS: Creating the First Release"](https://lupyuen.github.io/articles/release)
+-   ["Star64 JH7110 + NuttX RTOS: Creating the First Release for the RISC-V SBC"](https://lupyuen.github.io/articles/release)
 
 -   ["Star64 JH7110 + NuttX RTOS: RISC-V PLIC Interrupts and Serial I/O"](https://lupyuen.github.io/articles/plic)
 
