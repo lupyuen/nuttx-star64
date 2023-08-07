@@ -4201,6 +4201,10 @@ TODO: Is NuttX 16550 UART Driver any different from Linux?
 
 # NuttX boots OK on Star64 JH7110
 
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: Creating the First Release for the RISC-V SBC"](https://lupyuen.github.io/articles/release)
+
 From the previous section we saw that JH7110 triggers too many spurious UART interrupts...
 
 - ["Spurious UART Interrupts"](https://lupyuen.github.io/articles/plic#spurious-uart-interrupts)
@@ -4298,6 +4302,10 @@ Now we create a Bootable MicroSD...
 [(See the Build Log)](https://gist.github.com/lupyuen/c6dc9aeec74d399029ebaf46ac16ef79)
 
 # Bootable MicroSD for NuttX
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: Creating the First Release for the RISC-V SBC"](https://lupyuen.github.io/articles/release)
 
 _How do we create a Bootable MicroSD for NuttX?_
 
@@ -4485,6 +4493,10 @@ TODO: Why use sdcard.img
 
 # Add Star64 JH7110 Arch and Board to NuttX
 
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: Creating the First Release for the RISC-V SBC"](https://lupyuen.github.io/articles/release)
+
 _How did we add Star64 JH7110 to NuttX as a new Arch and Board?_
 
 We added Star64 JH7110 to NuttX with 3 Pull Requests...
@@ -4636,6 +4648,10 @@ TODO: GPIO next
 
 # StarFive VisionFive2 Software Release
 
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: Creating the First Release for the RISC-V SBC"](https://lupyuen.github.io/articles/release)
+
 StarFive VisionFive2 Software Releases seem to boot OK on Star64...
 
 - [VisionFive2 Software Releases](https://github.com/starfive-tech/VisionFive2/releases)
@@ -4709,6 +4725,10 @@ Useful for creating our own SD Card Partitions!
 (We won't need the `spl`, `uboot` and `root` partitions for NuttX)
 
 # UART Clock for JH7110
+
+Read the article...
+
+-   ["Star64 JH7110 + NuttX RTOS: Creating the First Release for the RISC-V SBC"](https://lupyuen.github.io/articles/release)
 
 _How did we figure out the UART Clock for JH7110?_
 
