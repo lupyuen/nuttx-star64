@@ -4,6 +4,8 @@
 
 Read the articles...
 
+-   ["RTOS on a RISC-V SBC: Star64 JH7110 + Apache NuttX"](https://www.hackster.io/lupyuen/rtos-on-a-risc-v-sbc-star64-jh7110-apache-nuttx-2a7429)
+
 -   ["Star64 JH7110 + NuttX RTOS: Creating the First Release for the RISC-V SBC"](https://lupyuen.github.io/articles/release)
 
 -   ["Star64 JH7110 + NuttX RTOS: RISC-V PLIC Interrupts and Serial I/O"](https://lupyuen.github.io/articles/plic)
