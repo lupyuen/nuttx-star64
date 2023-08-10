@@ -4777,7 +4777,7 @@ CONFIG_16550_UART0_CLOCK=23040000
 
 # PineTab-V Factory Test Code
 
-![PineTab-V Factory Test Code](https://lupyuen.github.io/images/pinetabv-factory.jpg)
+> ![PineTab-V Factory Test Code](https://lupyuen.github.io/images/pinetabv-factory.jpg)
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
 
