@@ -4775,9 +4775,9 @@ CONFIG_16550_UART0_CLOCK=23040000
 
 [(Source)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/57d5bba4723b58c7bb947f9fa206be377c80c8d0/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L10-L18)
 
-# PineTab-V Factory Test Code
-
 > ![PineTab-V Factory Test Code](https://lupyuen.github.io/images/pinetabv-factory.jpg)
+
+# PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
 
