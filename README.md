@@ -4789,9 +4789,9 @@ Let's look inside the Factory Test Code...
 
 # PineTab-V Device Tree
 
-Here's the PineTab-V Device Tree for Linux:
+Inside the PineTab-V Factory Test Code (from previous section), we see the PineTab-V Device Tree for Linux:
 
-[VisionFive2/linux/arch/riscv/boot/dts/starfive/jh7110-visionfive-v2.dtsi](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dtsi)
+[VisionFive2/linux/arch/riscv/boot/dts/starfive/jh7110-visionfive-v2.dtsi](https://github.com/lupyuen/nuttx-star64/blob/main/pinetabv-jh7110-visionfive-v2.dtsi)
 
 TODO
 
