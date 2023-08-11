@@ -4777,7 +4777,7 @@ CONFIG_16550_UART0_CLOCK=23040000
 
 # NuttX Automated Daily Build for Star64
 
-NuttX for Star6 is now built automatically every day via GitHub Actions.
+NuttX for Star64 is now built automatically every day via GitHub Actions.
 
 The Daily Releases are available here...
 
@@ -4797,7 +4797,7 @@ The GitHub Actions Workflow is here...
 Maybe someday we'll do Daily Automated Testing...
 
 1.  Download the Daily Build to TFTP Server
-1.  Power on Star64 with an [IKEA Smart Switch via Home Assistant](https://lupyuen.github.io/articles/tftp#whats-next)
+1.  Power on Star64 with an [IKEA Smart Power Plug via Home Assistant](https://lupyuen.github.io/articles/tftp#whats-next)
 1.  Star64 boots the Daily Build over TFTP
 1.  Capture the Automated Testing Log and write to the Release Notes
 
