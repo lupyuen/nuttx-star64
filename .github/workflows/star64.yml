@@ -79,6 +79,11 @@ jobs:
         ## Generate Initial RAM Disk
         genromfs -f initrd -d ../apps/bin -V "NuttXBootVol"
 
+        ## Generate Flat Image Tree
+        wget https://raw.githubusercontent.com/lupyuen/nuttx-star64/main/nuttx.its
+        wget https://github.com/starfive-tech/VisionFive2/releases/download/VF2_v3.1.5/jh7110-visionfive-v2.dtb
+        mkimage -f nuttx.its -A riscv -O linux -T flat_dt starfiveu.fit
+
         ## Show the size
         riscv64-unknown-elf-size nuttx
 
@@ -109,12 +114,14 @@ jobs:
         path: |
           nuttx/nuttx/nuttx*
           nuttx/nuttx/initrd
+          nuttx/nuttx/starfiveu.fit
+          nuttx/nuttx/jh7110-visionfive-v2.dtb
           nuttx/nuttx/init.S
 
     - name: Zip Build Outputs for GitHub Release
       run: |
         cd nuttx/nuttx
-        zip nuttx.zip nuttx* initrd init.S
+        zip nuttx.zip nuttx* initrd starfiveu.fit jh7110-visionfive-v2.dtb init.S
 
     - name: Get Current Date
       id: date
@@ -130,7 +137,10 @@ jobs:
           nuttx/nuttx/nuttx.bin
           nuttx/nuttx/nuttx.hash
           nuttx/nuttx/nuttx.S
+          nuttx/nuttx/nuttx.its
           nuttx/nuttx/initrd
+          nuttx/nuttx/starfiveu.fit
+          nuttx/nuttx/jh7110-visionfive-v2.dtb
           nuttx/nuttx/init.S
         draft: false
         prerelease: false
