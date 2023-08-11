@@ -1,0 +1,137 @@
+## Build Mainline NuttX every day for Star64
+
+name: Build PinePhone
+
+on:
+
+  ## Run every day at 0:00 UTC
+  schedule:
+    - cron: '0 0 * * *'
+
+  ## Run on every commit to this branch
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - name: Install Build Tools
+      run:  |
+        sudo apt -y update
+        sudo apt -y install \
+        bison flex gettext texinfo libncurses5-dev libncursesw5-dev \
+        gperf automake libtool pkg-config build-essential gperf genromfs \
+        libgmp-dev libmpc-dev libmpfr-dev libisl-dev binutils-dev libelf-dev \
+        libexpat-dev gcc-multilib g++-multilib u-boot-tools util-linux \
+        kconfig-frontends \
+        wget u-boot-tools
+
+    - name: Install Toolchain
+      run:  |
+        wget --no-check-certificate https://static.dev.sifive.com/dev-tools/freedom-tools/v2020.12/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz
+        tar -xf riscv64-unknown-elf-toolchain*.tar.gz
+
+    - name: Checkout Source Files
+      run:  |
+        mkdir nuttx
+        cd nuttx
+        git clone https://github.com/apache/incubator-nuttx nuttx
+        git clone https://github.com/apache/incubator-nuttx-apps apps
+          
+    - name: Build
+      run: |
+        ## Add toolchain to PATH
+        export PATH=$PATH:$PWD/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin
+        cd nuttx/nuttx
+
+        ## Dump the git hash
+        hash1=`git rev-parse HEAD`
+        pushd ../apps
+        hash2=`git rev-parse HEAD`
+        popd
+        echo NuttX Source: https://github.com/apache/nuttx/tree/$hash1 >nuttx.hash
+        echo NuttX Apps: https://github.com/apache/nuttx-apps/tree/$hash2 >>nuttx.hash
+        cat nuttx.hash
+
+        ## Show the GCC version
+        riscv64-unknown-elf-gcc -v
+
+        ## Configure the build
+        tools/configure.sh star64:nsh
+
+        ## Preserve the build config
+        cp .config nuttx.config
+        
+        ## Run the build
+        make
+
+        ## Build Apps Filesystem
+        make export
+        pushd ../apps
+        ./tools/mkimport.sh -z -x ../nuttx/nuttx-export-*.tar.gz
+        make import
+        popd
+
+        ## Generate Initial RAM Disk
+        genromfs -f initrd -d ../apps/bin -V "NuttXBootVol"
+
+        ## Show the size
+        riscv64-unknown-elf-size nuttx
+
+        ## Export the Binary Image to nuttx.bin
+        riscv64-unknown-elf-objcopy \
+          -O binary \
+          nuttx \
+          nuttx.bin
+
+        ## Dump the disassembly to nuttx.S
+        riscv64-unknown-elf-objdump \
+          -t -S --demangle --line-numbers --wide \
+          nuttx \
+          >nuttx.S \
+          2>&1
+
+        ## Dump the init disassembly to init.S
+        riscv64-unknown-elf-objdump \
+          -t -S --demangle --line-numbers --wide \
+          ../apps/bin/init \
+          >init.S \
+          2>&1
+
+    - name: Upload Build Outputs as Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuttx.zip
+        path: |
+          nuttx/nuttx/nuttx*
+          nuttx/nuttx/initrd
+          nuttx/nuttx/init.S
+
+    - name: Zip Build Outputs for GitHub Release
+      run: |
+        cd nuttx/nuttx
+        zip nuttx.zip nuttx* initrd init.S
+
+    - name: Get Current Date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        
+    - name: Publish the GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: upstream-${{ steps.date.outputs.date }}
+        files: |
+          nuttx/nuttx/nuttx.zip
+          nuttx/nuttx/nuttx
+          nuttx/nuttx/nuttx.bin
+          nuttx/nuttx/nuttx.hash
+          nuttx/nuttx/nuttx.S
+          nuttx/nuttx/initrd
+          nuttx/nuttx/init.S
+        draft: false
+        prerelease: false
+        generate_release_notes: false
