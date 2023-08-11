@@ -5,7 +5,7 @@ name: Build Star64
 permissions:
   ## Allow publishing of GitHub Release
   contents: write
-  
+
 on:
 
   ## Run every day at 0:00 UTC
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    
+
     - name: Install Build Tools
       run:  |
         sudo apt -y update
@@ -45,7 +45,7 @@ jobs:
         cd nuttx
         git clone https://github.com/apache/incubator-nuttx nuttx
         git clone https://github.com/apache/incubator-nuttx-apps apps
-          
+
     - name: Build
       run: |
         ## Add toolchain to PATH
@@ -69,7 +69,7 @@ jobs:
 
         ## Preserve the build config
         cp .config nuttx.config
-        
+
         ## Run the build
         make
 
@@ -130,7 +130,7 @@ jobs:
     - name: Get Current Date
       id: date
       run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-        
+
     - name: Publish the GitHub Release
       uses: softprops/action-gh-release@v1
       with:
@@ -144,10 +144,10 @@ jobs:
           nuttx/nuttx/nuttx.S
           nuttx/nuttx/nuttx.bin
           nuttx/nuttx/nuttx.map
-          nuttx/nuttx/nuttx.hex          
-          nuttx/nuttx/nuttx.config          
+          nuttx/nuttx/nuttx.hex
+          nuttx/nuttx/nuttx.config
           nuttx/nuttx/nuttx.manifest
-          nuttx/nuttx/nuttx.hash          
+          nuttx/nuttx/nuttx.hash
           nuttx/nuttx/nuttx.its
           nuttx/nuttx/initrd
           nuttx/nuttx/starfiveu.fit
