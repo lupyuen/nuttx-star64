@@ -141,9 +141,13 @@ jobs:
         files: |
           nuttx/nuttx/nuttx.zip
           nuttx/nuttx/nuttx
-          nuttx/nuttx/nuttx.bin
-          nuttx/nuttx/nuttx.hash
           nuttx/nuttx/nuttx.S
+          nuttx/nuttx/nuttx.bin
+          nuttx/nuttx/nuttx.map
+          nuttx/nuttx/nuttx.hex          
+          nuttx/nuttx/nuttx.config          
+          nuttx/nuttx/nuttx.manifest
+          nuttx/nuttx/nuttx.hash          
           nuttx/nuttx/nuttx.its
           nuttx/nuttx/initrd
           nuttx/nuttx/starfiveu.fit
