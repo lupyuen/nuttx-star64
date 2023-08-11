@@ -4793,7 +4793,96 @@ Inside the PineTab-V Factory Test Code (from previous section), we see the PineT
 
 [VisionFive2/linux/arch/riscv/boot/dts/starfive/jh7110-visionfive-v2.dtsi](https://github.com/lupyuen/nuttx-star64/blob/main/pinetabv-jh7110-visionfive-v2.dtsi)
 
-TODO
+TODO: Galaxycore GC02M2
+
+```text
+&gpio {
+  ...
+	gc02m2_pins: gc02m2_pins {
+		gc02m2pins-pwdn {
+			starfive,pins = <PAD_GPIO25>;
+			starfive,pinmux = <PAD_GPIO25_FUNC_SEL 0>;
+			starfive,pin-ioconfig = <IO(GPIO_IE(1))>;
+			starfive,pin-gpio-dout = <GPO_HIGH>;
+			starfive,pin-gpio-doen = <OEN_LOW>;
+		};
+
+		gc02m2_pins-rst {
+			starfive,pins = <PAD_GPIO33>;
+			starfive,pinmux = <PAD_GPIO33_FUNC_SEL 0>;
+			starfive,pin-ioconfig = <IO(GPIO_IE(1))>;
+			starfive,pin-gpio-dout = <GPO_HIGH>;
+			starfive,pin-gpio-doen = <OEN_LOW>;
+		};
+
+		// gc02m2_pins-sw {
+		// 	starfive,pins = <PAD_GPIO53>;
+		// 	starfive,pinmux = <PAD_GPIO53_FUNC_SEL 0>;
+		// 	starfive,pin-ioconfig = <IO(GPIO_IE(1))>;
+		// 	starfive,pin-gpio-dout = <GPO_LOW>;
+		// 	starfive,pin-gpio-doen = <OEN_LOW>;
+		// };
+	};
+  ...
+&i2c6 {
+	clock-frequency = <100000>;
+	i2c-sda-hold-time-ns = <300>;
+	i2c-sda-falling-time-ns = <510>;
+	i2c-scl-falling-time-ns = <510>;
+	auto_calc_scl_lhcnt;
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c6_pins>;
+	status = "okay";
+  ...
+	gc02m2: gc02m2@37 {
+		status = "okay";
+		compatible = "galaxycore,gc02m2";
+		pinctrl-names = "default";
+		pinctrl-0 = <&gc02m2_pins>;
+		reg = <0x37>;
+		clocks = <&clk_ext_camera>;
+		clock-names = "xvclk";
+		reset-gpio = <&gpio 33 GPIO_ACTIVE_HIGH>;
+		pwdn-gpio = <&gpio 25 GPIO_ACTIVE_LOW>;
+		// sw-gpios = <&gpio 53 GPIO_ACTIVE_LOW>;
+
+		port {
+			gc02m2_to_csi2rx0: endpoint {
+				remote-endpoint = <&csi2rx0_from_gc02m2>;
+				bus-type = <4>;      /* MIPI CSI-2 D-PHY */
+				data-lanes = <1>;
+				link-frequencies = /bits/ 64 <336000000>;
+			};
+		};
+	};
+};
+...
+&vin_sysctl {
+	/* when use dvp open this pinctrl*/
+	status = "okay";
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@1 {
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+      ...
+			csi2rx0_from_gc02m2: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&gc02m2_to_csi2rx0>;
+				bus-type = <4>;      /* MIPI CSI-2 D-PHY */
+				clock-lanes = <0>;
+				data-lanes = <2 1>;
+				lane-polarities = <0 0 0>;
+				status = "okay";
+			};
+		};
+	};
+};
+```
 
 # RAM Disk Address for RISC-V QEMU
 
