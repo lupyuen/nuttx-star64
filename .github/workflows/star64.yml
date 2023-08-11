@@ -2,6 +2,10 @@
 
 name: Build Star64
 
+permissions:
+  ## Allow publishing of GitHub Release
+  contents: write
+  
 on:
 
   ## Run every day at 0:00 UTC
