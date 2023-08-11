@@ -4787,6 +4787,12 @@ The factory test reference source code has been mirrored here (for quicker downl
 
 Let's look inside the Factory Test Code...
 
+# PineTab-V Device Tree
+
+Here's the PineTab-V Device Tree for Linux:
+
+[VisionFive2/linux/arch/riscv/boot/dts/starfive/jh7110-visionfive-v2.dtsi](https://github.com/lupyuen/nuttx-star64/blob/main/jh7110-visionfive-v2.dtsi)
+
 TODO
 
 # RAM Disk Address for RISC-V QEMU
