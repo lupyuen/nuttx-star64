@@ -4775,6 +4775,34 @@ CONFIG_16550_UART0_CLOCK=23040000
 
 [(Source)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/57d5bba4723b58c7bb947f9fa206be377c80c8d0/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L10-L18)
 
+# NuttX Automated Daily Build for Star64
+
+NuttX for Star6 is now built automatically every day via GitHub Actions.
+
+The Daily Releases are available here...
+
+- [nuttx-star64/releases](https://github.com/lupyuen/nuttx-star64/releases)
+
+[nuttx.hash](https://github.com/lupyuen/nuttx-star64/releases/download/nuttx-star64-2023-08-11/nuttx.hash) contains the Commit Hash of the NuttX Kernel and NuttX Apps repos...
+
+```text
+NuttX Source: https://github.com/apache/nuttx/tree/fa676f264fa16253213ff665052ba4691e56bf05
+NuttX Apps: https://github.com/apache/nuttx-apps/tree/6196e03337a3c677aba0c74e815af16e7075bc71
+```
+
+The GitHub Actions Workflow is here...
+
+- [star64.yml](https://github.com/lupyuen/nuttx-star64/blob/main/.github/workflows/star64.yml)
+
+Maybe someday we'll do Daily Automated Testing...
+
+1.  Download the Daily Build to TFTP Server
+1.  Power on Star64 with an [IKEA Smart Switch via Home Assistant](https://lupyuen.github.io/articles/tftp#whats-next)
+1.  Star64 boots the Daily Build over TFTP
+1.  Capture the Automated Testing Log and write to the Release Notes
+
+[(Similar to BL602)](https://lupyuen.github.io/articles/auto)
+
 > ![PineTab-V Factory Test Code](https://lupyuen.github.io/images/pinetabv-factory.jpg)
 
 # PineTab-V Factory Test Code
