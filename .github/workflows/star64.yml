@@ -1,6 +1,6 @@
 ## Build Mainline NuttX every day for Star64
 
-name: Build PinePhone
+name: Build Star64
 
 on:
 
@@ -130,7 +130,10 @@ jobs:
     - name: Publish the GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: upstream-${{ steps.date.outputs.date }}
+        tag_name: nuttx-star64-${{ steps.date.outputs.date }}
+        draft: false
+        prerelease: false
+        generate_release_notes: false
         files: |
           nuttx/nuttx/nuttx.zip
           nuttx/nuttx/nuttx
@@ -142,6 +145,3 @@ jobs:
           nuttx/nuttx/starfiveu.fit
           nuttx/nuttx/jh7110-visionfive-v2.dtb
           nuttx/nuttx/init.S
-        draft: false
-        prerelease: false
-        generate_release_notes: false
