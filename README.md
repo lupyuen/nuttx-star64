@@ -4877,9 +4877,11 @@ TODO: Touch Panel
 
 TODO: StarFive Jadard Display Panel Driver: (which one?)
 
-- [VisionFive2/linux/drivers/gpu/drm/panel/panel-er88577b.c](https://github.com/lupyuen/nuttx-star64/blob/main/panel-er88577b.c)
+- er88577b: [VisionFive2/linux/drivers/gpu/drm/panel/panel-er88577b.c](https://github.com/lupyuen/nuttx-star64/blob/main/panel-er88577b.c)
 
-- [VisionFive2/linux/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c](https://github.com/lupyuen/nuttx-star64/blob/main/panel-jadard-jd9365da-h3.c)
+- jd9365da-h3: [VisionFive2/linux/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c](https://github.com/lupyuen/nuttx-star64/blob/main/panel-jadard-jd9365da-h3.c)
+
+Jadard also mentioned in [JH7110 MIPI LCD Developing and Porting Guide](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/configuration_for_1c4l_port.html)
 
 TODO: Galaxycore GC02M2
 
