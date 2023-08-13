@@ -4823,6 +4823,63 @@ Inside the PineTab-V Factory Test Code (from previous section), we see the PineT
 
 [VisionFive2/linux/arch/riscv/boot/dts/starfive/jh7110-visionfive-v2.dtsi](https://github.com/lupyuen/nuttx-star64/blob/main/pinetabv-jh7110-visionfive-v2.dtsi)
 
+
+TODO: Touch Panel
+
+```text
+&i2c2 {
+	clock-frequency = <100000>;
+	i2c-sda-hold-time-ns = <300>;
+	i2c-sda-falling-time-ns = <510>;
+	i2c-scl-falling-time-ns = <510>;
+	auto_calc_scl_lhcnt;
+	status = "okay";
+
+	seeed_plane_i2c@45 {
+		compatible = "seeed_panel";
+		reg = <0x45>;
+
+		port {
+			panel_out0: endpoint {
+				remote-endpoint = <&dsi0_output>;
+			};
+		};
+	};
+
+	tinker_ft5406: tinker_ft5406@38 {
+		compatible = "tinker_ft5406";
+		reg = <0x38>;
+	};
+
+	panel_radxa@19 {
+		status = "okay";
+		compatible ="starfive_jadard";
+		reg = <0x19>;
+		//reset-gpio = <&gpio 23 0>;
+		blen-gpio = <&gpio 45 0>;
+		enable-gpio = <&gpio 37 0>;
+
+		port {
+			panel_out1: endpoint {
+				remote-endpoint = <&dsi1_output>;
+				};
+		};
+	};
+
+	touchscreen@14 {
+		status = "okay";
+		compatible = "goodix,gt911";
+		reg = <0x14>;
+		irq-gpios = <&gpio 30 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio 31 GPIO_ACTIVE_HIGH>;
+	};
+};
+```
+
+VisionFive2/linux/drivers/gpu/drm/panel/panel-er88577b.c
+
+VisionFive2/linux/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+
 TODO: Galaxycore GC02M2
 
 ```text
