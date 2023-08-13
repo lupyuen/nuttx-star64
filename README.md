@@ -2,6 +2,8 @@
 
 # Apache NuttX RTOS for Pine64 Star64 64-bit RISC-V SBC (StarFive JH7110)
 
+[![Daily Build of NuttX for Star64](https://github.com/lupyuen/nuttx-star64/actions/workflows/star64.yml/badge.svg)](https://github.com/lupyuen/nuttx-star64/actions/workflows/star64.yml)
+
 Read the articles...
 
 -   ["RTOS on a RISC-V SBC: Star64 JH7110 + Apache NuttX"](https://www.hackster.io/lupyuen/rtos-on-a-risc-v-sbc-star64-jh7110-apache-nuttx-2a7429)
