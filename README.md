@@ -4823,7 +4823,6 @@ Inside the PineTab-V Factory Test Code (from previous section), we see the PineT
 
 [VisionFive2/linux/arch/riscv/boot/dts/starfive/jh7110-visionfive-v2.dtsi](https://github.com/lupyuen/nuttx-star64/blob/main/pinetabv-jh7110-visionfive-v2.dtsi)
 
-
 TODO: Touch Panel
 
 ```text
@@ -4876,9 +4875,11 @@ TODO: Touch Panel
 };
 ```
 
-VisionFive2/linux/drivers/gpu/drm/panel/panel-er88577b.c
+TODO: StarFive Jadard Display Panel Driver: (which one?)
 
-VisionFive2/linux/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c
+- [VisionFive2/linux/drivers/gpu/drm/panel/panel-er88577b.c](https://github.com/lupyuen/nuttx-star64/blob/main/panel-er88577b.c)
+
+- [VisionFive2/linux/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c](https://github.com/lupyuen/nuttx-star64/blob/main/panel-jadard-jd9365da-h3.c)
 
 TODO: Galaxycore GC02M2
 
