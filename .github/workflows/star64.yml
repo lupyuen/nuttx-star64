@@ -1,6 +1,6 @@
 ## Build Mainline NuttX every day for Star64
 
-name: Build Star64
+name: Daily Build of NuttX for Star64
 
 permissions:
   ## Allow publishing of GitHub Release
