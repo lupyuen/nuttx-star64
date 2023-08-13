@@ -1048,16 +1048,16 @@ Here's the assembled output...
     4020000e:	0000                	unimp
     40200010:	9e7c                	0x9e7c
     40200012:	0002                	c.slli64	zero
-	...
+  ...
     40200020:	0002                	c.slli64	zero
-	...
+  ...
     4020002e:	0000                	unimp
     40200030:	4952                	lw	s2,20(sp)
     40200032:	00564353          	fadd.s	ft6,fa2,ft5,rmm
     40200036:	0000                	unimp
     40200038:	5352                	lw	t1,52(sp)
     4020003a:	00000543          	fmadd.s	fa0,ft0,ft0,ft0,rne
-	...
+  ...
 
 0000000040200040 <real_start>:
 ```
@@ -2272,25 +2272,25 @@ As defined according to the Default Config for 16550: [Kconfig-16550](https://gi
 
 ```text
 config 16550_REGINCR
-	int "Address increment between 16550 registers"
-	default 1
-	---help---
-		The address increment between 16550 registers.  Options are 1, 2, or 4.
-		Default: 1
+  int "Address increment between 16550 registers"
+  default 1
+  ---help---
+    The address increment between 16550 registers.  Options are 1, 2, or 4.
+    Default: 1
 
 config 16550_REGWIDTH
-	int "Bit width of 16550 registers"
-	default 8
-	---help---
-		The bit width of registers.  Options are 8, 16, or 32. Default: 8
+  int "Bit width of 16550 registers"
+  default 8
+  ---help---
+    The bit width of registers.  Options are 8, 16, or 32. Default: 8
 
 config 16550_ADDRWIDTH
-	int "Address width of 16550 registers"
-	default 8
-	---help---
-		The bit width of registers.  Options are 0, 8, 16, or 32.
-		Default: 8
-		Note: 0 means auto detect address size (uintptr_t)
+  int "Address width of 16550 registers"
+  default 8
+  ---help---
+    The bit width of registers.  Options are 0, 8, 16, or 32.
+    Default: 8
+    Note: 0 means auto detect address size (uintptr_t)
 ```
 
 _But is CONFIG_16550_REGINCR correct for Star64 JH7110?_
@@ -2310,12 +2310,12 @@ And from the Linux 8250 Driver: [8250_dw.c](https://github.com/torvalds/linux/bl
 ```text
 static void dw8250_serial_out(struct uart_port *p, int offset, int value)
 {
-	struct dw8250_data *d = to_dw8250_data(p->private_data);
+  struct dw8250_data *d = to_dw8250_data(p->private_data);
 
-	writeb(value, p->membase + (offset << p->regshift));
+  writeb(value, p->membase + (offset << p->regshift));
 
-	if (offset == UART_LCR && !d->uart_16550_compatible)
-		dw8250_check_lcr(p, value);
+  if (offset == UART_LCR && !d->uart_16550_compatible)
+    dw8250_check_lcr(p, value);
 }
 ```
 
@@ -4705,50 +4705,50 @@ Also we see the script that generates the SD Card Image: [genimage.sh](https://g
 
 ```bash
 genimage \
-	--rootpath "${ROOTPATH_TMP}"     \
-	--tmppath "${GENIMAGE_TMP}"    \
-	--inputpath "${INPUT_DIR}"  \
-	--outputpath "${OUTPUT_DIR}" \
-	--config genimage-vf2.cfg
+  --rootpath "${ROOTPATH_TMP}"     \
+  --tmppath "${GENIMAGE_TMP}"    \
+  --inputpath "${INPUT_DIR}"  \
+  --outputpath "${OUTPUT_DIR}" \
+  --config genimage-vf2.cfg
 ```
 
 The SD Card Partitions are defined in [genimage-vf2.cfg](https://github.com/starfive-tech/VisionFive2/blob/JH7110_VisionFive2_devel/conf/genimage-vf2.cfg):
 
 ```text
 image sdcard.img {
-	hdimage {
-		gpt = true
-	}
+  hdimage {
+    gpt = true
+  }
 
-	partition spl {
-		image = "work/u-boot-spl.bin.normal.out"
-		partition-type-uuid = 2E54B353-1271-4842-806F-E436D6AF6985
-		offset = 2M
-		size = 2M
-	}
+  partition spl {
+    image = "work/u-boot-spl.bin.normal.out"
+    partition-type-uuid = 2E54B353-1271-4842-806F-E436D6AF6985
+    offset = 2M
+    size = 2M
+  }
 
-	partition uboot {
-		image = "work/visionfive2_fw_payload.img"
-		partition-type-uuid = 5B193300-FC78-40CD-8002-E86C45580B47
-		offset = 4M
-		size = 4M
-	}
+  partition uboot {
+    image = "work/visionfive2_fw_payload.img"
+    partition-type-uuid = 5B193300-FC78-40CD-8002-E86C45580B47
+    offset = 4M
+    size = 4M
+  }
 
-	partition image {
-		# partition-type = 0xC
-		partition-type-uuid = EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
-		image = "work/starfive-visionfive2-vfat.part"
-		offset = 8M
-		size = 292M
-	}
+  partition image {
+    # partition-type = 0xC
+    partition-type-uuid = EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
+    image = "work/starfive-visionfive2-vfat.part"
+    offset = 8M
+    size = 292M
+  }
 
-	partition root {
-		# partition-type = 0x83
-		partition-type-uuid = 0FC63DAF-8483-4772-8E79-3D69D8477DE4
-		image = "work/buildroot_rootfs/images/rootfs.ext4"
-		offset = 300M
-		bootable = true
-	}
+  partition root {
+    # partition-type = 0x83
+    partition-type-uuid = 0FC63DAF-8483-4772-8E79-3D69D8477DE4
+    image = "work/buildroot_rootfs/images/rootfs.ext4"
+    offset = 300M
+    bootable = true
+  }
 }
 ```
 
@@ -4823,154 +4823,138 @@ Inside the PineTab-V Factory Test Code (from previous section), we see the PineT
 
 [VisionFive2/linux/arch/riscv/boot/dts/starfive/jh7110-visionfive-v2.dtsi](https://github.com/lupyuen/nuttx-star64/blob/main/pinetabv-jh7110-visionfive-v2.dtsi)
 
-TODO: Touch Panel
+From the above Device Tree we see the LCD Panel (StarFive Jadard on MIPI DSI1) and Touch Panel (Goodix GT911)...
 
 ```text
 &i2c2 {
-	clock-frequency = <100000>;
-	i2c-sda-hold-time-ns = <300>;
-	i2c-sda-falling-time-ns = <510>;
-	i2c-scl-falling-time-ns = <510>;
-	auto_calc_scl_lhcnt;
-	status = "okay";
+  clock-frequency = <100000>;
+  i2c-sda-hold-time-ns = <300>;
+  i2c-sda-falling-time-ns = <510>;
+  i2c-scl-falling-time-ns = <510>;
+  auto_calc_scl_lhcnt;
+  status = "okay";
+  ...
+  panel_radxa@19 {
+    status = "okay";
+    compatible ="starfive_jadard";
+    reg = <0x19>;
+    //reset-gpio = <&gpio 23 0>;
+    blen-gpio = <&gpio 45 0>;
+    enable-gpio = <&gpio 37 0>;
 
-	seeed_plane_i2c@45 {
-		compatible = "seeed_panel";
-		reg = <0x45>;
+    port {
+      panel_out1: endpoint {
+        remote-endpoint = <&dsi1_output>;
+        };
+    };
+  };
 
-		port {
-			panel_out0: endpoint {
-				remote-endpoint = <&dsi0_output>;
-			};
-		};
-	};
-
-	tinker_ft5406: tinker_ft5406@38 {
-		compatible = "tinker_ft5406";
-		reg = <0x38>;
-	};
-
-	panel_radxa@19 {
-		status = "okay";
-		compatible ="starfive_jadard";
-		reg = <0x19>;
-		//reset-gpio = <&gpio 23 0>;
-		blen-gpio = <&gpio 45 0>;
-		enable-gpio = <&gpio 37 0>;
-
-		port {
-			panel_out1: endpoint {
-				remote-endpoint = <&dsi1_output>;
-				};
-		};
-	};
-
-	touchscreen@14 {
-		status = "okay";
-		compatible = "goodix,gt911";
-		reg = <0x14>;
-		irq-gpios = <&gpio 30 GPIO_ACTIVE_HIGH>;
-		reset-gpios = <&gpio 31 GPIO_ACTIVE_HIGH>;
-	};
+  touchscreen@14 {
+    status = "okay";
+    compatible = "goodix,gt911";
+    reg = <0x14>;
+    irq-gpios = <&gpio 30 GPIO_ACTIVE_HIGH>;
+    reset-gpios = <&gpio 31 GPIO_ACTIVE_HIGH>;
+  };
 };
 ```
 
-TODO: StarFive Jadard Display Panel Driver: (which one?)
+Which maps to this Linux Driver for StarFive Jadard Display Panel: (which one?)
 
 - er88577b: [VisionFive2/linux/drivers/gpu/drm/panel/panel-er88577b.c](https://github.com/lupyuen/nuttx-star64/blob/main/panel-er88577b.c)
 
 - jd9365da-h3: [VisionFive2/linux/drivers/gpu/drm/panel/panel-jadard-jd9365da-h3.c](https://github.com/lupyuen/nuttx-star64/blob/main/panel-jadard-jd9365da-h3.c)
 
-Jadard also mentioned in [JH7110 MIPI LCD Developing and Porting Guide](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/configuration_for_1c4l_port.html)
+StarFive Jadard is also mentioned in [JH7110 MIPI LCD Developing and Porting Guide](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/configuration_for_1c4l_port.html)
 
-TODO: Galaxycore GC02M2
+We also see the Galaxycore GC02M2 Camera (on MIPI CSI)...
 
 ```text
 &gpio {
   ...
-	gc02m2_pins: gc02m2_pins {
-		gc02m2pins-pwdn {
-			starfive,pins = <PAD_GPIO25>;
-			starfive,pinmux = <PAD_GPIO25_FUNC_SEL 0>;
-			starfive,pin-ioconfig = <IO(GPIO_IE(1))>;
-			starfive,pin-gpio-dout = <GPO_HIGH>;
-			starfive,pin-gpio-doen = <OEN_LOW>;
-		};
+  gc02m2_pins: gc02m2_pins {
+    gc02m2pins-pwdn {
+      starfive,pins = <PAD_GPIO25>;
+      starfive,pinmux = <PAD_GPIO25_FUNC_SEL 0>;
+      starfive,pin-ioconfig = <IO(GPIO_IE(1))>;
+      starfive,pin-gpio-dout = <GPO_HIGH>;
+      starfive,pin-gpio-doen = <OEN_LOW>;
+    };
 
-		gc02m2_pins-rst {
-			starfive,pins = <PAD_GPIO33>;
-			starfive,pinmux = <PAD_GPIO33_FUNC_SEL 0>;
-			starfive,pin-ioconfig = <IO(GPIO_IE(1))>;
-			starfive,pin-gpio-dout = <GPO_HIGH>;
-			starfive,pin-gpio-doen = <OEN_LOW>;
-		};
+    gc02m2_pins-rst {
+      starfive,pins = <PAD_GPIO33>;
+      starfive,pinmux = <PAD_GPIO33_FUNC_SEL 0>;
+      starfive,pin-ioconfig = <IO(GPIO_IE(1))>;
+      starfive,pin-gpio-dout = <GPO_HIGH>;
+      starfive,pin-gpio-doen = <OEN_LOW>;
+    };
 
-		// gc02m2_pins-sw {
-		// 	starfive,pins = <PAD_GPIO53>;
-		// 	starfive,pinmux = <PAD_GPIO53_FUNC_SEL 0>;
-		// 	starfive,pin-ioconfig = <IO(GPIO_IE(1))>;
-		// 	starfive,pin-gpio-dout = <GPO_LOW>;
-		// 	starfive,pin-gpio-doen = <OEN_LOW>;
-		// };
-	};
+    // gc02m2_pins-sw {
+    // 	starfive,pins = <PAD_GPIO53>;
+    // 	starfive,pinmux = <PAD_GPIO53_FUNC_SEL 0>;
+    // 	starfive,pin-ioconfig = <IO(GPIO_IE(1))>;
+    // 	starfive,pin-gpio-dout = <GPO_LOW>;
+    // 	starfive,pin-gpio-doen = <OEN_LOW>;
+    // };
+  };
   ...
 &i2c6 {
-	clock-frequency = <100000>;
-	i2c-sda-hold-time-ns = <300>;
-	i2c-sda-falling-time-ns = <510>;
-	i2c-scl-falling-time-ns = <510>;
-	auto_calc_scl_lhcnt;
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c6_pins>;
-	status = "okay";
+  clock-frequency = <100000>;
+  i2c-sda-hold-time-ns = <300>;
+  i2c-sda-falling-time-ns = <510>;
+  i2c-scl-falling-time-ns = <510>;
+  auto_calc_scl_lhcnt;
+  pinctrl-names = "default";
+  pinctrl-0 = <&i2c6_pins>;
+  status = "okay";
   ...
-	gc02m2: gc02m2@37 {
-		status = "okay";
-		compatible = "galaxycore,gc02m2";
-		pinctrl-names = "default";
-		pinctrl-0 = <&gc02m2_pins>;
-		reg = <0x37>;
-		clocks = <&clk_ext_camera>;
-		clock-names = "xvclk";
-		reset-gpio = <&gpio 33 GPIO_ACTIVE_HIGH>;
-		pwdn-gpio = <&gpio 25 GPIO_ACTIVE_LOW>;
-		// sw-gpios = <&gpio 53 GPIO_ACTIVE_LOW>;
+  gc02m2: gc02m2@37 {
+    status = "okay";
+    compatible = "galaxycore,gc02m2";
+    pinctrl-names = "default";
+    pinctrl-0 = <&gc02m2_pins>;
+    reg = <0x37>;
+    clocks = <&clk_ext_camera>;
+    clock-names = "xvclk";
+    reset-gpio = <&gpio 33 GPIO_ACTIVE_HIGH>;
+    pwdn-gpio = <&gpio 25 GPIO_ACTIVE_LOW>;
+    // sw-gpios = <&gpio 53 GPIO_ACTIVE_LOW>;
 
-		port {
-			gc02m2_to_csi2rx0: endpoint {
-				remote-endpoint = <&csi2rx0_from_gc02m2>;
-				bus-type = <4>;      /* MIPI CSI-2 D-PHY */
-				data-lanes = <1>;
-				link-frequencies = /bits/ 64 <336000000>;
-			};
-		};
-	};
+    port {
+      gc02m2_to_csi2rx0: endpoint {
+        remote-endpoint = <&csi2rx0_from_gc02m2>;
+        bus-type = <4>;      /* MIPI CSI-2 D-PHY */
+        data-lanes = <1>;
+        link-frequencies = /bits/ 64 <336000000>;
+      };
+    };
+  };
 };
 ...
 &vin_sysctl {
-	/* when use dvp open this pinctrl*/
-	status = "okay";
+  /* when use dvp open this pinctrl*/
+  status = "okay";
 
-	ports {
-		#address-cells = <1>;
-		#size-cells = <0>;
+  ports {
+    #address-cells = <1>;
+    #size-cells = <0>;
 
-		port@1 {
-			reg = <1>;
-			#address-cells = <1>;
-			#size-cells = <0>;
+    port@1 {
+      reg = <1>;
+      #address-cells = <1>;
+      #size-cells = <0>;
       ...
-			csi2rx0_from_gc02m2: endpoint@1 {
-				reg = <1>;
-				remote-endpoint = <&gc02m2_to_csi2rx0>;
-				bus-type = <4>;      /* MIPI CSI-2 D-PHY */
-				clock-lanes = <0>;
-				data-lanes = <2 1>;
-				lane-polarities = <0 0 0>;
-				status = "okay";
-			};
-		};
-	};
+      csi2rx0_from_gc02m2: endpoint@1 {
+        reg = <1>;
+        remote-endpoint = <&gc02m2_to_csi2rx0>;
+        bus-type = <4>;      /* MIPI CSI-2 D-PHY */
+        clock-lanes = <0>;
+        data-lanes = <2 1>;
+        lane-polarities = <0 0 0>;
+        status = "okay";
+      };
+    };
+  };
 };
 ```
 
