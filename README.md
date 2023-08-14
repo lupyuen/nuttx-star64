@@ -5000,27 +5000,39 @@ See also...
 
 - [Debug Display](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/debug_hdmi.html)
 
-TODO: What's inside the modetest app
+TODO: What's inside the modetest app? [modetest.c](https://gitlab.freedesktop.org/mesa/drm/-/blob/main/tests/modetest/modetest.c)
+
+# Call Flow for DC8200 Display Controller Driver
+
+TODO
+
+# Call Flow for HDMI Controller Driver
+
+TODO
 
 # LCD Panel for Star64 JH7110
 
-TODO: [Cadence MIPI DSI v1.3.1 TX Controller IP (DSITX)](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/ic_specification_lcd.html)
+Also in the JH7110 Display Docs: How to connect an LCD Panel to JH7110.
+
+JH7110's MIPI DSI Controller is [Cadence MIPI DSI v1.3.1 TX Controller IP (DSITX)](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/ic_specification_lcd.html)...
 
 ![Cadence MIPI DSI v1.3.1 TX Controller IP (DSITX)](https://doc-en.rvspace.org/VisionFive2/DG_LCD/Image/JH7110_SDK/ic_spec.png)
 
 [(Source)](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/ic_specification_lcd.html)
 
-TODO: [MIPI DPHY M31 (M31DPHYRX611TL028D_00151501)](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/ic_specification_lcd.html)
+JH7110's MIPI DPHY Controller is [MIPI DPHY M31 (M31DPHYRX611TL028D_00151501)](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/ic_specification_lcd.html)...
 
 ![MIPI DPHY M31 (M31DPHYRX611TL028D_00151501)](https://doc-en.rvspace.org/VisionFive2/DG_LCD/Image/JH7110_SDK/MIPI_DPHY_M31.png)
 
 [(Source)](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/ic_specification_lcd.html)
 
-TODO: [Linux Display Driver](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/display_driver_locations_lcd.html)
+Refer to the...
 
-TODO: [Linux Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/device_tree_configuration_lcd.html)
+- [Linux Display Driver](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/display_driver_locations_lcd.html)
 
-TODO: LCD Panel Code
+- [Linux Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/device_tree_configuration_lcd.html)
+
+See also the Sample LCD Panel Code for Seeed LCD Panel...
 
 - [Enable LCD](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/enable_lcd.html)
 
@@ -5028,13 +5040,13 @@ TODO: LCD Panel Code
 
 - [Obtain LCD Information](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/obtain_lcd_information.html)
 
-TODO: [LCD Initialisation Process](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/initalization_lcd.html)
+Here's the [LCD Initialisation Process](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/initalization_lcd.html)
 
 ![LCD Initialisation Process](https://doc-en.rvspace.org/VisionFive2/DG_LCD/Image/JH7110_SDK/LCD_Init.svg)
 
 [(Source)](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/initalization_lcd.html)
 
-TODO: [MIPI Parameter Configuration](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/mipi_configuration.html) for 1C2L (2-lane MIPI DSI) and 1C4L (4-lane MIPI DSI)
+And the [MIPI Parameter Configuration](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/mipi_configuration.html) for 1C2L (2-lane MIPI DSI) and 1C4L (4-lane MIPI DSI).
 
 # PineTab-V Factory Test Code
 
