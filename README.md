@@ -4809,7 +4809,7 @@ CONFIG_16550_UART0_CLOCK=23040000
 
 _Will NuttX work with the HDMI Display on Star64?_
 
-Let's find out! Maybe our code can be reused for PineTab-V's MIPI DSI Display Panel. Here are the official docs...
+Let's find out! Maybe our HDMI code will be reused for PineTab-V's MIPI DSI Display Panel. Here are the official docs...
 
 - [Display Subsystem](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/display_subsystem.html)
 
@@ -4839,7 +4839,11 @@ And we have the [Display Subsystem Clock and Reset](https://doc-en.rvspace.org/J
 
 [(Source)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_n_reset_display.html)
 
-# Linux Driver for JH7110 HDMI
+# DC8200 Display Controller for Star64 JH7110
+
+TODO
+
+# HDMI Controller for Star64 JH7110
 
 Based on [JH7110 HDMI Developing Guide](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/JH7110_SDK/source_code_structure_hdmi.html), the Linux Drivers for JH7110 HDMI (VeriSilicon InnoHDMI) are...
 
