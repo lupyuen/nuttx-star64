@@ -4829,7 +4829,7 @@ From the docs above we have the [Display Subsystem Block Diagram](https://doc-en
 
 [(Source)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/block_diagram_display.html)
 
-Which says that JH7110 uses a __DC8200 Dual Display Controller__.
+Which says that JH7110 uses a __DC8200 Dual Display Controller__ to drive the MIPI DSI and HDMI Displays.
 
 [(But the DC8200 docs are confidential sigh)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/detail_info_display.html)
 
@@ -4838,6 +4838,8 @@ And we have the [Display Subsystem Clock and Reset](https://doc-en.rvspace.org/J
 ![Display Subsystem Clock and Reset](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/vout_clkrst18.png)
 
 [(Source)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_n_reset_display.html)
+
+So to make HDMI work on JH7110, we need a create a NuttX Driver for the DC8200 Display Controller...
 
 # DC8200 Display Controller for Star64 JH7110
 
