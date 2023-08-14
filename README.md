@@ -4990,9 +4990,9 @@ modetest \
 
 [(Source)](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/test_example_display.html)
 
-`116@31:1920x1080` means <Connector ID>@<CRTC ID>: <Resolution>
+`116@31:1920x1080` means `<Connector ID>@<CRTC ID>: <Resolution>`
 
-`39@31:1920x1080@RG16` means <Plane ID>@<CRTC ID>: <Resolution>@<Format>
+`39@31:1920x1080@RG16` means `<Plane ID>@<CRTC ID>: <Resolution>@<Format>`
 
 See also...
 
