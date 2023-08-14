@@ -4841,15 +4841,81 @@ And we have the [Display Subsystem Clock and Reset](https://doc-en.rvspace.org/J
 
 # DC8200 Display Controller for Star64 JH7110
 
-TODO
+Let's talk about the __DC8200 Dual Display Controller__.
+
+[(But the DC8200 docs are confidential sigh)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/detail_info_display.html)
+
+Here's the [Block Diagram of DC8200 Display Controller](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/block_diagram_display.html)...
+
+![Block Diagram of DC8200 Display Controller](https://doc-en.rvspace.org/VisionFive2/DG_Display/Image/JH7110_SDK/Display_Block_Diagram.png)
+
+[(Source)](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/block_diagram_display.html)
+
+(Display Devices refer to MIPI DPHY and HDMI, interchangeable)
+
+Here are the [Linux Drivers for DC8200 Display Controller](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/source_code_structure_display.html)...
+
+- [vs_dc.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c)
+
+- [vs_dc_hw.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c)
+
+- [vs_drv.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c)
+
+- [vs_crtc.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_crtc.c)
+
+- [vs_plane.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_plane.c)
+
+- [vs_simple_enc.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_simple_enc.c)
+
+- [vs_gem.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_gem.c)
+
+- [vs_virtual.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_virtual.c)
+
+- [vs_dc_dec.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_dec.c)
+
+[(See the Notes here)](https://github.com/starfive-tech/linux/tree/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon)
+
+Are these used?
+
+- [vs_dc_mmu.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_mmu.c)
+
+- [vs_fb.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_fb.c)
+
+Here's the (partial) [Linux Device Tree for DC8200](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/device_tree_config_display.html)...
+
+```text
+&dc8200 {
+	status = "okay";
+
+	dc_out: port {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		dc_out_dpi0: endpoint@0 {
+			reg = <0>;
+			remote-endpoint = <&hdmi_input0>;
+		};
+		dc_out_dpi1: endpoint@1 {
+			reg = <1>;
+			remote-endpoint = <&hdmi_in_lcdc>;
+		};
+
+		dc_out_dpi2: endpoint@2 {
+			reg = <2>;
+			remote-endpoint = <&mipi_in>;
+		};
+	};
+};
+```
+
+[(Source)](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/device_tree_config_display.html)
 
 # HDMI Controller for Star64 JH7110
 
 Based on [JH7110 HDMI Developing Guide](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/JH7110_SDK/source_code_structure_hdmi.html), the Linux Drivers for JH7110 HDMI (VeriSilicon InnoHDMI) are...
 
-- [inno_hdmi.c](https://github.com/starfive-tech/linux/blob/8fe323292f2caf46bde0e0aab8f484f920f521be/drivers/gpu/drm/verisilicon/inno_hdmi.c)
+- [inno_hdmi.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/inno_hdmi.c)
 
-- [inno_hdmi.h](https://github.com/starfive-tech/linux/blob/8fe323292f2caf46bde0e0aab8f484f920f521be/drivers/gpu/drm/verisilicon/inno_hdmi.h)
+- [inno_hdmi.h](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/inno_hdmi.h)
 
 The [Linux Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/JH7110_SDK/device_tree_hdmi.html) looks like...
 
