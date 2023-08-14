@@ -4972,6 +4972,28 @@ And the [HDMI Plug and Unplug Process](https://doc-en.rvspace.org/VisionFive2/DG
 
 [(Source)](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/JH7110_SDK/plug_n_unplug_process.html)
 
+# Test HDMI for Star64 JH7110
+
+TODO
+
+https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/test_example_display.html
+
+The following command shows an example for testing the HDMI output.
+
+```bash
+modetest \
+  -M starfive \
+  -D 0 \
+  -a \
+  -s 116@31:1920x1080 \
+  -P 39@31:1920x1080@RG16 \
+  -Ftiles 
+```
+
+`116@31:1920x1080` means <Connector ID>@<CRTC ID>: <Resolution>
+
+`39@31:1920x1080@RG16` means <Plane ID>@<CRTC ID>: <Resolution>@<Format>
+
 # LCD Panel for Star64 JH7110
 
 TODO: [Cadence MIPI DSI v1.3.1 TX Controller IP (DSITX)](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/ic_specification_lcd.html)
