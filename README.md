@@ -1037,26 +1037,26 @@ Here's the assembled output...
 ```text
 0000000040200000 <__start>:
   li      s4, -0xd             /* Magic Signature "MZ" (2 bytes) */
-    40200000:	5a4d                	li	s4,-13
+    40200000:  5a4d                  li  s4,-13
   j       real_start           /* Jump to Kernel Start (2 bytes) */
-    40200002:	a83d                	j	40200040 <real_start>
-    40200004:	0000                	unimp
-    40200006:	0000                	unimp
-    40200008:	0000                	unimp
-    4020000a:	0020                	addi	s0,sp,8
-    4020000c:	0000                	unimp
-    4020000e:	0000                	unimp
-    40200010:	9e7c                	0x9e7c
-    40200012:	0002                	c.slli64	zero
+    40200002:  a83d                  j  40200040 <real_start>
+    40200004:  0000                  unimp
+    40200006:  0000                  unimp
+    40200008:  0000                  unimp
+    4020000a:  0020                  addi  s0,sp,8
+    4020000c:  0000                  unimp
+    4020000e:  0000                  unimp
+    40200010:  9e7c                  0x9e7c
+    40200012:  0002                  c.slli64  zero
   ...
-    40200020:	0002                	c.slli64	zero
+    40200020:  0002                  c.slli64  zero
   ...
-    4020002e:	0000                	unimp
-    40200030:	4952                	lw	s2,20(sp)
-    40200032:	00564353          	fadd.s	ft6,fa2,ft5,rmm
-    40200036:	0000                	unimp
-    40200038:	5352                	lw	t1,52(sp)
-    4020003a:	00000543          	fmadd.s	fa0,ft0,ft0,ft0,rne
+    4020002e:  0000                  unimp
+    40200030:  4952                  lw  s2,20(sp)
+    40200032:  00564353            fadd.s  ft6,fa2,ft5,rmm
+    40200036:  0000                  unimp
+    40200038:  5352                  lw  t1,52(sp)
+    4020003a:  00000543            fmadd.s  fa0,ft0,ft0,ft0,rne
   ...
 
 0000000040200040 <real_start>:
@@ -1132,9 +1132,9 @@ RISC-V Disassembly of NuttX Kernel shows that the Start Address is correct...
 ```text
 0000000040200000 <__start>:
   li      s4, -0xd             /* Magic Signature "MZ" (2 bytes) */
-    40200000:	5a4d                	li	s4,-13
+    40200000:  5a4d                  li  s4,-13
   j       real_start           /* Jump to Kernel Start (2 bytes) */
-    40200002:	a83d                	j	40200040 <real_start>
+    40200002:  a83d                  j  40200040 <real_start>
 ```
 
 We're ready to boot NuttX on Star64!
@@ -1279,7 +1279,7 @@ From [qemu_rv_head.S](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/ed09c
 nuttx/arch/risc-v/src/chip/qemu_rv_head.S:95
   /* Load mhartid (cpuid) */
   csrr a0, mhartid
-    4020005c:	f1402573  csrr a0, mhartid
+    4020005c:  f1402573  csrr a0, mhartid
 ```
 
 NuttX tries loads the CPU ID or Hardware Thread "Hart" ID from the RISC-V Control and Status Register (CSR). [(Explained here)](https://lupyuen.github.io/articles/riscv#get-cpu-id)
@@ -1406,13 +1406,13 @@ That's because the Linux Boot Code will work for Machine Level AND Supervisor Le
 ```text
 #ifdef CONFIG_RISCV_M_MODE
   /* Use Machine-Level CSR Registers */
-  # define CSR_IE		CSR_MIE
-  # define CSR_IP		CSR_MIP
+  # define CSR_IE    CSR_MIE
+  # define CSR_IP    CSR_MIP
   ...
 #else
   /* Use Supervisor-Level CSR Registers */
-  # define CSR_IE		CSR_SIE
-  # define CSR_IP		CSR_SIP
+  # define CSR_IE    CSR_SIE
+  # define CSR_IP    CSR_SIP
   ...
 #endif /* !CONFIG_RISCV_M_MODE */
 ```
@@ -1515,8 +1515,8 @@ __For All Hart IDs:__
 ```
 2:
   /* Disable all interrupts (i.e. timer, external) in mie */
-  csrw	sie, zero
-  /* Previously: csrw	mie, zero */
+  csrw  sie, zero
+  /* Previously: csrw  mie, zero */
 
   /* Don't load the Interrupt Vector Table, use OpenSBI for crash logging */
   /* la   t0, __trap_vec */
@@ -2092,8 +2092,8 @@ int up_putc(int ch)
 up_irq_save():
 nuttx/include/arch/irq.h:675
   __asm__ __volatile__
-    40204598:	47a1                	li	a5,8
-    4020459a:	3007b7f3          	csrrc	a5,mstatus,a5
+    40204598:  47a1                  li  a5,8
+    4020459a:  3007b7f3            csrrc  a5,mstatus,a5
 up_putc():
 nuttx/drivers/serial/uart_16550.c:1726
   flags = enter_critical_section();
@@ -2215,15 +2215,15 @@ Which fails at...
 ```text
 nuttx/arch/risc-v/src/common/riscv_mmu.c:101
   lntable[index] = (paddr | mmuflags);
-    40200620:	1ff7f793          	andi	a5,a5,511
-    40200624:	078e                	slli	a5,a5,0x3
-    40200626:	95be                	add	a1,a1,a5
-    40200628:	0105b023          	sd	a6,0(a1)  /* Fails Here */
+    40200620:  1ff7f793            andi  a5,a5,511
+    40200624:  078e                  slli  a5,a5,0x3
+    40200626:  95be                  add  a1,a1,a5
+    40200628:  0105b023            sd  a6,0(a1)  /* Fails Here */
 mmu_invalidate_tlb_by_vaddr():
 nuttx/arch/risc-v/src/common/riscv_mmu.h:237
   __asm__ __volatile__
-    4020062c:	12d00073          	sfence.vma	zero,a3
-    40200630:	8082                	ret
+    4020062c:  12d00073            sfence.vma  zero,a3
+    40200630:  8082                  ret
 ```
 
 TODO: Trace this Store/AMO Access Fault
@@ -2589,18 +2589,18 @@ nuttx/arch/risc-v/src/common/riscv_semihost.S:37
 smh_call:
 
   slli zero, zero, 0x1f
-    40200430:	01f01013          	slli	zero,zero,0x1f
+    40200430:  01f01013            slli  zero,zero,0x1f
 nuttx/arch/risc-v/src/common/riscv_semihost.S:38
   ebreak
     //// Crashes here (Trigger semihosting breakpoint)
-    40200434:	00100073          	ebreak
+    40200434:  00100073            ebreak
 nuttx/arch/risc-v/src/common/riscv_semihost.S:39
   srai zero, zero, 0x7
-    40200438:	40705013          	srai	zero,zero,0x7
+    40200438:  40705013            srai  zero,zero,0x7
 nuttx/arch/risc-v/src/common/riscv_semihost.S:40
   ret
-    4020043c:	00008067          	ret
-    40200440:	0000                	unimp
+    4020043c:  00008067            ret
+    40200440:  0000                  unimp
 ```
 
 When we log `smh_call`...
@@ -3623,7 +3623,7 @@ CONFIG_16550_UART0_IRQ=57
 
 [(Source)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig#L10-L17)
 
-Also from [JH7110 Interrupt Connections](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html): `u0_uart`	is at `global_interrupts[27]`
+Also from [JH7110 Interrupt Connections](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/interrupt_connections.html): `u0_uart`  is at `global_interrupts[27]`
 
 Which is correct because [SiFive U74-MC Core Complex Manual](https://starfivetech.com/uploads/u74mc_core_complex_manual_21G1.pdf) (Page 198) says that `global_interrupts[0]` is PLIC Interrupt ID 5.
 
@@ -3832,8 +3832,8 @@ _What about the PLIC Base Address?_
 According to [U74 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/u74_memory_map.html), the Base Addresses are:
 
 ```text
-0x00_0200_0000	0x00_0200_FFFF		RW A	CLINT
-0x00_0C00_0000	0x00_0FFF_FFFF		RW A	PLIC
+0x00_0200_0000  0x00_0200_FFFF    RW A  CLINT
+0x00_0C00_0000  0x00_0FFF_FFFF    RW A  PLIC
 ```
 
 Which are correct in NuttX: [qemu_rv_memorymap.h](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64d/arch/risc-v/src/qemu-rv/hardware/qemu_rv_memorymap.h#L30-L32)
@@ -5020,13 +5020,13 @@ struct platform_driver dc_platform_driver = {
 
 ```c
 static const struct vs_crtc_funcs dc_crtc_funcs = {
-  .enable			  = vs_dc_enable,
-  .disable		  = vs_dc_disable,
-  .mode_fixup		= vs_dc_mode_fixup,
-  .set_gamma		= vs_dc_set_gamma,
-  .enable_gamma	= vs_dc_enable_gamma,
+  .enable        = vs_dc_enable,
+  .disable       = vs_dc_disable,
+  .mode_fixup    = vs_dc_mode_fixup,
+  .set_gamma     = vs_dc_set_gamma,
+  .enable_gamma  = vs_dc_enable_gamma,
   .enable_vblank = vs_dc_enable_vblank,
-  .commit			  = vs_dc_commit,
+  .commit        = vs_dc_commit,
 };
 ```
 
@@ -5034,9 +5034,9 @@ static const struct vs_crtc_funcs dc_crtc_funcs = {
 
 ```c
 static const struct vs_plane_funcs dc_plane_funcs = {
-  .update			= vs_dc_update_plane,
-  .disable		= vs_dc_disable_plane,
-  .check			= vs_dc_check_plane,
+  .update  = vs_dc_update_plane,
+  .disable = vs_dc_disable_plane,
+  .check   = vs_dc_check_plane,
 };
 ```
 
@@ -5171,11 +5171,11 @@ We also see the Galaxycore GC02M2 Camera (on MIPI CSI)...
     };
 
     // gc02m2_pins-sw {
-    // 	starfive,pins = <PAD_GPIO53>;
-    // 	starfive,pinmux = <PAD_GPIO53_FUNC_SEL 0>;
-    // 	starfive,pin-ioconfig = <IO(GPIO_IE(1))>;
-    // 	starfive,pin-gpio-dout = <GPO_LOW>;
-    // 	starfive,pin-gpio-doen = <OEN_LOW>;
+    //   starfive,pins = <PAD_GPIO53>;
+    //   starfive,pinmux = <PAD_GPIO53_FUNC_SEL 0>;
+    //   starfive,pin-ioconfig = <IO(GPIO_IE(1))>;
+    //   starfive,pin-gpio-dout = <GPO_LOW>;
+    //   starfive,pin-gpio-doen = <OEN_LOW>;
     // };
   };
   ...
