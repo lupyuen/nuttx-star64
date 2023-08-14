@@ -4823,19 +4823,76 @@ Let's find out! Maybe our code can be reused for PineTab-V's MIPI DSI Display Pa
 
 - [MIPI LCD Developing and Porting Guide](http://doc-en.rvspace.org/VisionFive2/DG_LCD/)
 
-TODO: Display Subsystem Block Diagram
+From the docs above we have the [Display Subsystem Block Diagram](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/block_diagram_display.html)...
 
 ![Display Subsystem Block Diagram](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/vout_block_diagram18.png)
 
 [(Source)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/block_diagram_display.html)
 
-TODO: Display Subsystem Clock and Reset
+Which says that JH7110 uses a __DC8200 Dual Display Controller__.
+
+[(But the DC8200 docs are confidential sigh)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/detail_info_display.html)
+
+And we have the [Display Subsystem Clock and Reset](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_n_reset_display.html)...
 
 ![Display Subsystem Clock and Reset](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/vout_clkrst18.png)
 
 [(Source)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_n_reset_display.html)
 
-TODO
+# Linux Driver for JH7110 HDMI
+
+Based on [JH7110 HDMI Developing Guide](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/JH7110_SDK/source_code_structure_hdmi.html), the Linux Drivers for JH7110 HDMI (VeriSilicon InnoHDMI) are...
+
+- [inno_hdmi.c](https://github.com/starfive-tech/linux/blob/8fe323292f2caf46bde0e0aab8f484f920f521be/drivers/gpu/drm/verisilicon/inno_hdmi.c)
+
+- [inno_hdmi.h](https://github.com/starfive-tech/linux/blob/8fe323292f2caf46bde0e0aab8f484f920f521be/drivers/gpu/drm/verisilicon/inno_hdmi.h)
+
+The [Linux Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/JH7110_SDK/device_tree_hdmi.html) looks like...
+
+```text
+hdmi: hdmi@29590000 {
+    compatible = "starfive,jh7100-hdmi","inno,hdmi";
+      reg = <0x0 0x29590000 0x0 0x4000>;
+      interrupts = <99>;
+      status = "disabled";
+      clocks = <&clkvout JH7110_U0_HDMI_TX_CLK_SYS>,
+        <&clkvout JH7110_U0_HDMI_TX_CLK_MCLK>,
+        <&clkvout JH7110_U0_HDMI_TX_CLK_BCLK>,
+        <&hdmitx0_pixelclk>;
+      clock-names = "sysclk", "mclk","bclk","pclk";
+      resets = <&rstgen RSTN_U0_HDMI_TX_HDMI>;
+      reset-names = "hdmi_tx";
+    };
+...
+&hdmi {
+  status = "okay";
+  pinctrl-names = "default";
+  pinctrl-0 = <&inno_hdmi_pins>;
+
+  hdmi_in: port {
+    #address-cells = <1>;
+    #size-cells = <0>;
+    hdmi_in_lcdc: endpoint@0 {
+      reg = <0>;
+      remote-endpoint = <&dc_out_dpi1>;
+    };
+  };
+};
+```
+
+[(Source)](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/JH7110_SDK/device_tree_hdmi.html)
+
+We see the [HDMI Initialization Process](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/JH7110_SDK/initialization_process.html)...
+
+![HDMI Initialization Process](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/Image/JH7110_SDK/HDMI_Init.svg)
+
+[(Source)](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/JH7110_SDK/initialization_process.html)
+
+And the [HDMI Plug and Unplug Process](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/JH7110_SDK/plug_n_unplug_process.html)...
+
+![HDMI Plug and Unplug Process](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/Image/JH7110_SDK/HDMI_Pug_Unplug.svg)
+
+[(Source)](https://doc-en.rvspace.org/VisionFive2/DG_HDMI/JH7110_SDK/plug_n_unplug_process.html)
 
 # PineTab-V Factory Test Code
 
