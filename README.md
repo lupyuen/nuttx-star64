@@ -4998,6 +4998,8 @@ TODO: [LCD Initialisation Process](https://doc-en.rvspace.org/VisionFive2/DG_LCD
 
 [(Source)](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/initalization_lcd.html)
 
+TODO: [MIPI Parameter Configuration](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/mipi_configuration.html) for 1C2L (2-lane MIPI DSI) and 1C4L (4-lane MIPI DSI)
+
 # PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
