@@ -4805,11 +4805,31 @@ CONFIG_16550_UART0_CLOCK=23040000
 
 [(Source)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/57d5bba4723b58c7bb947f9fa206be377c80c8d0/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L10-L18)
 
-> ![PineTab-V Factory Test Code](https://lupyuen.github.io/images/pinetabv-factory.jpg)
+# HDMI Display for Star64 JH7110
+
+_Will NuttX work with the HDMI Display on Star64?_
+
+Let's find out! Maybe our code can be reused for PineTab-V's MIPI DSI Display Panel. Here are the official docs...
+
+- [Display Subsystem](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/display_subsystem.html)
+
+- [SDK for HDMI](http://doc-en.rvspace.org/VisionFive2/DG_HDMI/)
+
+- [Display Controller Developing Guide](http://doc-en.rvspace.org/VisionFive2/DG_Display/)
+
+- [GPU Developing and Porting Guide](http://doc-en.rvspace.org/VisionFive2/DG_GPU/)
+
+- [Multimedia Developing Guide](http://doc-en.rvspace.org/VisionFive2/DG_Multimedia/)
+
+- [MIPI LCD Developing and Porting Guide](http://doc-en.rvspace.org/VisionFive2/DG_LCD/)
+
+TODO
 
 # PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
+
+> ![PineTab-V Factory Test Code](https://lupyuen.github.io/images/pinetabv-factory.jpg)
 
 The factory test reference source code has been mirrored here (for quicker downloading)...
 
