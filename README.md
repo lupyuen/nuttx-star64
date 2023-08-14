@@ -4974,11 +4974,9 @@ And the [HDMI Plug and Unplug Process](https://doc-en.rvspace.org/VisionFive2/DG
 
 # Test HDMI for Star64 JH7110
 
-TODO
+_How will we test the HDMI Display for Star64 JH7110?_
 
-https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/test_example_display.html
-
-The following command shows an example for testing the HDMI output.
+We run the [`modetest` command to test HDMI](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/test_example_display.html)...
 
 ```bash
 modetest \
@@ -4990,9 +4988,19 @@ modetest \
   -Ftiles 
 ```
 
+[(Source)](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/test_example_display.html)
+
 `116@31:1920x1080` means <Connector ID>@<CRTC ID>: <Resolution>
 
 `39@31:1920x1080@RG16` means <Plane ID>@<CRTC ID>: <Resolution>@<Format>
+
+See also...
+
+- [Before Debug](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/before_debug.html)
+
+- [Debug Display](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/debug_hdmi.html)
+
+TODO: What's inside the modetest app
 
 # LCD Panel for Star64 JH7110
 
