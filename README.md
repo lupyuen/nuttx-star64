@@ -4885,25 +4885,25 @@ Here's the (partial) [Linux Device Tree for DC8200](https://doc-en.rvspace.org/V
 
 ```text
 &dc8200 {
-	status = "okay";
+  status = "okay";
 
-	dc_out: port {
-		#address-cells = <1>;
-		#size-cells = <0>;
-		dc_out_dpi0: endpoint@0 {
-			reg = <0>;
-			remote-endpoint = <&hdmi_input0>;
-		};
-		dc_out_dpi1: endpoint@1 {
-			reg = <1>;
-			remote-endpoint = <&hdmi_in_lcdc>;
-		};
+  dc_out: port {
+    #address-cells = <1>;
+    #size-cells = <0>;
+    dc_out_dpi0: endpoint@0 {
+      reg = <0>;
+      remote-endpoint = <&hdmi_input0>;
+    };
+    dc_out_dpi1: endpoint@1 {
+      reg = <1>;
+      remote-endpoint = <&hdmi_in_lcdc>;
+    };
 
-		dc_out_dpi2: endpoint@2 {
-			reg = <2>;
-			remote-endpoint = <&mipi_in>;
-		};
-	};
+    dc_out_dpi2: endpoint@2 {
+      reg = <2>;
+      remote-endpoint = <&mipi_in>;
+    };
+  };
 };
 ```
 
