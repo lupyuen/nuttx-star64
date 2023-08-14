@@ -5006,6 +5006,44 @@ TODO: What's inside the modetest app? [modetest.c](https://gitlab.freedesktop.or
 
 TODO
 
+[dc_bind](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1421-L1573)
+
+```c
+struct platform_driver dc_platform_driver = {
+  .probe  = dc_probe,
+  .remove = dc_remove,
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1642-L1649)
+
+[dc_probe](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1595-L1629)
+
+```c
+static const struct vs_crtc_funcs dc_crtc_funcs = {
+  .enable			  = vs_dc_enable,
+  .disable		  = vs_dc_disable,
+  .mode_fixup		= vs_dc_mode_fixup,
+  .set_gamma		= vs_dc_set_gamma,
+  .enable_gamma	= vs_dc_enable_gamma,
+  .enable_vblank = vs_dc_enable_vblank,
+  .commit			  = vs_dc_commit,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1400-L1408)
+
+```c
+static const struct vs_plane_funcs dc_plane_funcs = {
+  .update			= vs_dc_update_plane,
+  .disable		= vs_dc_disable_plane,
+  .check			= vs_dc_check_plane,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1410-L1414)
+
+[DRM Internals](https://www.kernel.org/doc/html/v4.15/gpu/drm-internals.html)
+
 # Call Flow for HDMI Controller Driver
 
 TODO
