@@ -4823,11 +4823,13 @@ Let's find out! Maybe our code can be reused for PineTab-V's MIPI DSI Display Pa
 
 - [MIPI LCD Developing and Porting Guide](http://doc-en.rvspace.org/VisionFive2/DG_LCD/)
 
-TODO
+TODO: Display Subsystem Block Diagram
 
 ![Display Subsystem Block Diagram](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/vout_block_diagram18.png)
 
 [(Source)](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/block_diagram_display.html)
+
+TODO: Display Subsystem Clock and Reset
 
 ![Display Subsystem Clock and Reset](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/vout_clkrst18.png)
 
