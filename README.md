@@ -5006,7 +5006,11 @@ TODO: What's inside the modetest app? [modetest.c](https://gitlab.freedesktop.or
 
 TODO
 
-[dc_bind](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1421-L1573)
+[dc_bind](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1421-L1573) calls..
+
+- dc_init, which calls...
+
+- dc_hw_init
 
 ```c
 struct platform_driver dc_platform_driver = {
