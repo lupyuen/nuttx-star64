@@ -5075,9 +5075,9 @@ Update Display Plane: [dc_hw_update_plane](https://github.com/starfive-tech/linu
 
 ```c
 static const struct dc_hw_funcs hw_func = {
-	.gamma = &gamma_ex_commit,
-	.plane = &plane_ex_commit,
-	.display = setup_display_ex,
+  .gamma = &gamma_ex_commit,
+  .plane = &plane_ex_commit,
+  .display = setup_display_ex,
 };
 ```
 
