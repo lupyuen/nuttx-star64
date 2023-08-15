@@ -4865,7 +4865,7 @@ Here are the [Linux Drivers for DC8200 Display Controller](https://doc-en.rvspac
 
 - [vs_crtc.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_crtc.c): Display Pipeline (Colour / Gamma / LUT)
 
-- [vs_plane.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_plane.c): Framebuffer Plane
+- [vs_plane.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_plane.c): Display Plane
 
 - [vs_simple_enc.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_simple_enc.c): DSS Encoder
 
@@ -4876,6 +4876,8 @@ Here are the [Linux Drivers for DC8200 Display Controller](https://doc-en.rvspac
 - [vs_dc_dec.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_dec.c): Bitmap Decompression
 
 [(See the Notes here)](https://github.com/starfive-tech/linux/tree/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon)
+
+We'll see the Call Flow in a while.
 
 Are these used?
 
@@ -5018,7 +5020,7 @@ struct platform_driver dc_platform_driver = {
 
 Probe for Display Controller is implemented here: [dc_probe](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1595-L1629)
 
-Here's are the Component Functions exposed by the driver...
+We see the Component Functions exposed by the driver...
 
 ```c
 const struct component_ops dc_component_ops = {
@@ -5097,19 +5099,23 @@ Display Controller Info: [dc_info](https://github.com/starfive-tech/linux/blob/J
 
 ```c
 static const struct dc_hw_funcs hw_func = {
-  .gamma = &gamma_ex_commit,
-  .plane = &plane_ex_commit,
+  .gamma   = &gamma_ex_commit,
+  .plane   = &plane_ex_commit,
   .display = setup_display_ex,
 };
 ```
 
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L2032-L2036)
 
-Setup Display: [setup_display_ex](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1971-L2030), which calls...
+Setup Display:
+
+- [setup_display_ex](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1971-L2030), which calls...
 
 - [setup_display](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1865-L1969)
 
-Commit Display Plane: [plane_ex_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1768-L1863), which calls...
+Commit Display Plane:
+
+- [plane_ex_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1768-L1863), which calls...
 
 - [plane_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1576-L1766)
 
@@ -5153,7 +5159,7 @@ const struct component_ops vd_component_ops = {
 
 ```c
 struct platform_driver virtual_display_platform_driver = {
-  .probe = vd_probe,
+  .probe  = vd_probe,
   .remove = vd_remove,
   ...
 };
@@ -5189,7 +5195,7 @@ static const struct drm_crtc_funcs vs_crtc_funcs = {
   .atomic_duplicate_state = vs_crtc_atomic_duplicate_state,
   .atomic_destroy_state   = vs_crtc_atomic_destroy_state,
   .atomic_set_property    = vs_crtc_atomic_set_property,
-  .atomic_get_property   = vs_crtc_atomic_get_property,
+  .atomic_get_property    = vs_crtc_atomic_get_property,
   //.gamma_set    = drm_atomic_helper_legacy_gamma_set,
   .late_register  = vs_crtc_late_register,
   .enable_vblank  = vs_crtc_enable_vblank,
@@ -5203,7 +5209,7 @@ Display Planes:
 
 ```c
 const struct drm_plane_helper_funcs vs_plane_helper_funcs = {
-  .atomic_check  = vs_plane_atomic_check,
+  .atomic_check   = vs_plane_atomic_check,
   .atomic_update  = vs_plane_atomic_update,
   .atomic_disable = vs_plane_atomic_disable,
 };
