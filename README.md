@@ -5117,6 +5117,100 @@ Commit Display Plane: [plane_ex_commit](https://github.com/starfive-tech/linux/b
 
 TODO
 
+```c
+static const struct drm_connector_helper_funcs vd_connector_helper_funcs = {
+  .get_modes    = vd_get_modes,
+  .mode_valid   = vd_mode_valid,
+  .best_encoder = vd_best_encoder,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_virtual.c#L197-L201)
+
+Display Resolutions: [vd_get_modes](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_virtual.c#L153-L181)
+
+```c
+static const struct drm_connector_funcs vd_connector_funcs = {
+  .fill_modes = drm_helper_probe_single_connector_modes,
+  .destroy    = vd_connector_destroy,
+  .detect     = vd_connector_detect,
+  .atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+  .atomic_destroy_state   = drm_atomic_helper_connector_destroy_state,
+  .reset = drm_atomic_helper_connector_reset,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_virtual.c#L215-L222)
+
+```c
+const struct component_ops vd_component_ops = {
+  .bind   = vd_bind,
+  .unbind = vd_unbind,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_virtual.c#L311-L314)
+
+```c
+struct platform_driver virtual_display_platform_driver = {
+  .probe = vd_probe,
+  .remove = vd_remove,
+  ...
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_virtual.c#L353-L360)
+
+Display Driver:
+
+```c
+static const struct file_operations fops = {
+  .owner     = THIS_MODULE,
+  .open      = drm_open,
+  .release   = drm_release,
+  .unlocked_ioctl = drm_ioctl,
+  .compat_ioctl   = drm_compat_ioctl,
+  .poll      = drm_poll,
+  .read      = drm_read,
+  .mmap      = vs_gem_mmap,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L54-L63)
+
+Display Pipelines:
+
+```c
+static const struct drm_crtc_funcs vs_crtc_funcs = {
+  .set_config = drm_atomic_helper_set_config,
+  .destroy    = vs_crtc_destroy,
+  .page_flip  = drm_atomic_helper_page_flip,
+  .reset      = vs_crtc_reset,
+  .atomic_duplicate_state = vs_crtc_atomic_duplicate_state,
+  .atomic_destroy_state   = vs_crtc_atomic_destroy_state,
+  .atomic_set_property    = vs_crtc_atomic_set_property,
+  .atomic_get_property   = vs_crtc_atomic_get_property,
+  //.gamma_set    = drm_atomic_helper_legacy_gamma_set,
+  .late_register  = vs_crtc_late_register,
+  .enable_vblank  = vs_crtc_enable_vblank,
+  .disable_vblank = vs_crtc_disable_vblank,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_crtc.c#L207-L220)
+
+Display Planes:
+
+```c
+const struct drm_plane_helper_funcs vs_plane_helper_funcs = {
+  .atomic_check  = vs_plane_atomic_check,
+  .atomic_update  = vs_plane_atomic_update,
+  .atomic_disable = vs_plane_atomic_disable,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_plane.c#L314-L318)
+
 # Call Flow for HDMI Controller Driver
 
 TODO
