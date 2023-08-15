@@ -5004,13 +5004,7 @@ TODO: What's inside the modetest app? [modetest.c](https://gitlab.freedesktop.or
 
 # Call Flow for DC8200 Display Controller Driver
 
-TODO
-
-[dc_bind](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1421-L1573) calls..
-
-- dc_init, which calls...
-
-- dc_hw_init
+Let's walk through the code in the Linux Driver for DC8200 Display Controller, to understand how we'll implement it in NuttX.
 
 ```c
 struct platform_driver dc_platform_driver = {
@@ -5020,7 +5014,22 @@ struct platform_driver dc_platform_driver = {
 
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1642-L1649)
 
-[dc_probe](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1595-L1629)
+Probe for Display Controller: [dc_probe](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1595-L1629)
+
+```c
+const struct component_ops dc_component_ops = {
+  .bind   = dc_bind,
+  .unbind = dc_unbind,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1584-L1587)
+
+Bind to Display Controller: [dc_bind](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1421-L1573) calls..
+
+- [dc_init](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L644-L722), which calls...
+
+- [dc_hw_init](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1301-L1361)
 
 ```c
 static const struct vs_crtc_funcs dc_crtc_funcs = {
@@ -5036,6 +5045,8 @@ static const struct vs_crtc_funcs dc_crtc_funcs = {
 
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1400-L1408)
 
+Enable Display Pipeline: [vs_dc_enable](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L740-L826)
+
 ```c
 static const struct vs_plane_funcs dc_plane_funcs = {
   .update  = vs_dc_update_plane,
@@ -5046,7 +5057,41 @@ static const struct vs_plane_funcs dc_plane_funcs = {
 
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1410-L1414)
 
-[DRM Internals](https://www.kernel.org/doc/html/v4.15/gpu/drm-internals.html)
+Update Display Plane: [vs_dc_update_plane](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1262-L1280) calls...
+
+- [update_plane](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1153-L1196)
+
+Refer to [Linux DRM Internals](https://www.kernel.org/doc/html/v4.15/gpu/drm-internals.html)
+
+# Call Flow for DC8200 Display Hardware Driver
+
+TODO
+
+Display Planes Info: [dc_hw_planes](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L472-L1084)
+
+Display Controller Info: [dc_info](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1086-L1150)
+
+Update Display Plane: [dc_hw_update_plane](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1368-L1399)
+
+```c
+static const struct dc_hw_funcs hw_func = {
+	.gamma = &gamma_ex_commit,
+	.plane = &plane_ex_commit,
+	.display = setup_display_ex,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L2032-L2036)
+
+Setup Display: [setup_display_ex](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1971-L2030)
+
+[setup_display](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1865-L1969)
+
+Commit Display Plane: [plane_ex_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1768-L1863)
+
+[plane_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1576-L1766)
+
+Commit Display: [dc_hw_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L2038-L2076)
 
 # Call Flow for HDMI Controller Driver
 
