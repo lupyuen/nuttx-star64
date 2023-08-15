@@ -4867,7 +4867,7 @@ Here are the [Linux Drivers for DC8200 Display Controller](https://doc-en.rvspac
 
 - [vs_plane.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_plane.c): Display Plane
 
-- [vs_simple_enc.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_simple_enc.c): DSS Encoder
+- [vs_simple_enc.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_simple_enc.c): [Display Subsystem (DSS)](https://software-dl.ti.com/processor-sdk-linux/esd/docs/06_03_00_106/linux/Foundational_Components/Kernel/Kernel_Drivers/Display/DSS.html) Encoder
 
 - [vs_gem.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_gem.c): GEM Memory Management Framework
 
@@ -5067,11 +5067,19 @@ Enable Display Pipeline is implemented here...
 
 - [dc_hw_setup_display](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1480-L1487)
 
+Enable Display Pipeline is called by [vs_crtc_atomic_enable](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_crtc.c#L265-L276)
+
+TODO: Who calls vs_crtc_atomic_enable?
+
 Commit Display Pipeline is here...
 
 - [vs_dc_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1381-L1398), which calls...
 
 - [dc_hw_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L2038-L2076)
+
+Commit Display Pipeline is called by [vs_crtc_atomic_flush](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_crtc.c#L320-L336)
+
+TODO: Who calls vs_crtc_atomic_flush?
 
 These are the exposed functions for the Display Plane...
 
@@ -5092,6 +5100,10 @@ Update Display Plane is here...
 - [update_plane](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1153-L1196), which calls...
 
 - [dc_hw_update_plane](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1368-L1399)
+
+Update Display Plane is called by [vs_plane_atomic_update](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_plane.c#L268-L301)
+
+TODO: Who calls vs_plane_atomic_update?
 
 Refer to [Linux DRM Internals](https://www.kernel.org/doc/html/v4.15/gpu/drm-internals.html)
 
@@ -5223,9 +5235,89 @@ const struct drm_plane_helper_funcs vs_plane_helper_funcs = {
 
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_plane.c#L314-L318)
 
+Simple Encoder Driver:
+
+```c
+struct platform_driver simple_encoder_driver = {
+	.probe = encoder_probe,
+	.remove = encoder_remove,
+  ...
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_simple_enc.c#L300-L307)
+
 # Call Flow for HDMI Controller Driver
 
 TODO
+
+
+```c
+// "innohdmi-starfive"
+struct platform_driver inno_hdmi_driver = {
+	.probe  = inno_hdmi_probe,
+	.remove = inno_hdmi_remove,
+  ...
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/inno_hdmi.c#L1155-L1163)
+
+```c
+static const struct drm_encoder_helper_funcs inno_hdmi_encoder_helper_funcs = {
+	.enable     = inno_hdmi_encoder_enable,
+	.disable    = inno_hdmi_encoder_disable,
+	.mode_fixup = inno_hdmi_encoder_mode_fixup,
+	.mode_set   = inno_hdmi_encoder_mode_set,
+	.atomic_check = inno_hdmi_encoder_atomic_check,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/inno_hdmi.c#L651-L657)
+
+MIPI DSI:
+
+```c
+// "dw-mipi-dsi"
+struct platform_driver dw_mipi_dsi_driver = {
+	.probe = dsi_probe,
+	.remove = dsi_remove,
+  ...
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/dw_mipi_dsi.c#L1066-L1073)
+
+```c
+static struct platform_driver cdns_dsi_platform_driver = {
+	.probe  = cdns_dsi_drm_probe,
+	.remove = cdns_dsi_drm_remove,
+  ...
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/starfive_drm_dsi.c#L1679-L1687)
+
+```c
+static const struct component_ops dsi_component_ops = {
+	.bind = dsi_bind,
+	.unbind = dsi_unbind,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/dw_mipi_dsi.c#L998-L1001)
+
+```c
+static const struct drm_bridge_funcs dw_mipi_dsi_bridge_funcs = {
+	.mode_set	= bridge_mode_set,
+	.enable		= bridge_enable,
+	.post_disable	= bridge_post_disable,
+	.attach		= bridge_attach,
+	.mode_fixup = bridge_mode_fixup,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/dw_mipi_dsi.c#L869-L875)
 
 # LCD Panel for Star64 JH7110
 
