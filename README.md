@@ -5074,6 +5074,18 @@ Enable Display Pipeline is called by [vs_crtc_atomic_enable](https://github.com/
 
 TODO: Who calls vs_crtc_atomic_enable?
 
+```c
+static const struct drm_crtc_helper_funcs vs_crtc_helper_funcs = {
+  .mode_fixup     = vs_crtc_mode_fixup,
+  .atomic_enable  = vs_crtc_atomic_enable,
+  .atomic_disable = vs_crtc_atomic_disable,
+  .atomic_begin   = vs_crtc_atomic_begin,
+  .atomic_flush   = vs_crtc_atomic_flush,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_crtc.c#L338-L344)
+
 Commit Display Pipeline is here...
 
 - [vs_dc_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1381-L1398), which calls...
@@ -5107,6 +5119,16 @@ Update Display Plane is here...
 Update Display Plane is called by [vs_plane_atomic_update](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_plane.c#L268-L301)
 
 TODO: Who calls vs_plane_atomic_update?
+
+```c
+const struct drm_plane_helper_funcs vs_plane_helper_funcs = {
+  .atomic_check   = vs_plane_atomic_check,
+  .atomic_update  = vs_plane_atomic_update,
+  .atomic_disable = vs_plane_atomic_disable,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_plane.c#L314-L318)
 
 Refer to [Linux DRM Internals](https://www.kernel.org/doc/html/v4.15/gpu/drm-internals.html)
 
@@ -5189,7 +5211,67 @@ struct platform_driver virtual_display_platform_driver = {
 
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_virtual.c#L353-L360)
 
-Display Driver:
+Display Driver (DRM):
+
+```c
+static struct drm_driver vs_drm_driver = {
+  .driver_features    = DRIVER_MODESET | DRIVER_ATOMIC | DRIVER_GEM,
+  .lastclose          = drm_fb_helper_lastclose,
+  .prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+  .prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+  .gem_prime_import   = vs_gem_prime_import,
+  .gem_prime_import_sg_table = vs_gem_prime_import_sg_table,
+  .gem_prime_mmap     = vs_gem_prime_mmap,
+  .dumb_create        = vs_gem_dumb_create,
+#ifdef CONFIG_DEBUG_FS
+  .debugfs_init       = vs_debugfs_init,
+#endif
+  .fops  = &fops,
+  .name  = "starfive",
+  .desc  = "VeriSilicon DRM driver",
+  .date  = "20191101",
+  .major = DRV_MAJOR,
+  .minor = DRV_MINOR,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L125-L143)
+
+```c
+static struct platform_driver *drm_sub_drivers[] = {
+	/* put display control driver at start */
+	&dc_platform_driver,
+
+	/* connector */
+#ifdef CONFIG_STARFIVE_INNO_HDMI
+	&inno_hdmi_driver,
+#endif
+
+	&simple_encoder_driver,
+
+#ifdef CONFIG_VERISILICON_VIRTUAL_DISPLAY
+	&virtual_display_platform_driver,
+#endif
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L301-L315)
+
+```c
+// name = "starfive"
+static struct platform_driver vs_drm_platform_driver = {
+	.probe = vs_drm_platform_probe,
+	.remove = vs_drm_platform_remove,
+  ...
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L448-L457)
+
+[vs_drm_init](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L459-L472) registers [drm_sub_drivers](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L301-L315) and [vs_drm_platform_driver](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L448-L457)
+ at startup.
+
+Display Driver File Operations:
 
 ```c
 static const struct file_operations fops = {
