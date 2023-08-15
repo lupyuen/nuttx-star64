@@ -5017,9 +5017,12 @@ Let's walk through the code in the Linux Driver for DC8200 Display Controller, t
 The DC8200 Driver exposes 2 Platform Functions...
 
 ```c
+// name = "vs-dc"
 struct platform_driver dc_platform_driver = {
   .probe  = dc_probe,
   .remove = dc_remove,
+  ...
+};
 ```
 
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1642-L1649)
@@ -5176,6 +5179,7 @@ const struct component_ops vd_component_ops = {
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_virtual.c#L311-L314)
 
 ```c
+// name = "vs-virtual-display"
 struct platform_driver virtual_display_platform_driver = {
   .probe  = vd_probe,
   .remove = vd_remove,
@@ -5238,9 +5242,10 @@ const struct drm_plane_helper_funcs vs_plane_helper_funcs = {
 Simple Encoder Driver:
 
 ```c
+// name = "vs-simple-encoder"
 struct platform_driver simple_encoder_driver = {
-	.probe = encoder_probe,
-	.remove = encoder_remove,
+  .probe  = encoder_probe,
+  .remove = encoder_remove,
   ...
 };
 ```
@@ -5253,10 +5258,10 @@ TODO
 
 
 ```c
-// "innohdmi-starfive"
+// name = "innohdmi-starfive"
 struct platform_driver inno_hdmi_driver = {
-	.probe  = inno_hdmi_probe,
-	.remove = inno_hdmi_remove,
+  .probe  = inno_hdmi_probe,
+  .remove = inno_hdmi_remove,
   ...
 };
 ```
@@ -5265,11 +5270,11 @@ struct platform_driver inno_hdmi_driver = {
 
 ```c
 static const struct drm_encoder_helper_funcs inno_hdmi_encoder_helper_funcs = {
-	.enable     = inno_hdmi_encoder_enable,
-	.disable    = inno_hdmi_encoder_disable,
-	.mode_fixup = inno_hdmi_encoder_mode_fixup,
-	.mode_set   = inno_hdmi_encoder_mode_set,
-	.atomic_check = inno_hdmi_encoder_atomic_check,
+  .enable     = inno_hdmi_encoder_enable,
+  .disable    = inno_hdmi_encoder_disable,
+  .mode_fixup = inno_hdmi_encoder_mode_fixup,
+  .mode_set   = inno_hdmi_encoder_mode_set,
+  .atomic_check = inno_hdmi_encoder_atomic_check,
 };
 ```
 
@@ -5278,10 +5283,10 @@ static const struct drm_encoder_helper_funcs inno_hdmi_encoder_helper_funcs = {
 MIPI DSI:
 
 ```c
-// "dw-mipi-dsi"
+// name = "dw-mipi-dsi"
 struct platform_driver dw_mipi_dsi_driver = {
-	.probe = dsi_probe,
-	.remove = dsi_remove,
+  .probe  = dsi_probe,
+  .remove = dsi_remove,
   ...
 };
 ```
@@ -5289,9 +5294,10 @@ struct platform_driver dw_mipi_dsi_driver = {
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/dw_mipi_dsi.c#L1066-L1073)
 
 ```c
+// name = "cdns-dsi"
 static struct platform_driver cdns_dsi_platform_driver = {
-	.probe  = cdns_dsi_drm_probe,
-	.remove = cdns_dsi_drm_remove,
+  .probe  = cdns_dsi_drm_probe,
+  .remove = cdns_dsi_drm_remove,
   ...
 };
 ```
@@ -5300,8 +5306,8 @@ static struct platform_driver cdns_dsi_platform_driver = {
 
 ```c
 static const struct component_ops dsi_component_ops = {
-	.bind = dsi_bind,
-	.unbind = dsi_unbind,
+  .bind   = dsi_bind,
+  .unbind = dsi_unbind,
 };
 ```
 
@@ -5309,11 +5315,11 @@ static const struct component_ops dsi_component_ops = {
 
 ```c
 static const struct drm_bridge_funcs dw_mipi_dsi_bridge_funcs = {
-	.mode_set	= bridge_mode_set,
-	.enable		= bridge_enable,
-	.post_disable	= bridge_post_disable,
-	.attach		= bridge_attach,
-	.mode_fixup = bridge_mode_fixup,
+  .mode_set  = bridge_mode_set,
+  .enable    = bridge_enable,
+  .post_disable = bridge_post_disable,
+  .attach     = bridge_attach,
+  .mode_fixup = bridge_mode_fixup,
 };
 ```
 
