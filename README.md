@@ -4996,6 +4996,8 @@ modetest \
 
 `39@31:1920x1080@RG16` means `<Plane ID>@<CRTC ID>: <Resolution>@<Format>`
 
+(CRTC is the Display Pipeline)
+
 See also...
 
 - [Before Debug](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/before_debug.html)
@@ -5003,6 +5005,10 @@ See also...
 - [Debug Display](https://doc-en.rvspace.org/VisionFive2/DG_Display/JH7110_SDK/debug_hdmi.html)
 
 TODO: What's inside the modetest app? [modetest.c](https://gitlab.freedesktop.org/mesa/drm/-/blob/main/tests/modetest/modetest.c)
+
+TODO: What parameters does modetest pass to the DC8200 Driver?
+
+TODO: Can we create a simpler modetest for our own testing on NuttX?
 
 # Call Flow for DC8200 Display Controller Driver
 
