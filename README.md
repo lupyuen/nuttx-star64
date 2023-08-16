@@ -5155,7 +5155,7 @@ Enable Display Pipeline is implemented here...
 
 Enable Display Pipeline is called by [vs_crtc_atomic_enable](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_crtc.c#L265-L276)
 
-TODO: Who calls vs_crtc_atomic_enable?
+Which is called by [drm_atomic_helper](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/drm_atomic_helper.c#L1323-L1408)
 
 ```c
 static const struct drm_crtc_helper_funcs vs_crtc_helper_funcs = {
@@ -5177,7 +5177,7 @@ Commit Display Pipeline is here...
 
 Commit Display Pipeline is called by [vs_crtc_atomic_flush](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_crtc.c#L320-L336)
 
-TODO: Who calls vs_crtc_atomic_flush?
+Which is called by [drm_atomic_helper](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/drm_atomic_helper.c#L2445-L2570)
 
 These are the exposed functions for the Display Plane...
 
@@ -5201,7 +5201,7 @@ Update Display Plane is here...
 
 Update Display Plane is called by [vs_plane_atomic_update](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_plane.c#L268-L301)
 
-TODO: Who calls vs_plane_atomic_update?
+Which is called by [drm_atomic_helper](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/drm_atomic_helper.c#L2445-L2570)
 
 ```c
 const struct drm_plane_helper_funcs vs_plane_helper_funcs = {
