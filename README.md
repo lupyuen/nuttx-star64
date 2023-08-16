@@ -5268,6 +5268,10 @@ Update Display Plane: [dc_hw_update_plane](https://github.com/starfive-tech/linu
 - Copy Position
 - Copy Blend
 
+TODO: Commit Display Plane: [plane_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1576-L1766)
+
+TODO: Setup Display Hardware: [setup_display](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1865-L1969)
+
 # Call Flow for DC8200 Virtual Display Driver
 
 TODO
