@@ -4869,7 +4869,7 @@ Here are the [Linux Drivers for DC8200 Display Controller](https://doc-en.rvspac
 
 - [vs_simple_enc.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_simple_enc.c): [Display Subsystem (DSS)](https://software-dl.ti.com/processor-sdk-linux/esd/docs/06_03_00_106/linux/Foundational_Components/Kernel/Kernel_Drivers/Display/DSS.html) Encoder
 
-- [vs_gem.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_gem.c): GEM Memory Management Framework
+- [vs_gem.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_gem.c): [Graphics Execution Manager](https://en.wikipedia.org/wiki/Direct_Rendering_Manager#Graphics_Execution_Manager) (Memory Management Framework)
 
 - [vs_virtual.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_virtual.c): Virtual Display
 
@@ -4996,7 +4996,7 @@ modetest \
 
 `39@31:1920x1080@RG16` means `<Plane ID>@<CRTC ID>: <Resolution>@<Format>`
 
-(CRTC is the Display Pipeline)
+[(CRTC "CRT Controller" refers to the Display Pipeline)](https://en.wikipedia.org/wiki/Direct_Rendering_Manager#KMS_device_model)
 
 See also...
 
@@ -5010,9 +5010,92 @@ TODO: What parameters does modetest pass to the DC8200 Driver?
 
 TODO: Can we create a simpler modetest for our own testing on NuttX?
 
-# Call Flow for DC8200 Display Controller Driver
+# Direct Rendering Manager Driver for DC8200
 
 Let's walk through the code in the Linux Driver for DC8200 Display Controller, to understand how we'll implement it in NuttX.
+
+```c
+// name = "starfive"
+static struct platform_driver vs_drm_platform_driver = {
+  .probe  = vs_drm_platform_probe,
+  .remove = vs_drm_platform_remove,
+  ...
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L448-L457)
+
+TODO: Display Driver (DRM):
+
+```c
+static struct drm_driver vs_drm_driver = {
+  .driver_features    = DRIVER_MODESET | DRIVER_ATOMIC | DRIVER_GEM,
+  .lastclose          = drm_fb_helper_lastclose,
+  .prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+  .prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+  .gem_prime_import   = vs_gem_prime_import,
+  .gem_prime_import_sg_table = vs_gem_prime_import_sg_table,
+  .gem_prime_mmap     = vs_gem_prime_mmap,
+  .dumb_create        = vs_gem_dumb_create,
+#ifdef CONFIG_DEBUG_FS
+  .debugfs_init       = vs_debugfs_init,
+#endif
+  .fops  = &fops,
+  .name  = "starfive",
+  .desc  = "VeriSilicon DRM driver",
+  .date  = "20191101",
+  .major = DRV_MAJOR,
+  .minor = DRV_MINOR,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L125-L143)
+
+```c
+static struct platform_driver *drm_sub_drivers[] = {
+  /* put display control driver at start */
+  &dc_platform_driver,
+
+  /* connector */
+#ifdef CONFIG_STARFIVE_INNO_HDMI
+  &inno_hdmi_driver,
+#endif
+
+  &simple_encoder_driver,
+
+#ifdef CONFIG_VERISILICON_VIRTUAL_DISPLAY
+  &virtual_display_platform_driver,
+#endif
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L301-L315)
+
+(More about [dc_platform_driver](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc.c#L1642-L1649) in the next section)
+
+[vs_drm_init](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L459-L472) registers [drm_sub_drivers](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L301-L315) and [vs_drm_platform_driver](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L448-L457)
+ at startup.
+
+Display Driver File Operations:
+
+```c
+static const struct file_operations fops = {
+  .owner     = THIS_MODULE,
+  .open      = drm_open,
+  .release   = drm_release,
+  .unlocked_ioctl = drm_ioctl,
+  .compat_ioctl   = drm_compat_ioctl,
+  .poll      = drm_poll,
+  .read      = drm_read,
+  .mmap      = vs_gem_mmap,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L54-L63)
+
+[(More about Direct Rendering Manager)](https://en.wikipedia.org/wiki/Direct_Rendering_Manager)
+
+# Call Flow for DC8200 Display Controller Driver
 
 The DC8200 Driver exposes 2 Platform Functions...
 
@@ -5210,83 +5293,6 @@ struct platform_driver virtual_display_platform_driver = {
 ```
 
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_virtual.c#L353-L360)
-
-Display Driver (DRM):
-
-```c
-static struct drm_driver vs_drm_driver = {
-  .driver_features    = DRIVER_MODESET | DRIVER_ATOMIC | DRIVER_GEM,
-  .lastclose          = drm_fb_helper_lastclose,
-  .prime_handle_to_fd = drm_gem_prime_handle_to_fd,
-  .prime_fd_to_handle = drm_gem_prime_fd_to_handle,
-  .gem_prime_import   = vs_gem_prime_import,
-  .gem_prime_import_sg_table = vs_gem_prime_import_sg_table,
-  .gem_prime_mmap     = vs_gem_prime_mmap,
-  .dumb_create        = vs_gem_dumb_create,
-#ifdef CONFIG_DEBUG_FS
-  .debugfs_init       = vs_debugfs_init,
-#endif
-  .fops  = &fops,
-  .name  = "starfive",
-  .desc  = "VeriSilicon DRM driver",
-  .date  = "20191101",
-  .major = DRV_MAJOR,
-  .minor = DRV_MINOR,
-};
-```
-
-[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L125-L143)
-
-```c
-static struct platform_driver *drm_sub_drivers[] = {
-	/* put display control driver at start */
-	&dc_platform_driver,
-
-	/* connector */
-#ifdef CONFIG_STARFIVE_INNO_HDMI
-	&inno_hdmi_driver,
-#endif
-
-	&simple_encoder_driver,
-
-#ifdef CONFIG_VERISILICON_VIRTUAL_DISPLAY
-	&virtual_display_platform_driver,
-#endif
-};
-```
-
-[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L301-L315)
-
-```c
-// name = "starfive"
-static struct platform_driver vs_drm_platform_driver = {
-	.probe = vs_drm_platform_probe,
-	.remove = vs_drm_platform_remove,
-  ...
-};
-```
-
-[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L448-L457)
-
-[vs_drm_init](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L459-L472) registers [drm_sub_drivers](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L301-L315) and [vs_drm_platform_driver](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L448-L457)
- at startup.
-
-Display Driver File Operations:
-
-```c
-static const struct file_operations fops = {
-  .owner     = THIS_MODULE,
-  .open      = drm_open,
-  .release   = drm_release,
-  .unlocked_ioctl = drm_ioctl,
-  .compat_ioctl   = drm_compat_ioctl,
-  .poll      = drm_poll,
-  .read      = drm_read,
-  .mmap      = vs_gem_mmap,
-};
-```
-
-[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L54-L63)
 
 Display Pipelines:
 
