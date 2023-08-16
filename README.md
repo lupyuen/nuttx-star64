@@ -5223,38 +5223,10 @@ Display Planes Info: [dc_hw_planes](https://github.com/starfive-tech/linux/blob/
 
 Display Controller Info: [dc_info](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1086-L1150)
 
-```c
-static const struct dc_hw_funcs hw_func = {
-  .gamma   = &gamma_ex_commit,
-  .plane   = &plane_ex_commit,
-  .display = setup_display_ex,
-};
-```
-
-[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L2032-L2036)
-
-Setup Display:
-
-- [setup_display_ex](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1971-L2030), which calls...
-
-- [setup_display](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1865-L1969)
-
-Commit Display Plane:
-
-- [plane_ex_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1768-L1863), which calls...
-
-- [plane_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1576-L1766)
-
-[plane_ex_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1768-L1863) and [gamma_ex_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1548-L1574) are called by [dc_hw_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L2038-L2076)
-
 Initialise Display Hardware: [dc_hw_init](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1301-L1361)
 - Read the Hardware Revision and Chip ID
 - Initialise every Layer / Display Plane
 - Initialise every Panel (Cursor)
-
-Setup Display Hardware: [dc_hw_setup_display](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1480-L1487)
-- Copy Display Struct
-- Call [setup_display_ex](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1971-L2030)
 
 Commit Display Hardware: [dc_hw_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L2038-L2076)
 - Call [gamma_ex_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1548-L1574)
@@ -5268,9 +5240,60 @@ Update Display Plane: [dc_hw_update_plane](https://github.com/starfive-tech/linu
 - Copy Position
 - Copy Blend
 
-TODO: Commit Display Plane: [plane_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1576-L1766)
+Display Hardware Functions:
 
-TODO: Setup Display Hardware: [setup_display](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1865-L1969)
+```c
+static const struct dc_hw_funcs hw_func = {
+  .gamma   = &gamma_ex_commit,
+  .plane   = &plane_ex_commit,
+  .display = setup_display_ex,
+};
+```
+
+[(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L2032-L2036)
+
+Setup Display (Upper Level): [dc_hw_setup_display](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1480-L1487)
+- Copy Display Struct
+- Call [setup_display_ex](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1971-L2030)
+
+Setup Display (Extended): [setup_display_ex](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1971-L2030)
+- Set Colour Format
+- Call [setup_display](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1865-L1969)
+
+Setup Display (Lower Level): [setup_display](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1865-L1969)
+- Set DPI Config
+- Disable Display Panel
+- Set Display Horizontal Resolution
+- Set Display Horizontal Sync
+- Set Display Vertical Resolution
+- Set Display Vertical Resolution Sync
+- Configure Framebuffer Sync Mode
+- Set Framebuffer Background Colour
+- Set Display Dither
+- Enable Display Panel
+- Set Overlay Config
+- Set Cursor Config
+
+Commit Display Plane (Extended): [plane_ex_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1768-L1863)
+- Set Colour Space
+- Set Gamma
+- Call [plane_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1576-L1766)
+
+Commit Display Plane: [plane_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1576-L1766)
+- For every Layer / Display Plane:
+- Set Framebuffer YUV Address
+- Set Framebuffer YUV Stride
+- Set Framebuffer Width and Height
+- Clear Framebuffer
+- Set Primary Framebuffer Config
+- Set Non-Primary Framebuffer Config
+- Enable Framebuffer Scaling (X and Y)
+- Set Framebuffer Offset (X and Y)
+- Set Framebuffer Blending
+- Set Colour Key / Transparency
+- Set ROI
+
+[plane_ex_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1768-L1863) and [gamma_ex_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1548-L1574) are called by [dc_hw_commit](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L2038-L2076)
 
 # Call Flow for DC8200 Virtual Display Driver
 
