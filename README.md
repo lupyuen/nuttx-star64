@@ -5076,7 +5076,7 @@ static struct platform_driver *drm_sub_drivers[] = {
 [vs_drm_init](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L459-L472) registers [drm_sub_drivers](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L301-L315) and [vs_drm_platform_driver](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L448-L457)
  at startup.
 
-Display Driver File Operations:
+TODO: Display Driver File Operations:
 
 ```c
 static const struct file_operations fops = {
@@ -5097,7 +5097,7 @@ static const struct file_operations fops = {
 
 # Call Flow for DC8200 Display Controller Driver
 
-The DC8200 Driver exposes 2 Platform Functions...
+The DC8200 Controller Driver is named "vs-dc" (for VeriSilicon)...
 
 ```c
 // name = "vs-dc"
