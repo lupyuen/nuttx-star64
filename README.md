@@ -5299,6 +5299,10 @@ Commit Display Plane: [plane_commit](https://github.com/starfive-tech/linux/blob
 
 TODO
 
+At startup, [vs_drm_bind](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L193-L271) calls [vs_mode_config_init](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_fb.c#L178-L191) to register the Framebuffer Driver: [vs_mode_config_funcs](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_fb.c#L166-L172).
+
+Which is defined as...
+
 ```c
 static const struct drm_mode_config_funcs vs_mode_config_funcs = {
   .fb_create       = vs_fb_create,
