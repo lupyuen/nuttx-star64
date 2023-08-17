@@ -30,6 +30,10 @@ Earlier articles...
 
 -   ["Rolling to RISC-V"](https://lupyuen.github.io/articles/pinephone2#rolling-to-risc-v)
 
+Many thanks to CNXSoft for the coverage...
+
+-   ["Star64 RISC-V SBC can now boot Apache NuttX real-time operating system"](https://www.cnx-software.com/2023/08/17/star64-risc-v-sbc-apache-nuttx-real-time-operating-system/)
+
 Let's port Apache NuttX RTOS to [Pine64 Star64](https://wiki.pine64.org/wiki/STAR64) 64-bit RISC-V SBC!
 
 (Based on [StarFive JH7110 SoC](https://doc-en.rvspace.org/Doc_Center/jh7110.html))
@@ -66,6 +70,10 @@ Maybe someday we'll do Daily Automated Testing...
 
 # Linux Images for Star64
 
+Read the article...
+
+-   ["Inspecting the RISC-V Linux Images for Star64 JH7110 SBC"](https://lupyuen.github.io/articles/star64)
+
 Let's examine the Linux Images for Star64 SBC, to see how U-Boot Bootloader is configured. (We'll boot NuttX later with U-Boot)
 
 According to [Software Releases for Star64](https://wiki.pine64.org/wiki/STAR64#Software_releases), we have...
@@ -81,6 +89,10 @@ According to [Software Releases for Star64](https://wiki.pine64.org/wiki/STAR64#
 Current state of RISC-V Linux: [Linux on RISC-V (2022)](https://docs.google.com/presentation/d/1A0A6DnGyXR_MPpeg7QunQbv_yePPqid_uRswQe8Sj8M/edit#slide=id.p)
 
 # Armbian Image for Star64
+
+Read the article...
+
+-   ["Inspecting the RISC-V Linux Images for Star64 JH7110 SBC"](https://lupyuen.github.io/articles/star64)
 
 Let's inspect the Armbian Image for Star64: [Armbian 23.8 Lunar (Minimal)](https://github.com/armbianro/os/releases/download/23.8.0-trunk.56/Armbian_23.8.0-trunk.56_Star64_lunar_edge_5.15.0_minimal.img.xz)
 
@@ -187,6 +199,10 @@ TODO: Explain `boot/uInitrd` RAM Disk
 
 # Yocto Image for Star64
 
+Read the article...
+
+-   ["Inspecting the RISC-V Linux Images for Star64 JH7110 SBC"](https://lupyuen.github.io/articles/star64)
+
 Let's inspect the Yocto Image for Star64: [star64-image-minimal](https://pine64.my-ho.st:8443/star64-image-minimal-star64-1.2.wic.bz2)
 
 Uncompress the .bz2, rename as .img. Balena Etcher won't work with .bz2 files!
@@ -274,6 +290,10 @@ lrwxrwxrwx 1       17 Mar  9  2018 fitImage -> fitImage-5.15.107
 
 # Boot NuttX with U-Boot Bootloader
 
+Read the article...
+
+-   ["Inspecting the RISC-V Linux Images for Star64 JH7110 SBC"](https://lupyuen.github.io/articles/star64)
+
 _Will we boot NuttX with Armbian or Yocto settings?_
 
 Armbian looks simpler, since it uses a plain Linux Kernel Image File `Image`. (Instead of Yocto's complicated Flat Image Tree)
@@ -287,6 +307,10 @@ NuttX Kernel will begin with a RISC-V Linux Header. (See next section)
 We'll use a Temporary File for the Flattened Device Tree (FDT) since it's missing from Armbian.
 
 # Inside the Armbian Kernel Image
+
+Read the article...
+
+-   ["Inspecting the RISC-V Linux Images for Star64 JH7110 SBC"](https://lupyuen.github.io/articles/star64)
 
 _What's inside the Armbian Linux Kernel Image?_
 
@@ -321,6 +345,10 @@ Let's decompile the Kernel Image...
 TODO: Explain MZ and the funny RISC-V instruction at the top
 
 # Decompile Armbian Kernel Image with Ghidra
+
+Read the article...
+
+-   ["Inspecting the RISC-V Linux Images for Star64 JH7110 SBC"](https://lupyuen.github.io/articles/star64)
 
 We decompile the Armbian Linux Kernel Image with [Ghidra](https://github.com/NationalSecurityAgency/ghidra).
 
@@ -370,6 +398,10 @@ TODO: Any interesting CSR Instructions?
 
 # Serial Console on Star64
 
+Read the article...
+
+-   ["Booting RISC-V Linux on Star64 JH7110 SBC"](https://lupyuen.github.io/articles/linux)
+
 To access the Serial Console, we connect a [USB Serial Adapter](https://pine64.com/product/serial-console-woodpecker-edition/) to Star64...
 
 ![Star64 JH7110 RISC-V SBC with Woodpecker USB Serial Adapter](https://lupyuen.github.io/images/linux-title.jpg)
@@ -405,6 +437,10 @@ We'll see this U-Boot Bootloader Log...
 TODO: Explain [OpenSBI](https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/)
 
 # Star64 U-Boot Bootloader Log
+
+Read the article...
+
+-   ["Booting RISC-V Linux on Star64 JH7110 SBC"](https://lupyuen.github.io/articles/linux)
 
 Here's the log for U-Boot Bootloader on Star64 (without microSD Card)...
 
@@ -725,6 +761,10 @@ StarFive #
 
 # Boot Armbian on Star64
 
+Read the article...
+
+-   ["Booting RISC-V Linux on Star64 JH7110 SBC"](https://lupyuen.github.io/articles/linux)
+
 Let's boot Armbian on Star64!
 
 We download the Armbian Image for Star64: [Armbian 23.8 Lunar (Minimal)](https://github.com/armbianro/os/releases/download/23.8.0-trunk.56/Armbian_23.8.0-trunk.56_Star64_lunar_edge_5.15.0_minimal.img.xz)
@@ -773,6 +813,10 @@ The missing Device Tree is noted in this [__Pine64 Forum Post__](https://forum.p
 
 # Boot Yocto on Star64
 
+Read the article...
+
+-   ["Booting RISC-V Linux on Star64 JH7110 SBC"](https://lupyuen.github.io/articles/linux)
+
 Now we boot Yocto on Star64.
 
 We download the Yocto Minimal Image for Star64: [star64-image-minimal](https://pine64.my-ho.st:8443/star64-image-minimal-star64-1.2.wic.bz2)
@@ -795,6 +839,10 @@ Yep the Yocto Minimal Image boots OK on Star64!
 
 # Boot Yocto Plasma on Star64
 
+Read the article...
+
+-   ["Booting RISC-V Linux on Star64 JH7110 SBC"](https://lupyuen.github.io/articles/linux)
+
 Finally we boot Yocto Plasma on Star64.
 
 We download the Yocto Plasma Image for Star64: [star64-image-plasma](https://pine64.my-ho.st:8443/star64-image-plasma-star64-1.2.wic.bz2)
@@ -814,6 +862,10 @@ Usernames and Passwords are...
 ![Yocto Plasma on Star64](https://lupyuen.github.io/images/star64-plasma.jpg)
 
 # NuttX prints to QEMU Console
+
+Read the article...
+
+-   ["Apache NuttX RTOS on RISC-V: Star64 JH7110 SBC"](https://lupyuen.github.io/articles/nuttx2)
 
 Our NuttX Kernel will print to Star64 Serial Console for debugging. Before that, let's write some RISC-V Assembly Code to print to the QEMU Console!
 
@@ -940,6 +992,10 @@ The correct output is `123123123123123123112323`. (Because of the 8 CPUs)
 
 # UART Base Address for Star64
 
+Read the article...
+
+-   ["Apache NuttX RTOS on RISC-V: Star64 JH7110 SBC"](https://lupyuen.github.io/articles/nuttx2)
+
 We'll take the UART Assembly Code from the previous section and run on Star64 / JH7110. (So we can troubleshoot the NuttX Boot Code)
 
 _Does Star64 / JH7110 use a 16550 UART Controller like QEMU?_
@@ -975,6 +1031,10 @@ NuttX UART Base Address is `0x1000` `0000`. The exact same UART Base Address for
 So no changes needed, our UART Assembly Code will run on QEMU AND Star64 yay!
 
 # RISC-V Linux Kernel Header
+
+Read the article...
+
+-   ["Apache NuttX RTOS on RISC-V: Star64 JH7110 SBC"](https://lupyuen.github.io/articles/nuttx2)
 
 For U-Boot Bootloader to boot NuttX, we need to embed the RISC-V Linux Kernel Header...
 
@@ -1070,6 +1130,10 @@ And our RISC-V Boot Code tested OK with QEMU.
 
 # Set Start Address of NuttX Kernel
 
+Read the article...
+
+-   ["Apache NuttX RTOS on RISC-V: Star64 JH7110 SBC"](https://lupyuen.github.io/articles/nuttx2)
+
 Earlier we saw that Star64's U-Boot Bootloader will load Linux Kernels into RAM at Address `0x4020` `0000`...
 
 - ["Armbian Image for Star64"](https://lupyuen.github.io/articles/star64#armbian-image-for-star64)
@@ -1140,6 +1204,10 @@ RISC-V Disassembly of NuttX Kernel shows that the Start Address is correct...
 We're ready to boot NuttX on Star64!
 
 # Boot NuttX on Star64
+
+Read the article...
+
+-   ["Apache NuttX RTOS on RISC-V: Star64 JH7110 SBC"](https://lupyuen.github.io/articles/nuttx2)
 
 Let's boot NuttX on Star64! We compile [NuttX for 64-bit RISC-V QEMU](https://lupyuen.github.io/articles/riscv#appendix-build-apache-nuttx-rtos-for-64-bit-risc-v-qemu) with these tweaks...
 
@@ -1258,6 +1326,10 @@ _[Cody AI Assistant](https://about.sourcegraph.com/cody) tries to explain our RI
 
 # NuttX Fails To Get Hart ID
 
+Read the article...
+
+-   ["Apache NuttX RTOS on RISC-V: Star64 JH7110 SBC"](https://lupyuen.github.io/articles/nuttx2)
+
 Earlier we saw NuttX crashing when booting on Star64...
 
 ```text
@@ -1287,6 +1359,10 @@ NuttX tries loads the CPU ID or Hardware Thread "Hart" ID from the RISC-V Contro
 But it fails! Because we don't have sufficient privilege to access the Hart ID...
 
 # RISC-V Privilege Levels
+
+Read the article...
+
+-   ["Apache NuttX RTOS on RISC-V: Star64 JH7110 SBC"](https://lupyuen.github.io/articles/nuttx2)
 
 RISC-V runs at 3 Privilege Levels...
 
@@ -1323,6 +1399,10 @@ Because QEMU runs everything in (super-powerful) __Machine Mode__!
 NuttX needs to fetch the Hart ID with a different recipe...
 
 # Downgrade NuttX to Supervisor Mode
+
+Read the article...
+
+-   ["Apache NuttX RTOS on RISC-V: Star64 JH7110 SBC"](https://lupyuen.github.io/articles/nuttx2)
 
 _How to get the Hart ID from OpenSBI?_
 
@@ -1422,6 +1502,10 @@ That's because the Linux Boot Code will work for Machine Level AND Supervisor Le
 Let's fix the Boot Code...
 
 # Fix the NuttX Boot Code
+
+Read the article...
+
+-   ["Apache NuttX RTOS on RISC-V: Star64 JH7110 SBC"](https://lupyuen.github.io/articles/nuttx2)
 
 From the previous section, we identified these fixes for the NuttX Boot Code...
 
