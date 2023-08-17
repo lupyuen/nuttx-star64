@@ -5100,6 +5100,8 @@ TODO: Can we create a simpler modetest for our own testing on NuttX?
 
 Let's walk through the code in the Linux Driver for DC8200 Display Controller, to understand how we'll implement it in NuttX.
 
+The DRM Driver is named "starfive"...
+
 ```c
 // name = "starfive"
 static struct platform_driver vs_drm_platform_driver = {
@@ -5111,7 +5113,7 @@ static struct platform_driver vs_drm_platform_driver = {
 
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L448-L457)
 
-TODO: Display Driver (DRM):
+Here are the DRM Operations supported by the driver...
 
 ```c
 static struct drm_driver vs_drm_driver = {
@@ -5136,6 +5138,8 @@ static struct drm_driver vs_drm_driver = {
 ```
 
 [(Source)](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L125-L143)
+
+The DRM Driver includes these Sub Drivers...
 
 ```c
 static struct platform_driver *drm_sub_drivers[] = {
@@ -5162,7 +5166,7 @@ static struct platform_driver *drm_sub_drivers[] = {
 [vs_drm_init](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L459-L472) registers [drm_sub_drivers](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L301-L315) and [vs_drm_platform_driver](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L448-L457)
  at startup.
 
-TODO: Display Driver File Operations:
+Here are the File Operations supported by the DRM Driver...
 
 ```c
 static const struct file_operations fops = {
