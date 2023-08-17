@@ -5096,6 +5096,8 @@ TODO: Can we create a simpler modetest for our own testing on NuttX?
 
 # Direct Rendering Manager Driver for DC8200
 
+![JH7110 Linux Display Driver](https://lupyuen.github.io/images/jh7110-display.jpg)
+
 Let's walk through the code in the Linux Driver for DC8200 Display Controller, to understand how we'll implement it in NuttX.
 
 ```c
