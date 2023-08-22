@@ -5187,6 +5187,8 @@ static const struct file_operations fops = {
 
 [(More about Direct Rendering Manager)](https://en.wikipedia.org/wiki/Direct_Rendering_Manager)
 
+[(__Justin / Fishwaldo__ suggests that we check out the simpler HDMI Driver in U-Boot)](https://fosstodon.org/@Fishwaldo/110902984442385966)
+
 # Call Flow for DC8200 Display Controller Driver
 
 The DC8200 Controller Driver is named "vs-dc" (for VeriSilicon)...
@@ -5620,6 +5622,8 @@ The factory test reference source code has been mirrored here (for quicker downl
 Let's look inside the Factory Test Code...
 
 # PineTab-V Device Tree
+
+[(__LCD Panel in PineTab-V__ is actually BOE TH101MB31IG002-28A)](https://fosstodon.org/@Fishwaldo/110902984462760802)
 
 Inside the PineTab-V Factory Test Code (from previous section), we see the PineTab-V Device Tree for Linux:
 
