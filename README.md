@@ -5629,6 +5629,16 @@ Here's the [LCD Initialisation Process](https://doc-en.rvspace.org/VisionFive2/D
 
 And the [MIPI Parameter Configuration](https://doc-en.rvspace.org/VisionFive2/DG_LCD/JH7110_SDK/mipi_configuration.html) for 1C2L (2-lane MIPI DSI) and 1C4L (4-lane MIPI DSI).
 
+# HDMI Driver for U-Boot Bootloader
+
+TODO
+
+[__Justin (Fishwaldo)__](https://fosstodon.org/@Fishwaldo/110902984442385966) suggests that we check out the simpler HDMI Driver in __U-Boot Bootloader__...
+
+- [__U-Boot Display Driver for JH7110__](https://github.com/starfive-tech/u-boot/tree/JH7110_VisionFive2_devel/drivers/video/starfive)
+
+- [__dc_hw_init__ looks awfully familiar](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248)
+
 # PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
