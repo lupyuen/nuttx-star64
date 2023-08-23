@@ -4893,6 +4893,10 @@ CONFIG_16550_UART0_CLOCK=23040000
 
 # HDMI Display for Star64 JH7110
 
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Inside the Display Controller"](https://lupyuen.github.io/articles/display2)
+
 _Will NuttX work with the HDMI Display on Star64?_
 
 Let's find out! Maybe our HDMI code will be reused for PineTab-V's MIPI DSI Display Panel. Here are the official docs...
@@ -4928,6 +4932,10 @@ And we have the [Display Subsystem Clock and Reset](https://doc-en.rvspace.org/J
 So to make HDMI work on JH7110, we need a create a NuttX Driver for the DC8200 Display Controller...
 
 # DC8200 Display Controller for Star64 JH7110
+
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Inside the Display Controller"](https://lupyuen.github.io/articles/display2)
 
 Let's talk about the __DC8200 Dual Display Controller__.
 
@@ -5098,6 +5106,10 @@ TODO: Can we create a simpler modetest for our own testing on NuttX?
 
 # Direct Rendering Manager Driver for DC8200
 
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Inside the Display Controller"](https://lupyuen.github.io/articles/display2)
+
 ![JH7110 Linux Display Driver](https://lupyuen.github.io/images/jh7110-display.jpg)
 
 Let's walk through the code in the Linux Driver for DC8200 Display Controller, to understand how we'll implement it in NuttX.
@@ -5190,6 +5202,10 @@ static const struct file_operations fops = {
 [(__Justin / Fishwaldo__ suggests that we check out the simpler HDMI Driver in U-Boot)](https://fosstodon.org/@Fishwaldo/110902984442385966)
 
 # Call Flow for DC8200 Display Controller Driver
+
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Inside the Display Controller"](https://lupyuen.github.io/articles/display2)
 
 The DC8200 Controller Driver is named "vs-dc" (for VeriSilicon)...
 
@@ -5311,7 +5327,9 @@ Refer to [Linux DRM Internals](https://www.kernel.org/doc/html/v4.15/gpu/drm-int
 
 # Call Flow for DC8200 Display Hardware Driver
 
-TODO
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Inside the Display Controller"](https://lupyuen.github.io/articles/display2)
 
 Display Planes Info: [dc_hw_planes](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L472-L1084)
 
@@ -5391,7 +5409,9 @@ Commit Display Plane: [plane_commit](https://github.com/starfive-tech/linux/blob
 
 # Call Flow for DC8200 Framebuffer Driver
 
-TODO
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Inside the Display Controller"](https://lupyuen.github.io/articles/display2)
 
 At startup, [vs_drm_bind](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_drv.c#L193-L271) calls [vs_mode_config_init](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_fb.c#L178-L191) to register the Framebuffer Driver: [vs_mode_config_funcs](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_fb.c#L166-L172).
 
