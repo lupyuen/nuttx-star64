@@ -5631,6 +5631,8 @@ And the [MIPI Parameter Configuration](https://doc-en.rvspace.org/VisionFive2/DG
 
 # HDMI Driver for U-Boot Bootloader
 
+We're building the NuttX HDMI Driver for Star64 JH7110 RISC-V SBC.
+
 [__Justin (Fishwaldo)__](https://fosstodon.org/@Fishwaldo/110902984442385966) suggests that we check out the simpler HDMI Driver in __U-Boot Bootloader__...
 
 - [__U-Boot Display Driver for JH7110__](https://github.com/starfive-tech/u-boot/tree/JH7110_VisionFive2_devel/drivers/video/starfive)
