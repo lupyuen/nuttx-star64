@@ -5643,11 +5643,11 @@ Here's our analysis of the Display Driver in U-Boot (which calls the HDMI Driver
 
   TODO: Who calls [sf_vop_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L657-L699)?
 
-- [sf_vop_power](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L76-L112): Power on
+- [sf_vop_power](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L76-L112): Power on (Where is the code?)
 
 - [vout_probe_resources_jh7110](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L250-L367): Enable Clocks noc_disp, vout_src, top_vout_axi, top_vout_ahb, dc_pix0, dc_pix1, dc_axi, dc_core, dc_ahb, hdmitx0_pixelclk. Deassert Resets noc_disp, rst_vout_src, dc8200_rst_axi, dc8200_rst_core, dc8200_rst_ahb. (Similar to [Linux Driver vs_dc_enable](https://lupyuen.github.io/articles/display2#vs_dc_enable))
 
-- [sf_display_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L369-L655): Call [dc_hw_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248) and [display_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/display-uclass.c#L23-L40). Set HDMI Clock Rate. Write to HDMI Registers.
+- [sf_display_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L369-L655): Call [dc_hw_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248) and [display_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/display-uclass.c#L23-L40). Set Clock pix_src as pix0's parent. Set HDMI Clock Rate pix_src. Write to HDMI Registers.
 
 - [dc_hw_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248): Read Hardware Revision and Chip ID (similar to [Linux Driver dc_hw_init](https://lupyuen.github.io/articles/display2))
 
