@@ -5663,6 +5663,12 @@ And here's our analysis of the Display Driver in U-Boot (which calls the HDMI Dr
 
 - [dc_hw_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248): Read Hardware Revision and Chip ID (similar to [Linux Driver dc_hw_init](https://lupyuen.github.io/articles/display2))
 
+TODO: Reconcile the above drivers with the [Official Linux Driver](https://lupyuen.github.io/articles/display2)
+
+TODO: Test on NuttX
+
+TODO: Do we really need I2C for testing HDMI?
+
 # PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
