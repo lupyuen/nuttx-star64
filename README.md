@@ -5631,15 +5631,11 @@ And the [MIPI Parameter Configuration](https://doc-en.rvspace.org/VisionFive2/DG
 
 # HDMI Driver for U-Boot Bootloader
 
-TODO
-
 [__Justin (Fishwaldo)__](https://fosstodon.org/@Fishwaldo/110902984442385966) suggests that we check out the simpler HDMI Driver in __U-Boot Bootloader__...
 
 - [__U-Boot Display Driver for JH7110__](https://github.com/starfive-tech/u-boot/tree/JH7110_VisionFive2_devel/drivers/video/starfive)
 
-- [__dc_hw_init__ looks awfully familiar](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248)
-
-TODO: Inspecting the HDMI Driver in U-Boot:
+Here's our analysis of the HDMI Driver in U-Boot:
 
 - [inno_hdmi_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L500-L541): Enable HDMI sys_clk, mclk, bclk and read HDMI Status
 
@@ -5653,7 +5649,7 @@ TODO: Inspecting the HDMI Driver in U-Boot:
 
 - [inno_hdmi_tx_ctrl](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L376-L387): Config Video Format Identification Code. bist mode: 0x00, normal mode: 0x10, phy mode: 0x4
 
-TODO: Display Driver in U-Boot:
+And here's our analysis of the Display Driver in U-Boot (which calls the HDMI Driver above):
 
 - [sf_vop_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L657-L699): Call [sf_vop_power](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L76-L112), [vout_probe_resources_jh7110](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L250-L367) and [sf_display_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L369-L655). Flush the dcache.
 
