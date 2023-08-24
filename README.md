@@ -5657,7 +5657,7 @@ And here's our analysis of the HDMI Driver in U-Boot:
 
   TODO: Who calls [inno_hdmi_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L500-L541)?
 
-- [inno_hdmi_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L444-L457): Power on HDMI Tx Phy and HDMI TDMS. Start Data Sync. Call [inno_hdmi_detect](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L32-L58) and [inno_hdmi_tx_phy_param_config](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L389-L425)
+- [inno_hdmi_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L444-L457): Configure 1920x1080 60Hz. Power on HDMI Tx Phy and HDMI TDMS. Start Data Sync. Call [inno_hdmi_detect](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L32-L58) and [inno_hdmi_tx_phy_param_config](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L389-L425)
 
   ([inno_hdmi_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L444-L457) is called by [display_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/display-uclass.c#L23-L40), which is called by [sf_display_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L369-L655))
 
