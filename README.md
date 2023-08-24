@@ -5669,6 +5669,8 @@ TODO: Test on NuttX
 
 TODO: Do we really need I2C for testing HDMI?
 
+TODO: Who calls [sf_vop_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L657-L699) and [inno_hdmi_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L500-L541)?
+
 # PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
