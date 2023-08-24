@@ -5637,9 +5637,25 @@ We're building the NuttX HDMI Driver for Star64 JH7110 RISC-V SBC.
 
 - [__U-Boot Display Driver for JH7110__](https://github.com/starfive-tech/u-boot/tree/JH7110_VisionFive2_devel/drivers/video/starfive)
 
-Here's our analysis of the HDMI Driver in U-Boot:
+Here's our analysis of the Display Driver in U-Boot (which calls the HDMI Driver below):
 
-- [inno_hdmi_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L500-L541): Enable HDMI sys_clk, mclk, bclk and read HDMI Status
+- [sf_vop_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L657-L699): Call [sf_vop_power](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L76-L112), [vout_probe_resources_jh7110](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L250-L367) and [sf_display_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L369-L655). Flush the dcache.
+
+  TODO: Who calls [sf_vop_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L657-L699)?
+
+- [sf_vop_power](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L76-L112): Power on
+
+- [vout_probe_resources_jh7110](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L250-L367): Enable Clocks noc_disp, vout_src, top_vout_axi, top_vout_ahb, dc_pix0, dc_pix1, dc_axi, dc_core, dc_ahb, hdmitx0_pixelclk. Deassert Resets noc_disp, rst_vout_src, dc8200_rst_axi, dc8200_rst_core, dc8200_rst_ahb. (Similar to [Linux Driver vs_dc_enable](https://lupyuen.github.io/articles/display2#vs_dc_enable))
+
+- [sf_display_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L369-L655): Call [dc_hw_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248) and [display_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/display-uclass.c#L23-L40). Set HDMI Clock Rate. Write to HDMI Registers.
+
+- [dc_hw_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248): Read Hardware Revision and Chip ID (similar to [Linux Driver dc_hw_init](https://lupyuen.github.io/articles/display2))
+
+And here's our analysis of the HDMI Driver in U-Boot:
+
+- [inno_hdmi_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L500-L541): Enable HDMI Clocks sys_clk, mclk, bclk. Read HDMI Status.
+
+  TODO: Who calls [inno_hdmi_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L500-L541)?
 
 - [inno_hdmi_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L444-L457): Power on HDMI Tx Phy and HDMI TDMS. Start Data Sync. Call [inno_hdmi_detect](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L32-L58) and [inno_hdmi_tx_phy_param_config](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L389-L425)
 
@@ -5653,25 +5669,11 @@ Here's our analysis of the HDMI Driver in U-Boot:
 
 - [inno_hdmi_tx_ctrl](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L376-L387): Config Video Format Identification Code. bist mode: 0x00, normal mode: 0x10, phy mode: 0x4
 
-And here's our analysis of the Display Driver in U-Boot (which calls the HDMI Driver above):
-
-- [sf_vop_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L657-L699): Call [sf_vop_power](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L76-L112), [vout_probe_resources_jh7110](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L250-L367) and [sf_display_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L369-L655). Flush the dcache.
-
-- [sf_vop_power](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L76-L112): Power on
-
-- [vout_probe_resources_jh7110](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L250-L367): Enable Clocks noc_disp, vout_src, top_vout_axi, top_vout_ahb, dc_pix0, dc_pix1, dc_axi, dc_core, dc_ahb, hdmitx0_pixelclk. Deassert Resets noc_disp, rst_vout_src, dc8200_rst_axi, dc8200_rst_core, dc8200_rst_ahb. (Similar to [Linux Driver vs_dc_enable](https://lupyuen.github.io/articles/display2#vs_dc_enable))
-
-- [sf_display_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L369-L655): Call [dc_hw_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248) and [display_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/display-uclass.c#L23-L40). Set HDMI Clock Rate. Write to HDMI Registers.
-
-- [dc_hw_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248): Read Hardware Revision and Chip ID (similar to [Linux Driver dc_hw_init](https://lupyuen.github.io/articles/display2))
-
 TODO: Reconcile the above drivers with the [Official Linux Driver](https://lupyuen.github.io/articles/display2)
 
 TODO: Test on NuttX
 
 TODO: Do we really need I2C for testing HDMI?
-
-TODO: Who calls [sf_vop_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L657-L699) and [inno_hdmi_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L500-L541)?
 
 # PineTab-V Factory Test Code
 
