@@ -5757,6 +5757,34 @@ clkvout: clock-controller@295C0000 {
 };
 ```
 
+Clocks and Resets Mapped Nicely:
+
+| Clock Names | Clocks |
+|:------------|:-------|  
+|noc_disp | JH7110_NOC_BUS_CLK_DISP_AXI
+|vout_src | JH7110_VOUT_SRC
+|top_vout_axi | JH7110_VOUT_TOP_CLK_VOUT_AXI
+|top_vout_ahb | JH7110_VOUT_TOP_CLK_VOUT_AHB
+|pix_clk | JH7110_U0_DC8200_CLK_PIX0
+|vout_pix1 | JH7110_U0_DC8200_CLK_PIX1
+|axi_clk | JH7110_U0_DC8200_CLK_AXI
+|core_clk | JH7110_U0_DC8200_CLK_CORE
+|vout_ahb | JH7110_U0_DC8200_CLK_AHB
+|vout_top_axi | JH7110_VOUT_TOP_CLK_VOUT_AXI
+|vout_top_lcd | JH7110_DOM_VOUT_TOP_LCD_CLK
+|hdmitx0_pixelclk | hdmitx0_pixelclk
+|dc8200_pix0 | JH7110_DC8200_PIX0
+|dc8200_pix0_out | JH7110_U0_DC8200_CLK_PIX0_OUT
+|dc8200_pix1_out | JH7110_U0_DC8200_CLK_PIX1_OUT
+
+| Reset Names | Resets |
+|:------------|:-------|    
+|rst_vout_src | RSTN_U0_DOM_VOUT_TOP_SRC
+|rst_axi | RSTN_U0_DC8200_AXI
+|rst_ahb | RSTN_U0_DC8200_AHB
+|rst_core | RSTN_U0_DC8200_CORE
+|rst_noc_disp | RSTN_U0_NOC_BUS_DISP_AXI_N
+
 See the [JH7110 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/memory_map_display.html) and [Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/controller_registers_display.html)
 
 TODO: Reconcile the above drivers with the [Official Linux Driver](https://lupyuen.github.io/articles/display2)
