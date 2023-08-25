@@ -5685,9 +5685,54 @@ Here's the Device Tree for U-Boot:
 
 Clocks are defined here: [clk-jh7110.c](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/clk/starfive/clk-jh7110.c)
 
-And in the Linux Device Tree: [jh7110.dtsi](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/arch/riscv/boot/dts/starfive/jh7110.dtsi#L339-L360)
+Also in Linux: [starfive-jh7110-clkgen.h](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-clkgen.h) and [starfive-jh7110-vout.h](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-vout.h)
+
+From the Linux Device Tree: [jh7110.dtsi](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/arch/riscv/boot/dts/starfive/jh7110.dtsi#L339-L360)
 
 ```text
+dc8200: dc8200@29400000 {
+  compatible = "starfive,jh7110-dc8200","verisilicon,dc8200";
+  verisilicon,dss-syscon = <&dssctrl>;//20220624 panel syscon
+  reg =
+    <0x0 0x29400000 0x0 0x100>,
+    <0x0 0x29400800 0x0 0x2000>,
+    <0x0 0x17030000 0x0 0x1000>;
+  interrupts = <95>;
+  status = "disabled";
+  clocks =
+    <&clkgen JH7110_NOC_BUS_CLK_DISP_AXI>,
+    <&clkgen JH7110_VOUT_SRC>,
+    <&clkgen JH7110_VOUT_TOP_CLK_VOUT_AXI>,
+    <&clkgen JH7110_VOUT_TOP_CLK_VOUT_AHB>,
+    <&clkvout JH7110_U0_DC8200_CLK_PIX0>,
+    <&clkvout JH7110_U0_DC8200_CLK_PIX1>,
+    <&clkvout JH7110_U0_DC8200_CLK_AXI>,
+    <&clkvout JH7110_U0_DC8200_CLK_CORE>,
+    <&clkvout JH7110_U0_DC8200_CLK_AHB>,
+    <&clkgen JH7110_VOUT_TOP_CLK_VOUT_AXI>,
+    <&clkvout JH7110_DOM_VOUT_TOP_LCD_CLK>,
+    <&hdmitx0_pixelclk>,
+    <&clkvout JH7110_DC8200_PIX0>,
+    <&clkvout JH7110_U0_DC8200_CLK_PIX0_OUT>,
+    <&clkvout JH7110_U0_DC8200_CLK_PIX1_OUT>;
+  clock-names =
+    "noc_disp","vout_src",
+    "top_vout_axi","top_vout_ahb",
+    "pix_clk","vout_pix1",
+    "axi_clk","core_clk","vout_ahb",
+    "vout_top_axi","vout_top_lcd","hdmitx0_pixelclk","dc8200_pix0",
+    "dc8200_pix0_out","dc8200_pix1_out";
+  resets = 
+    <&rstgen RSTN_U0_DOM_VOUT_TOP_SRC>,
+    <&rstgen RSTN_U0_DC8200_AXI>,
+    <&rstgen RSTN_U0_DC8200_AHB>,
+    <&rstgen RSTN_U0_DC8200_CORE>,
+    <&rstgen RSTN_U0_NOC_BUS_DISP_AXI_N>;
+  reset-names =
+    "rst_vout_src","rst_axi","rst_ahb","rst_core",
+    "rst_noc_disp";
+};
+
 clkvout: clock-controller@295C0000 {
   compatible = "starfive,jh7110-clk-vout";
   reg = <0x0 0x295C0000 0x0 0x10000>;
