@@ -5683,9 +5683,9 @@ Here's the Device Tree for U-Boot:
 
   Which includes [jh7110-u-boot.dtsi](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/arch/riscv/dts/jh7110-u-boot.dtsi)
 
-Clocks are defined here: [clk-jh7110.c](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/clk/starfive/clk-jh7110.c)
+U-Boot Clocks are defined here: [starfive-jh7110-clkgen.h](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-clkgen.h) and [clk-jh7110.c](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/clk/starfive/clk-jh7110.c)
 
-Also in Linux: [starfive-jh7110-clkgen.h](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-clkgen.h) and [starfive-jh7110-vout.h](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-vout.h)
+Linux Clocks are defined here: [starfive-jh7110-clkgen.h](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-clkgen.h) and [starfive-jh7110-vout.h](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-vout.h)
 
 From the Linux Device Tree: [jh7110.dtsi](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/arch/riscv/boot/dts/starfive/jh7110.dtsi#L339-L360)
 
