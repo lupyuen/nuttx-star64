@@ -5683,6 +5683,77 @@ Here's the Device Tree for U-Boot:
 
   Which includes [jh7110-u-boot.dtsi](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/arch/riscv/dts/jh7110-u-boot.dtsi)
 
+From U-Boot Device Tree: [jh7110.dtsi](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/arch/riscv/dts/jh7110.dtsi#L1292-L1343)
+
+```text
+dc8200: dc8200@29400000 {
+  compatible = "starfive,sf-dc8200";
+  reg = 
+    <0x0 0x29400000 0x0 0x100>,
+    <0x0 0x29400800 0x0 0x2000>;
+  reg-names = "hi", "low";
+  status = "okay";
+
+  clocks = 
+    <&clkgen JH7110_NOC_BUS_CLK_DISP_AXI>,
+    <&clkgen JH7110_VOUT_SRC>,
+    <&clkgen JH7110_VOUT_TOP_CLK_VOUT_AXI>,
+    <&clkgen JH7110_VOUT_TOP_CLK_VOUT_AHB>,
+    <&clkvout JH7110_U0_DC8200_CLK_PIX0>,
+    <&clkvout JH7110_U0_DC8200_CLK_PIX1>,
+    <&clkvout JH7110_U0_DC8200_CLK_AXI>,
+    <&clkvout JH7110_U0_DC8200_CLK_CORE>,
+    <&clkvout JH7110_U0_DC8200_CLK_AHB>,
+    <&clkvout JH7110_DOM_VOUT_TOP_LCD_CLK>,
+    <&hdmitx0_pixelclk>,
+    <&clkvout JH7110_DC8200_PIX0>,
+    <&clkvout JH7110_U0_DC8200_CLK_PIX0_OUT>,
+    <&clkvout JH7110_U0_DC8200_CLK_PIX1_OUT>;
+  clock-names =
+    "disp_axi","vout_src",
+    "top_vout_axi","top_vout_ahb",
+    "dc_pix0","dc_pix1",
+    "dc_axi","dc_core","dc_ahb",
+    "top_vout_lcd","hdmitx0_pixelclk","dc8200_pix0",
+    "dc8200_pix0_out","dc8200_pix1_out";
+  resets = 
+    <&rstgen RSTN_U0_DOM_VOUT_TOP_SRC>,
+    <&rstgen RSTN_U0_DC8200_AXI>,
+    <&rstgen RSTN_U0_DC8200_AHB>,
+    <&rstgen RSTN_U0_DC8200_CORE>,
+    <&rstgen RSTN_U0_NOC_BUS_DISP_AXI_N>;
+  reset-names =
+    "rst_vout_src","rst_axi","rst_ahb","rst_core",
+    "rst_noc_disp";
+```
+
+U-Boot Clocks and Resets Mapped Nicely:
+
+| Clock Names | Clocks |
+|:------------|:-------|  
+| disp_axi | JH7110_NOC_BUS_CLK_DISP_AXI
+| vout_src | JH7110_VOUT_SRC
+| top_vout_axi | JH7110_VOUT_TOP_CLK_VOUT_AXI
+| top_vout_ahb | JH7110_VOUT_TOP_CLK_VOUT_AHB
+| dc_pix0 | JH7110_U0_DC8200_CLK_PIX0
+| dc_pix1 | JH7110_U0_DC8200_CLK_PIX1
+| dc_axi | JH7110_U0_DC8200_CLK_AXI
+| dc_core | JH7110_U0_DC8200_CLK_CORE
+| dc_ahb | JH7110_U0_DC8200_CLK_AHB
+| top_vout_lcd | JH7110_DOM_VOUT_TOP_LCD_CLK
+| hdmitx0_pixelclk | hdmitx0_pixelclk
+| dc8200_pix0 | JH7110_DC8200_PIX0
+| dc8200_pix0_out | JH7110_U0_DC8200_CLK_PIX0_OUT
+| dc8200_pix1_out | JH7110_U0_DC8200_CLK_PIX1_OUT
+
+| Reset Names | Resets |
+|:------------|:-------|    
+| rst_vout_src | RSTN_U0_DOM_VOUT_TOP_SRC
+| rst_axi | RSTN_U0_DC8200_AXI
+| rst_ahb | RSTN_U0_DC8200_AHB
+| rst_core | RSTN_U0_DC8200_CORE
+| rst_noc_disp | RSTN_U0_NOC_BUS_DISP_AXI_N
+
 U-Boot Clocks are defined here: [starfive-jh7110-clkgen.h](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-clkgen.h) and [clk-jh7110.c](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/clk/starfive/clk-jh7110.c)
 
 Linux Clocks are defined here: [starfive-jh7110-clkgen.h](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-clkgen.h) and [starfive-jh7110-vout.h](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-vout.h)
@@ -5757,7 +5828,7 @@ clkvout: clock-controller@295C0000 {
 };
 ```
 
-Clocks and Resets Mapped Nicely:
+Linux Clocks and Resets Mapped Nicely:
 
 | Clock Names | Clocks |
 |:------------|:-------|  
