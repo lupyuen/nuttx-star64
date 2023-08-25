@@ -5647,7 +5647,11 @@ Here's our analysis of the Display Driver in U-Boot (which calls the HDMI Driver
 
 - [vout_probe_resources_jh7110](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L250-L367): Enable Clocks noc_disp, vout_src, top_vout_axi, top_vout_ahb, dc_pix0, dc_pix1, dc_axi, dc_core, dc_ahb, hdmitx0_pixelclk. Deassert Resets noc_disp, rst_vout_src, dc8200_rst_axi, dc8200_rst_core, dc8200_rst_ahb. (Similar to [Linux Driver vs_dc_enable](https://lupyuen.github.io/articles/display2#vs_dc_enable))
 
-- [sf_display_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L369-L655): Call [dc_hw_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248) and [display_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/display-uclass.c#L23-L40). Set Clock pix_src as pix0's parent. Set HDMI Clock Rate pix_src. Write to HDMI Registers.
+- [sf_display_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L369-L655): Call [dc_hw_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248), [device_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/core/device.c#L484-L596) and [display_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/display-uclass.c#L23-L40). Set Clock pix_src as pix0's parent. Set HDMI Clock Rate pix_src. Write to HDMI Registers.
+
+  ([device_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/core/device.c#L484-L596) calls [inno_hdmi_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L500-L541), which is explained below)
+
+  ([display_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/display-uclass.c#L23-L40) calls [inno_hdmi_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L444-L457), which is explained below)
 
 - [dc_hw_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L237-L248): Read Hardware Revision and Chip ID (similar to [Linux Driver dc_hw_init](https://lupyuen.github.io/articles/display2))
 
@@ -5655,7 +5659,7 @@ And here's our analysis of the HDMI Driver in U-Boot:
 
 - [inno_hdmi_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L500-L541): Enable HDMI Clocks sys_clk, mclk, bclk. Read HDMI Status.
 
-  TODO: Who calls [inno_hdmi_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L500-L541)?
+  ([inno_hdmi_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L500-L541) is called by [device_probe](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/core/device.c#L484-L596), which is called by [sf_display_init](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_vop.c#L369-L655))
 
 - [inno_hdmi_enable](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L444-L457): Configure 1920x1080 60Hz. Power on HDMI Tx Phy and HDMI TDMS. Start Data Sync. Call [inno_hdmi_detect](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L32-L58) and [inno_hdmi_tx_phy_param_config](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L389-L425)
 
@@ -5668,6 +5672,16 @@ And here's our analysis of the HDMI Driver in U-Boot:
 - [inno_hdmi_config_1920x1080p60](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L245-L288): Config PLL for 1080p, 60hz
 
 - [inno_hdmi_tx_ctrl](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L376-L387): Config Video Format Identification Code. bist mode: 0x00, normal mode: 0x10, phy mode: 0x4
+
+Here's the Device Tree for U-Boot:
+
+- [starfive_visionfive2.dts](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/arch/riscv/dts/starfive_visionfive2.dts)
+
+  Which includes [jh7110.dtsi](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/arch/riscv/dts/jh7110.dtsi)
+
+- [starfive_visionfive2-u-boot.dtsi](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/arch/riscv/dts/starfive_visionfive2-u-boot.dtsi)
+
+  Which includes [jh7110-u-boot.dtsi](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/arch/riscv/dts/jh7110-u-boot.dtsi)
 
 TODO: Reconcile the above drivers with the [Official Linux Driver](https://lupyuen.github.io/articles/display2)
 
