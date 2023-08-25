@@ -5685,6 +5685,35 @@ Here's the Device Tree for U-Boot:
 
 Clocks are defined here: [clk-jh7110.c](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/clk/starfive/clk-jh7110.c)
 
+And in the Linux Device Tree: [jh7110.dtsi](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/arch/riscv/boot/dts/starfive/jh7110.dtsi#L339-L360)
+
+```text
+clkvout: clock-controller@295C0000 {
+  compatible = "starfive,jh7110-clk-vout";
+  reg = <0x0 0x295C0000 0x0 0x10000>;
+  reg-names = "vout";
+  clocks = 
+    <&hdmitx0_pixelclk>,
+    <&mipitx_dphy_rxesc>,
+    <&mipitx_dphy_txbytehs>,
+    <&clkgen JH7110_VOUT_SRC>,
+    <&clkgen JH7110_VOUT_TOP_CLK_VOUT_AHB>;
+  clock-names =
+    "hdmitx0_pixelclk",
+    "mipitx_dphy_rxesc",
+    "mipitx_dphy_txbytehs",
+    "vout_src",
+    "vout_top_ahb";
+  resets = <&rstgen RSTN_U0_DOM_VOUT_TOP_SRC>;
+  reset-names = "vout_src";
+  #clock-cells = <1>;
+  power-domains = <&pwrc JH7110_PD_VOUT>;
+  status = "okay";
+};
+```
+
+See the [JH7110 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/memory_map_display.html) and [Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/controller_registers_display.html)
+
 TODO: Reconcile the above drivers with the [Official Linux Driver](https://lupyuen.github.io/articles/display2)
 
 TODO: Test on NuttX
