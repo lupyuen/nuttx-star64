@@ -6095,6 +6095,15 @@ From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system
 
 TODO: Which Power Domains are already enabled?
 
+[Current Power Mode](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html) is at Offset Address 0x80. (Address 0x17030080)
+
+From U-Boot Log above, Current Power Mode is 3, which means...
+- Bit [0]	systop_power_mode: SYSTOP turn-on power mode is Enabled
+- Bit [1]	cpu_power_mode: CPU turn-on power mode is Enabled
+- But Bit [4]	vout_power_mode: VOUT turn-on power mode is Disabled!
+
+TODO: Enable vout_power_mode
+
 From [Bus Connection](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/bus_connection.html):
 
 ![Bus Connection](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/stg_mtrx_connection17.png)
