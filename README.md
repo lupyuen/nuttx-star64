@@ -6047,16 +6047,20 @@ From [System Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM
 
 clk_u0_dom_vout_top_clk_dom_vout_top_clk_vout_src
 
-Offset	16’he4
+Offset	16’he8
 
 Bit [31]	clk_icg	1	
 - 1: Clock enable
 - 0: Clock disable
 
 ```text
-md 130200e4 1
-mw 130200e4 0x80000000 1
-md 130200e4 1
+# md 130200e8 1
+130200e8: 00000000                             ....
+
+# mw 130200e8 0x80000000 1
+
+# md 130200e8 1
+130200e8: 80000000                             ....
 
 md 29400000 0x80
 md 29480000 0x80
@@ -6074,7 +6078,13 @@ Bit [11]	rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src	1
 - 0: De-assert reset
 
 ```text
-md 130200fc 1
+# md 130202fc 1
+130202fc: 07e7fe00                             ....
+
+# mw 130202fc 0x7e7f600 1
+
+# md 130202fc 1
+130202fc: 07e7f600                             ....
 ```
 
 [SYS SYSCON: System Configuration Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_syscon.html)
