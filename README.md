@@ -6073,17 +6073,27 @@ clk_u0_dom_vout_top_clk_dom_vout_top_clk_vout_src
 
 Offset	16’he4
 
-[31]	clk_icg	1	
+Bit [31]	clk_icg	1	
 - 1: Clock enable
 - 0: Clock disable
+
+```text
+md 130300e4 1
+mw 130300e4 0x??? 1
+md 130300e4 1
+```
 
 Software RESET 1 Address Selector
 
 Offset	16’h2fc
 
-[11]	rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src	1	
+Bit [11]	rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src	1	
 - 1: Assert reset
 - 0: De-assert reset
+
+```text
+md 130300fc 1
+```
 
 TODO: Which SYSCON Registers are already configured?
 
