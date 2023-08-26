@@ -6007,16 +6007,6 @@ Display Controller (vout_crg) is clocked and reset by...
 
 TODO: Enable the above clocks and deassert the above reset
 
-From [Power Management](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/overview_pm.html):
-
-![Power Management](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/power_stratey.png)
-
-Display Controller (vout) is powered by the Power Domains...
-- dom_dig
-- dom_vout
-
-TODO: Enable the above Power Domains
-
 [SYS CRG: System Clock and Reset Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html)
 
 From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html), System CRG is at 0x1302_0000
@@ -6045,9 +6035,7 @@ TODO: Which Clocks and Registers are already enabled / deasserted?
 
 From [System Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html)
 
-clk_u0_dom_vout_top_clk_dom_vout_top_clk_vout_src
-
-Offset	16’he8
+clk_u0_dom_vout_top_clk_dom_vout_top_clk_vout_src: Offset	0xe8
 
 Bit [31]	clk_icg	1	
 - 1: Clock enable
@@ -6069,9 +6057,61 @@ md 295B0000 0x80
 md 295C0000 0x80
 ```
 
-Software RESET 1 Address Selector
+Clock AHB 1: Offset	0x28
 
-Offset	16’h2fc
+MCLK Out: Offset	0x4c
+
+clk_u0_sft7110_noc_bus_clk_cpu_axi: Offset	0x98
+
+clk_u0_sft7110_noc_bus_clk_axicfg0_axi: Offset	0x9c
+
+Clock NOC Display AXI: Offset	0xf0
+
+Clock Video Output AHB: Offset	0xf4
+
+Clock Video Output AXI: Offset	0xf8
+
+Clock Video Output HDMI TX0 MCLK: Offset	0xfc
+
+```text
+md 13020028 1
+mw 13020028 0x80000000 1
+md 13020028 1
+
+md 1302004c 1
+mw 1302004c 0x80000000 1
+md 1302004c 1
+
+md 13020098 1
+mw 13020098 0x80000000 1
+md 13020098 1
+
+md 1302009c 1
+mw 1302009c 0x80000000 1
+md 1302009c 1
+
+md 130200e8 1
+mw 130200e8 0x80000000 1
+md 130200e8 1
+
+md 130200f0 1
+mw 130200f0 0x80000000 1
+md 130200f0 1
+
+md 130200f4 1
+mw 130200f4 0x80000000 1
+md 130200f4 1
+
+md 130200f8 1
+mw 130200f8 0x80000000 1
+md 130200f8 1
+
+md 130200fc 1
+mw 130200fc 0x80000000 1
+md 130200fc 1
+```
+
+Software RESET 1 Address Selector: Offset	0x2fc
 
 Bit [11]	rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src	1	
 - 1: Assert reset
@@ -6138,6 +6178,16 @@ From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system
 ```
 
 TODO: Which Power Domains are already enabled?
+
+From [Power Management](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/overview_pm.html):
+
+![Power Management](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/power_stratey.png)
+
+Display Controller (vout) is powered by the Power Domains...
+- dom_dig
+- dom_vout
+
+TODO: Enable the above Power Domains
 
 [Current Power Mode](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html) is at Offset Address 0x80. (Address 0x17030080)
 
