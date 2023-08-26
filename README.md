@@ -6079,8 +6079,14 @@ Bit [31]	clk_icg	1
 
 ```text
 md 130300e4 1
-mw 130300e4 0x??? 1
+mw 130300e4 0x80000000 1
 md 130300e4 1
+
+md 29400000 0x80
+md 29480000 0x80
+md 29590000 0x80
+md 295B0000 0x80
+md 295C0000 0x80
 ```
 
 Software RESET 1 Address Selector
