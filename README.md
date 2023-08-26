@@ -5862,6 +5862,16 @@ TODO: Test on NuttX
 
 TODO: Do we really need I2C for testing HDMI?
 
+# Poking the Star64 JH7110 Display Controller with U-Boot Bootloader
+
+In the olden days we would `peek` and `poke` the Display Controller, to see weird and wonderful displays.
+
+Today (46 years later), we'll do it with Star64 JH7110 Display Controller and a modern tool: U-Boot Bootloader!
+
+(Spoiler: No weird and wonderful displays for today!)
+
+TODO
+
 # PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
