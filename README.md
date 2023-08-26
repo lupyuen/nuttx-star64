@@ -6067,6 +6067,24 @@ From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system
 130300f0: 00000000 00000000 00000000 00000000  ................
 ```
 
+From [System Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html)
+
+clk_u0_dom_vout_top_clk_dom_vout_top_clk_vout_src
+
+Offset	16’he4
+
+[31]	clk_icg	1	
+- 1: Clock enable
+- 0: Clock disable
+
+Software RESET 1 Address Selector
+
+Offset	16’h2fc
+
+[11]	rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src	1	
+- 1: Assert reset
+- 0: De-assert reset
+
 TODO: Which SYSCON Registers are already configured?
 
 [PMU: Power Management Unit Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html)
