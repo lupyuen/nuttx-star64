@@ -6035,28 +6035,6 @@ TODO: Which Clocks and Registers are already enabled / deasserted?
 
 From [System Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html)
 
-clk_u0_dom_vout_top_clk_dom_vout_top_clk_vout_src: Offset	0xe8
-
-Bit [31]	clk_icg	1	
-- 1: Clock enable
-- 0: Clock disable
-
-```text
-# md 130200e8 1
-130200e8: 00000000                             ....
-
-# mw 130200e8 0x80000000 1
-
-# md 130200e8 1
-130200e8: 80000000                             ....
-
-md 29400000 0x80
-md 29480000 0x80
-md 29590000 0x80
-md 295B0000 0x80
-md 295C0000 0x80
-```
-
 Clock AHB 1: Offset	0x28
 
 MCLK Out: Offset	0x4c
@@ -6065,6 +6043,8 @@ clk_u0_sft7110_noc_bus_clk_cpu_axi: Offset	0x98
 
 clk_u0_sft7110_noc_bus_clk_axicfg0_axi: Offset	0x9c
 
+clk_u0_dom_vout_top_clk_dom_vout_top_clk_vout_src: Offset	0xe8
+
 Clock NOC Display AXI: Offset	0xf0
 
 Clock Video Output AHB: Offset	0xf4
@@ -6072,6 +6052,12 @@ Clock Video Output AHB: Offset	0xf4
 Clock Video Output AXI: Offset	0xf8
 
 Clock Video Output HDMI TX0 MCLK: Offset	0xfc
+
+Bit [31]	clk_icg	1	
+- 1: Clock enable
+- 0: Clock disable
+
+Enable the clocks:
 
 ```text
 md 13020028 1
@@ -6109,6 +6095,24 @@ md 130200f8 1
 md 130200fc 1
 mw 130200fc 0x80000000 1
 md 130200fc 1
+```
+
+U-Boot Log:
+
+```text
+# md 130200e8 1
+130200e8: 00000000                             ....
+
+# mw 130200e8 0x80000000 1
+
+# md 130200e8 1
+130200e8: 80000000                             ....
+
+md 29400000 0x80
+md 29480000 0x80
+md 29590000 0x80
+md 295B0000 0x80
+md 295C0000 0x80
 ```
 
 Software RESET 1 Address Selector: Offset	0x2fc
