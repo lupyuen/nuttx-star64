@@ -6121,6 +6121,28 @@ Bit [11]	rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src	1
 - 1: Assert reset
 - 0: De-assert reset
 
+SYSCRG RESET Status 0: Offset	0x308
+
+Bit [26]	rstn_u0_sft7110_noc_bus_reset_disp_axi_n	0	
+- 1: Assert reset
+- 0: De-assert reset
+
+SYSCRG RESET Status 1: Offset	0x30c
+
+Bit [11]	rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src	1	
+- 1: Assert reset
+- 0: De-assert reset
+
+```text
+md 130202fc 1
+mw 130202fc 0x7e7f600 1
+md 130202fc 1
+
+md 13020308 1
+
+md 1302030c 1
+```
+
 ```text
 # md 130202fc 1
 130202fc: 07e7fe00                             ....
