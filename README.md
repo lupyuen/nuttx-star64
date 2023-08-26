@@ -5983,7 +5983,31 @@ Maybe because the Display Controller is not powered up?
 
 Can we poke the Clock and Reset Registers to power it up?
 
+Let's find out...
+
+# Power Up Star64 JH7110 Display Controller
+
+_Can we poke the Clock and Reset Registers to power it up?_
+
 TODO
+
+From [Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_structure.html):
+
+![Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/Image/Drawing/Clock_Structure.svg)
+
+From [Power Management](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/overview_pm.html):
+
+![Power Management](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/power_stratey.png)
+
+[SYS CRG](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html)
+
+[SYS SYSCON](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_syscon.html)
+
+[PMU Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html)
+
+From [Bus Connection](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/bus_connection.html):
+
+![Bus Connection](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/stg_mtrx_connection17.png)
 
 # PineTab-V Factory Test Code
 
