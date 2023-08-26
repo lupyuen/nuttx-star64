@@ -6104,6 +6104,17 @@ From U-Boot Log above, Current Power Mode is 3, which means...
 
 TODO: Enable vout_power_mode
 
+```text
+md 17030080 1
+mw 17030080 0x13 1
+md 17030080 1
+md 29400000 100
+md 29480000
+md 29590000
+md 295B0000
+md 295C0000
+```
+
 From [Bus Connection](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/bus_connection.html):
 
 ![Bus Connection](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/stg_mtrx_connection17.png)
