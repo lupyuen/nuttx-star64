@@ -6043,6 +6043,40 @@ From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system
 
 TODO: Which Clocks and Registers are already enabled / deasserted?
 
+From [System Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html)
+
+clk_u0_dom_vout_top_clk_dom_vout_top_clk_vout_src
+
+Offset	16’he4
+
+Bit [31]	clk_icg	1	
+- 1: Clock enable
+- 0: Clock disable
+
+```text
+md 130200e4 1
+mw 130200e4 0x80000000 1
+md 130200e4 1
+
+md 29400000 0x80
+md 29480000 0x80
+md 29590000 0x80
+md 295B0000 0x80
+md 295C0000 0x80
+```
+
+Software RESET 1 Address Selector
+
+Offset	16’h2fc
+
+Bit [11]	rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src	1	
+- 1: Assert reset
+- 0: De-assert reset
+
+```text
+md 130200fc 1
+```
+
 [SYS SYSCON: System Configuration Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_syscon.html)
 
 From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html), System SYSCON is at 0x1303_0000
@@ -6065,40 +6099,6 @@ From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system
 130300d0: 00000000 00000000 00000000 00000000  ................
 130300e0: 00000000 00000000 00000000 00000000  ................
 130300f0: 00000000 00000000 00000000 00000000  ................
-```
-
-From [System Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html)
-
-clk_u0_dom_vout_top_clk_dom_vout_top_clk_vout_src
-
-Offset	16’he4
-
-Bit [31]	clk_icg	1	
-- 1: Clock enable
-- 0: Clock disable
-
-```text
-md 130300e4 1
-mw 130300e4 0x80000000 1
-md 130300e4 1
-
-md 29400000 0x80
-md 29480000 0x80
-md 29590000 0x80
-md 295B0000 0x80
-md 295C0000 0x80
-```
-
-Software RESET 1 Address Selector
-
-Offset	16’h2fc
-
-Bit [11]	rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src	1	
-- 1: Assert reset
-- 0: De-assert reset
-
-```text
-md 130300fc 1
 ```
 
 TODO: Which SYSCON Registers are already configured?
