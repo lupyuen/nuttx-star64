@@ -5995,19 +5995,27 @@ From [Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_st
 
 ![Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/Image/Drawing/Clock_Structure.svg)
 
-Display Controller (vout_crg) is powered by...
+Display Controller (vout_crg) is clocked and reset by...
 - clk_vout_root
 - mipiphy ref clk
 - hdmiphy ref clk
 - clk_vout_src (1228.8M)
 - clk_vout_axi (614.4M)
 - clk_vout_ahb (204.8M)（clk_ahb1）
-- rstn_vout
 - clk_mclk (51.2M)
+- rstn_vout
+
+TODO: Enable the above clocks and deassert the above reset
 
 From [Power Management](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/overview_pm.html):
 
 ![Power Management](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/power_stratey.png)
+
+Display Controller (vout) is powered by the Power Domains...
+- dom_dig
+- dom_vout
+
+TODO: Enable the above Power Domains
 
 [SYS CRG](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html)
 
