@@ -5731,7 +5731,7 @@ U-Boot Clocks and Resets Mapped Nicely:
 
 | Clock Names | Clocks |
 |:------------|:-------|  
-| disp_axi | JH7110_NOC_BUS_CLK_DISP_AXI
+| disp_axi / noc_disp | JH7110_NOC_BUS_CLK_DISP_AXI
 | vout_src | JH7110_VOUT_SRC
 | top_vout_axi | JH7110_VOUT_TOP_CLK_VOUT_AXI
 | top_vout_ahb | JH7110_VOUT_TOP_CLK_VOUT_AHB
@@ -5754,9 +5754,7 @@ U-Boot Clocks and Resets Mapped Nicely:
 | rst_core | RSTN_U0_DC8200_CORE
 | rst_noc_disp | RSTN_U0_NOC_BUS_DISP_AXI_N
 
-U-Boot Clocks and Resets are defined here: [clock/starfive-jh7110-clkgen.h](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-clkgen.h), [reset/starfive-jh7110.h](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/include/dt-bindings/reset/starfive-jh7110.h) and [clk-jh7110.c](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/clk/starfive/clk-jh7110.c)
-
-Linux Clocks are defined here: [clock/starfive-jh7110-clkgen.h](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-clkgen.h) and [clock/starfive-jh7110-vout.h](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/include/dt-bindings/clock/starfive-jh7110-vout.h)
+U-Boot Clocks are defined here: [clk-jh7110.c](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/clk/starfive/clk-jh7110.c)
 
 From the Linux Device Tree: [jh7110.dtsi](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/arch/riscv/boot/dts/starfive/jh7110.dtsi#L339-L360)
 
