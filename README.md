@@ -5864,6 +5864,8 @@ TODO: Do we really need I2C for testing HDMI?
 
 # Poking the Star64 JH7110 Display Controller with U-Boot Bootloader
 
+![Star64 JH7110 Display Controller is alive!](https://lupyuen.github.io/images/display3-title.png)
+
 In the olden days we would `peek` and `poke` the Display Controller, to see weird and wonderful displays.
 
 Today (46 years later), we poke around the Display Controller of Star64 JH7110 SBC with a modern tool (not BASIC): U-Boot Bootloader!
@@ -6473,9 +6475,13 @@ The Display Controller Registers are now visible at VOUT_CRG (0x295C_0000) yay!
 
 Which means Display Controller is alive yay!
 
+![Star64 JH7110 Display Controller is alive!](https://lupyuen.github.io/images/display3-title.png)
+
 The Default Values seem to match [DOM VOUT CRG](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vout_crg.html).
 
 (`clk_tx_esc` should have default `24'hc`, there is a typo in the doc: `24'h12`)
+
+![`clk_tx_esc` should have default `24'hc`, there is a typo in the doc: `24'h12`](https://lupyuen.github.io/images/display3-typo.png)
 
 FYI: It hangs when we read U0_HDMITX at 0x2959_0000. Probably because Display Controller is actually powered up.
 
