@@ -5991,6 +5991,88 @@ _Can we poke the Clock and Reset Registers to power it up?_
 
 TODO
 
+From [Power Management](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/overview_pm.html):
+
+![Power Management](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/power_stratey.png)
+
+Display Controller (vout) is powered by the Power Domains...
+- dom_dig
+- dom_vout
+
+TODO: Enable the above Power Domains
+
+[PMU: Power Management Unit Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html)
+
+From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html), PMU is at 0x1703_0000
+
+```text
+# md 17030000
+17030000: 00000000 00000000 000000ff 00000003  ................
+17030010: 00000000 0000ffff 04008402 04010040  ............@...
+17030020: 00010040 00000000 00000000 00000000  @...............
+17030030: 00000000 00000000 00000000 00000000  ................
+17030040: 00000000 00000000 000007ff 00000012  ................
+17030050: 0000001f ffffffff 00000001 00000003  ................
+17030060: 00000000 00000000 00000080 00000000  ................
+17030070: 00000000 00000000 00000000 00000000  ................
+17030080: 00000003 00000000 00000203 00000000  ................
+17030090: 00000020 00000003 000001c3 00000000   ...............
+170300a0: 00000000 00000000 00000000 00000000  ................
+170300b0: 00000000 00000000 00000000 00000000  ................
+170300c0: 00000000 00000000 00000000 00000000  ................
+170300d0: 00000000 00000000 00000000 00000000  ................
+170300e0: 00000000 00000000 00000000 00000000  ................
+170300f0: 00000000 00000000 00000000 00000000  ................
+```
+
+TODO: Which Power Domains are already enabled?
+
+[Current Power Mode](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html) is at Offset Address 0x80. (Address 0x17030080)
+
+From U-Boot Log above, Current Power Mode is 3, which means...
+- Bit [0]	systop_power_mode: SYSTOP turn-on power mode is Enabled
+- Bit [1]	cpu_power_mode: CPU turn-on power mode is Enabled
+- But Bit [4]	vout_power_mode: VOUT turn-on power mode is Disabled!
+
+TODO: Enable vout_power_mode
+
+From [PMU Function Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/function_descript_pmu.html):
+
+> SW encourage Turn-on sequence:
+
+> (1) Configure the register SW turn-on power mode (offset 0x0c), write the bit 1 which power domain will be turn-on, write the others 0;
+
+> (2) Write the SW Turn-on command sequence. Write the register Software encourage (offset 0x44) 0xff –> 0x05 –> 0x50
+
+(What's a Software Encourage? Is it a Software Trigger?)
+
+Which is implemented in the Linux Driver (no delays in the Command Sequence): [jh7110_pmu.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/soc/starfive/jh7110_pmu.c#L132-L147)
+
+```text
+md 1703000c 1
+mw 1703000c 0x10 1
+md 1703000c 1
+
+mw 17030044 0xff 1
+mw 17030044 0x05 1
+mw 17030044 0x50 1
+```
+
+Check status:
+
+```text
+md 17030080 1
+md 29400000 0x40
+md 29480000 0x40
+md 29590000 0x40
+md 295B0000 0x40
+md 295C0000 0x40
+```
+
+# Clocks and Resets for Star64 JH7110 Display Controller
+
+TODO
+
 From [Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_structure.html):
 
 ![Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/Image/Drawing/Clock_Structure.svg)
@@ -6419,62 +6501,6 @@ From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system
 ```
 
 TODO: Which SYSCON Registers are already configured?
-
-[PMU: Power Management Unit Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html)
-
-From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html), PMU is at 0x1703_0000
-
-```text
-# md 17030000
-17030000: 00000000 00000000 000000ff 00000003  ................
-17030010: 00000000 0000ffff 04008402 04010040  ............@...
-17030020: 00010040 00000000 00000000 00000000  @...............
-17030030: 00000000 00000000 00000000 00000000  ................
-17030040: 00000000 00000000 000007ff 00000012  ................
-17030050: 0000001f ffffffff 00000001 00000003  ................
-17030060: 00000000 00000000 00000080 00000000  ................
-17030070: 00000000 00000000 00000000 00000000  ................
-17030080: 00000003 00000000 00000203 00000000  ................
-17030090: 00000020 00000003 000001c3 00000000   ...............
-170300a0: 00000000 00000000 00000000 00000000  ................
-170300b0: 00000000 00000000 00000000 00000000  ................
-170300c0: 00000000 00000000 00000000 00000000  ................
-170300d0: 00000000 00000000 00000000 00000000  ................
-170300e0: 00000000 00000000 00000000 00000000  ................
-170300f0: 00000000 00000000 00000000 00000000  ................
-```
-
-TODO: Which Power Domains are already enabled?
-
-From [Power Management](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/overview_pm.html):
-
-![Power Management](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/power_stratey.png)
-
-Display Controller (vout) is powered by the Power Domains...
-- dom_dig
-- dom_vout
-
-TODO: Enable the above Power Domains
-
-[Current Power Mode](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html) is at Offset Address 0x80. (Address 0x17030080)
-
-From U-Boot Log above, Current Power Mode is 3, which means...
-- Bit [0]	systop_power_mode: SYSTOP turn-on power mode is Enabled
-- Bit [1]	cpu_power_mode: CPU turn-on power mode is Enabled
-- But Bit [4]	vout_power_mode: VOUT turn-on power mode is Disabled!
-
-TODO: Enable vout_power_mode
-
-```text
-md 17030080 1
-mw 17030080 0x13 1
-md 17030080 1
-md 29400000 100
-md 29480000
-md 29590000
-md 295B0000
-md 295C0000
-```
 
 From [Bus Connection](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/bus_connection.html):
 
