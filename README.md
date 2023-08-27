@@ -6241,7 +6241,7 @@ Based on the [System Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH
 
 (OK looks excessive, but better to enable more clocks than too few!)
 
-We should set Bit 31 (clk_icg) to 0...
+For the Clock Registers above, we should set Bit 31 (clk_icg) to 1...
 - 1: Clock enable
 - 0: Clock disable
 
@@ -6386,11 +6386,11 @@ md 1302030c 1
 Then we check the Display Registers...
 
 ```text
-md 29400000 0x40
-md 29480000 0x40
-md 29590000 0x40
-md 295B0000 0x40
-md 295C0000 0x40
+md 29400000 0x20
+md 29480000 0x20
+md 29590000 0x20
+md 295B0000 0x20
+md 295C0000 0x20
 ```
 
 Here's the U-Boot Log...
