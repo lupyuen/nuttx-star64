@@ -6094,6 +6094,19 @@ StarFive # mw 17030044 0x50 1
 StarFive # 
 StarFive # md 17030080 1
 17030080: 00000013                             ....
+```
+
+_Is the Display Controller now powered up?_
+
+From U-Boot Log above, the [Current Power Mode](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html) (0x17030080) is 0x13, which means...
+
+- Bit 0 (systop_power_mode): SYSTOP Power is Enabled
+- Bit 1 (cpu_power_mode): CPU Power is Enabled
+- Bit 4 (vout_power_mode): VOUT Power is Enabled
+
+But the Display Controller Registers are still missing...
+
+```text
 StarFive # md 29400000 0x40
 29400000: 00000000 00000000 00000000 00000000  ................
 29400010: 00000000 00000000 00000000 00000000  ................
@@ -6182,7 +6195,7 @@ StarFive # md 295C0000 0x40
 StarFive # 
 ```
 
-Hmmm the Display Controller Registers are still missing. Let's poke the Clock and Reset Registers...
+Let's poke the Clock and Reset Registers...
 
 # Clock and Reset Registers for Star64 JH7110 Display Controller
 
