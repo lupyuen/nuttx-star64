@@ -6558,6 +6558,51 @@ StarFive # md 29480000 0x40
 StarFive # md 29590000 0x40
 ```
 
+# Automate U-Boot to Power Up Display Controller
+
+_That's a long list of U-Boot Commands. Can we automate this?_
+
+```text
+mw 1703000c 0x10 1
+mw 17030044 0xff 1
+mw 17030044 0x05 1
+mw 17030044 0x50 1
+mw 13020028 0x80000000 1
+mw 1302004c 0x80000000 1
+mw 13020098 0x80000000 1
+mw 1302009c 0x80000000 1
+mw 130200e8 0x80000000 1
+mw 130200f0 0x80000000 1
+mw 130200f4 0x80000000 1
+mw 130200f8 0x80000000 1
+mw 130200fc 0x80000000 1
+mw 130202fc 0x7e7f600 1
+mw 13020308 0xfb9fffff 1
+md 295C0000 0x20
+```
+
+Sure can! Run this in U-Boot...
+
+```text
+## Create the command to power up the Display Controller
+setenv display_on 'mw 1703000c 0x10 1 ; mw 17030044 0xff 1 ; mw 17030044 0x05 1 ; mw 17030044 0x50 1 ; mw 13020028 0x80000000 1 ; mw 1302004c 0x80000000 1 ; mw 13020098 0x80000000 1 ; mw 1302009c 0x80000000 1 ; mw 130200e8 0x80000000 1 ; mw 130200f0 0x80000000 1 ; mw 130200f4 0x80000000 1 ; mw 130200f8 0x80000000 1 ; mw 130200fc 0x80000000 1 ; mw 130202fc 0x7e7f600 1 ; mw 13020308 0xfb9fffff 1 ; md 295C0000 0x20 ; '
+
+## Check that it's correct
+printenv display_on
+
+## Save it for future reboots
+display_on
+
+## Run the command to power up the Display Controller
+run display_on
+```
+
+(The `run` feels a bit like BASIC)
+
+Maybe we could use this to render something to the HDMI Display!
+
+(Before converting to C for NuttX)
+
 # JH7110 System Configuration Registers
 
 TODO
