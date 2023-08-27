@@ -6619,6 +6619,45 @@ Maybe we could use this to render something to the HDMI Display!
 
 (Before converting to C for NuttX)
 
+_How will we test this in NuttX?_
+
+Probably inside `board_late_initialize` like this: [jh7110_appinit.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/hdmi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L154-L189)
+
+```c
+void board_late_initialize(void) {
+  /* Mount the RAM Disk */
+  mount_ramdisk();
+
+  /* Perform board-specific initialization */
+#ifdef CONFIG_NSH_ARCHINIT
+  mount(NULL, "/proc", "procfs", 0, NULL);
+#endif
+
+  // Test HDMI
+  int test_hdmi(void);
+  int ret = test_hdmi();
+  DEBUGASSERT(ret == 0);
+}
+
+// Display Subsystem Base Address
+// https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/memory_map_display.html
+#define DISPLAY_BASE_ADDRESS (0x29400000)
+
+// DOM VOUT Control Registers
+// https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/memory_map_display.html
+#define CRG_BASE_ADDRESS     (DISPLAY_BASE_ADDRESS + 0x1C0000)
+
+// Enable Clock
+// https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vout_crg.html
+#define CLK_ICG (1 << 31)
+
+// https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vout_crg.html
+#define clk_u0_dc8200_clk_pix0 (CRG_BASE_ADDRESS + 0x1c)
+
+// Test HDMI
+int test_hdmi(void) { ... }
+```
+
 # JH7110 System Configuration Registers
 
 TODO
