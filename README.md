@@ -6472,6 +6472,10 @@ StarFive #
 
 Display Controller is alive yay! The Registers are visible at VOUT_CRG: 0x295C_0000 yay!
 
+The Default Values seem to match [DOM VOUT CRG](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vout_crg.html).
+
+(`clk_tx_esc` should have default `24'hc`, there is a typo in the doc: `24'h12`)
+
 FYI: It hangs at U0_HDMITX: 0x2959_0000. Probably because Display Controller is actually powered up.
 
 ```text
