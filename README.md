@@ -6044,9 +6044,11 @@ From [PMU Function Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM
 
 > (2) Write the SW Turn-on command sequence. Write the register Software encourage (offset 0x44) 0xff –> 0x05 –> 0x50
 
-(What's a Software Encourage? Is it a Software Trigger?)
+Which is implemented in the Linux Driver (with no delays in the Command Sequence): [jh7110_pmu.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/soc/starfive/jh7110_pmu.c#L132-L147)
 
-Which is implemented in the Linux Driver (no delays in the Command Sequence): [jh7110_pmu.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/soc/starfive/jh7110_pmu.c#L132-L147)
+_What's a "Software Encourage"?_
+
+Something got Lost in Translation. Let's assume it means "Software Trigger".
 
 We do it in U-Boot like this...
 
