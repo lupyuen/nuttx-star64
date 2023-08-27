@@ -5985,9 +5985,9 @@ Can we poke the Clock and Reset Registers to power it up?
 
 Let's find out...
 
-# Power Up Star64 JH7110 Display Controller
+# Power Management Registers for Star64 JH7110 Display Controller
 
-_Can we poke the Clock and Reset Registers to power it up?_
+_Can we poke the PMU Registers and Clock and Reset Registers to power it up?_
 
 TODO
 
@@ -6176,7 +6176,9 @@ StarFive # md 1703000c 1
 StarFive # 
 ```
 
-# Clocks and Resets for Star64 JH7110 Display Controller
+OK the Display Controller Registers are still missing, let's poke the Clock and Reset Registers...
+
+# Clock and Reset Registers for Star64 JH7110 Display Controller
 
 TODO
 
