@@ -6205,7 +6205,7 @@ Based on the [JH7110 Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH71
 
 ![Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/Image/Drawing/Clock_Structure.svg)
 
-Display Controller (vout_crg) is clocked and reset by...
+Display Controller (vout_crg, top left) is clocked and reset by...
 - clk_vout_root
 - mipiphy ref clk
 - hdmiphy ref clk
