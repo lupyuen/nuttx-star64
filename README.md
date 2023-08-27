@@ -6613,6 +6613,8 @@ StarFive # run display_on
 295c0070: 00000000 00000000 00000000 00000000  ................
 ```
 
+So much easier!
+
 Maybe we could use this to render something to the HDMI Display!
 
 (Before converting to C for NuttX)
