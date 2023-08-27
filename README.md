@@ -5981,17 +5981,15 @@ But the values are all zero!
 
 Maybe because the Display Controller is not powered up?
 
-Can we poke the Clock and Reset Registers to power it up?
+Can we poke the PMU Registers and Clock and Reset Registers to power it up?
 
 Let's find out...
 
 # Power Management Registers for Star64 JH7110 Display Controller
 
-_Can we poke the PMU Registers and Clock and Reset Registers to power it up?_
+_Can we poke the Power Management Registers to power up the Display Controller?_
 
-TODO
-
-From [Power Management](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/overview_pm.html):
+From [JH7110 Power Management](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/overview_pm.html)...
 
 ![Power Management](https://doc-en.rvspace.org/JH7110/TRM/Image/RD/JH7110/power_stratey.png)
 
@@ -5999,11 +5997,11 @@ Display Controller (vout) is powered by the Power Domains...
 - dom_dig
 - dom_vout
 
-TODO: Enable the above Power Domains
+_How to enable these Power Domains?_
 
-[PMU: Power Management Unit Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html)
+We refer to the [Power Management Unit (PMU) Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html)
 
-From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html), PMU is at 0x1703_0000
+From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html), PMU is at 0x1703_0000...
 
 ```text
 # md 17030000
@@ -6025,18 +6023,18 @@ From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system
 170300f0: 00000000 00000000 00000000 00000000  ................
 ```
 
-TODO: Which Power Domains are already enabled?
+_Which Power Domains are already enabled?_
 
-[Current Power Mode](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html) is at Offset Address 0x80. (Address 0x17030080)
+The [Current Power Mode Register](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_info_pmu.html) is at Offset Address 0x80. (Address 0x17030080)
 
 From U-Boot Log above, Current Power Mode is 3, which means...
-- Bit [0]	systop_power_mode: SYSTOP turn-on power mode is Enabled
-- Bit [1]	cpu_power_mode: CPU turn-on power mode is Enabled
-- But Bit [4]	vout_power_mode: VOUT turn-on power mode is Disabled!
+- Bit 0 (systop_power_mode): SYSTOP Power is Enabled
+- Bit 1 (cpu_power_mode): CPU Power is Enabled
+- But Bit 4 (vout_power_mode): VOUT Power is Disabled!
 
-TODO: Enable vout_power_mode
+_How to enable VOUT Power?_
 
-From [PMU Function Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/function_descript_pmu.html):
+From [PMU Function Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/function_descript_pmu.html)...
 
 > SW encourage Turn-on sequence:
 
@@ -6048,6 +6046,8 @@ From [PMU Function Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM
 
 Which is implemented in the Linux Driver (no delays in the Command Sequence): [jh7110_pmu.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/soc/starfive/jh7110_pmu.c#L132-L147)
 
+We do it in U-Boot like this...
+
 ```text
 md 1703000c 1
 mw 1703000c 0x10 1
@@ -6058,7 +6058,7 @@ mw 17030044 0x05 1
 mw 17030044 0x50 1
 ```
 
-Check status:
+Then we check status if VOUT Power is on...
 
 ```text
 md 17030080 1
@@ -6069,10 +6069,10 @@ md 295B0000 0x40
 md 295C0000 0x40
 ```
 
-U-Boot Log:
+Here's the U-Boot Log...
 
 ```text
-# md 1703000c 1
+StarFive # md 1703000c 1
 1703000c: 00000003                             ....
 StarFive # mw 1703000c 0x10 1
 StarFive # 
@@ -6180,13 +6180,13 @@ StarFive # md 295C0000 0x40
 StarFive # 
 ```
 
-OK the Display Controller Registers are still missing, let's poke the Clock and Reset Registers...
+Hmmm the Display Controller Registers are still missing. Let's poke the Clock and Reset Registers...
 
 # Clock and Reset Registers for Star64 JH7110 Display Controller
 
-TODO
+_VOUT Power is already enabled via PMU. How do we poke the Clock and Reset Registers to power up the Display Controller?_
 
-From [Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_structure.html):
+Based on the [JH7110 Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_structure.html)...
 
 ![Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/Image/Drawing/Clock_Structure.svg)
 
@@ -6200,11 +6200,11 @@ Display Controller (vout_crg) is clocked and reset by...
 - clk_mclk (51.2M)
 - rstn_vout
 
-TODO: Enable the above clocks and deassert the above reset
+_How to enable the above clocks and deassert the above reset?_
 
-[SYS CRG: System Clock and Reset Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html)
+We refer to the [System Clock and Reset (SYS CRG) Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html).
 
-From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html), System CRG is at 0x1302_0000
+From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html), System CRG is at 0x1302_0000...
 
 ```text
 # md 13020000
@@ -6228,31 +6228,24 @@ From [System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system
 
 TODO: Which Clocks and Registers are already enabled / deasserted?
 
-From [System Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html)
+Based on the [System Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html), we need to enable these clocks...
+- Clock AHB 1: Offset  0x28
+- MCLK Out: Offset  0x4c
+- clk_u0_sft7110_noc_bus_clk_cpu_axi: Offset  0x98
+- clk_u0_sft7110_noc_bus_clk_axicfg0_axi: Offset  0x9c
+- clk_u0_dom_vout_top_clk_dom_vout_top_clk_vout_src: Offset  0xe8
+- Clock NOC Display AXI: Offset  0xf0
+- Clock Video Output AHB: Offset  0xf4
+- Clock Video Output AXI: Offset  0xf8
+- Clock Video Output HDMI TX0 MCLK: Offset  0xfc
 
-Clock AHB 1: Offset	0x28
+(OK looks excessive, but better to enable more clocks than too few!)
 
-MCLK Out: Offset	0x4c
-
-clk_u0_sft7110_noc_bus_clk_cpu_axi: Offset	0x98
-
-clk_u0_sft7110_noc_bus_clk_axicfg0_axi: Offset	0x9c
-
-clk_u0_dom_vout_top_clk_dom_vout_top_clk_vout_src: Offset	0xe8
-
-Clock NOC Display AXI: Offset	0xf0
-
-Clock Video Output AHB: Offset	0xf4
-
-Clock Video Output AXI: Offset	0xf8
-
-Clock Video Output HDMI TX0 MCLK: Offset	0xfc
-
-Bit [31]	clk_icg	1	
+We should set Bit 31 (clk_icg) to 0...
 - 1: Clock enable
 - 0: Clock disable
 
-Enable the clocks:
+Here are the U-Boot Commands to enable the clocks...
 
 ```text
 md 13020028 1
@@ -6292,10 +6285,10 @@ mw 130200fc 0x80000000 1
 md 130200fc 1
 ```
 
-U-Boot Log:
+Here's the U-Boot Log...
 
 ```text
-# md 13020028 1
+StarFive # md 13020028 1
 13020028: 80000000                             ....
 StarFive # mw 13020028 0x80000000 1
 StarFive # 
@@ -6352,25 +6345,29 @@ StarFive # md 130200fc 1
 StarFive # 
 ```
 
-Software RESET 1 Address Selector: Offset	0x2fc
+_What about the Resets?_
 
-Bit [11]	rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src	1	
-- 1: Assert reset
-- 0: De-assert reset
+Based on the [System Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html), we need to deassert these resets...
 
-SYSCRG RESET Status 0: Offset	0x308
+- Software RESET 1 Address Selector: Offset 0x2fc
 
-Bit [26]	rstn_u0_sft7110_noc_bus_reset_disp_axi_n	0	
-- 1: Assert reset
-- 0: De-assert reset
+  Bit 11: rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src
+  - 1: Assert reset
+  - 0: De-assert reset
 
-SYSCRG RESET Status 1: Offset	0x30c
+- SYSCRG RESET Status 0: Offset 0x308
 
-Bit [11]	rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src	1	
-- 1: Assert reset
-- 0: De-assert reset
+  Bit 26: rstn_u0_sft7110_noc_bus_reset_disp_axi_n
+  - 1: Assert reset
+  - 0: De-assert reset
 
-Deassert Resets:
+- SYSCRG RESET Status 1: Offset 0x30c
+
+  Bit 11: rstn_u0_dom_vout_top_rstn_dom_vout_top_rstn_vout_src
+  - 1: Assert reset
+  - 0: De-assert reset
+
+These are the U-Boot Commands to Deassert the above Resets...
 
 ```text
 md 130202fc 1
@@ -6384,7 +6381,9 @@ md 13020308 1
 md 1302030c 1
 ```
 
-Check Display Registers:
+(The last one is already deasserted, no need to change it)
+
+Then we check the Display Registers...
 
 ```text
 md 29400000 0x40
@@ -6394,10 +6393,10 @@ md 295B0000 0x40
 md 295C0000 0x40
 ```
 
-U-Boot Log:
+Here's the U-Boot Log...
 
 ```text
-md 1703000c 1
+StarFive # md 1703000c 1
 1703000c: 00000003                             ....
 StarFive # mw 1703000c 0x10 1
 StarFive # 
@@ -6470,16 +6469,18 @@ StarFive # md 295C0000 0x40
 StarFive # 
 ```
 
-Display Controller is alive yay! The Registers are visible at VOUT_CRG: 0x295C_0000 yay!
+The Display Controller Registers are now visible at VOUT_CRG (0x295C_0000) yay!
+
+Which means Display Controller is alive yay!
 
 The Default Values seem to match [DOM VOUT CRG](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vout_crg.html).
 
 (`clk_tx_esc` should have default `24'hc`, there is a typo in the doc: `24'h12`)
 
-FYI: It hangs at U0_HDMITX: 0x2959_0000. Probably because Display Controller is actually powered up.
+FYI: It hangs when we read U0_HDMITX at 0x2959_0000. Probably because Display Controller is actually powered up.
 
 ```text
-# mw 13020028 0x80000000 1
+StarFive # mw 13020028 0x80000000 1
 StarFive # 
 StarFive # mw 1302004c 0x80000000 1
 StarFive # 
