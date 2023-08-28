@@ -5891,6 +5891,16 @@ Based on [DOM VOUT CRG](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vou
     - 1: Assert reset
     - 0: De-assert reset
 
+TODO: clk_u0_dc8200_clk_pix1: Offset 0x20
+
+- Bits [24:29]:	clk_mux_sel	(Default 0)
+
+  Clock multiplexing selector:
+  - clk_dc8200_pix0
+  - clk_hdmitx0_pixelclk
+
+  What are the values for clk_mux_sel?
+
 TODO: Reconcile the above drivers with the [Official Linux Driver](https://lupyuen.github.io/articles/display2)
 
 TODO: Test on NuttX
