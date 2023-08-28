@@ -5887,6 +5887,10 @@ Based on [DOM VOUT CRG](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vou
     - 1: Assert reset
     - 0: De-assert reset
 
+  - Bit [9]	rstn_u0_hdmi_tx_rstn_hdmi
+    - 1: Assert reset
+    - 0: De-assert reset
+
 TODO: Reconcile the above drivers with the [Official Linux Driver](https://lupyuen.github.io/articles/display2)
 
 TODO: Test on NuttX
