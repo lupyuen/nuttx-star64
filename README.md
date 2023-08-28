@@ -5901,6 +5901,8 @@ TODO: clk_u0_dc8200_clk_pix0: Offset 0x1c
 
   What are the values for clk_mux_sel?
 
+TODO: Can we read another Clock Mux to figure this out?
+
 From [clk-jh7110.c](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/clk/starfive/clk-jh7110.c#L77-L80):
 
 ```c
