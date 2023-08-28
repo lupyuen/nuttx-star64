@@ -5901,6 +5901,77 @@ TODO: clk_u0_dc8200_clk_pix0: Offset 0x1c
 
   What are the values for clk_mux_sel?
 
+From [clk-jh7110.c](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/clk/starfive/clk-jh7110.c#L77-L80):
+
+```c
+static const char *u0_dc8200_clk_pix_sels[2] = {
+	[0] = "dc8200_pix0",
+	[1] = "hdmitx0_pixelclk",
+};
+
+clk_dm(JH7110_U0_DC8200_CLK_PIX0,
+  starfive_clk_composite(priv->vout,
+    "u0_dc8200_clk_pix0",
+    u0_dc8200_clk_pix_sels,
+    ARRAY_SIZE(u0_dc8200_clk_pix_sels),
+    VOUT_OFFSET(JH7110_U0_DC8200_CLK_PIX0), 1, 1, 0));
+
+clk_dm(JH7110_U0_DC8200_CLK_PIX1,
+  starfive_clk_composite(priv->vout,
+    "u0_dc8200_clk_pix1",
+    u0_dc8200_clk_pix_sels,
+    ARRAY_SIZE(u0_dc8200_clk_pix_sels),
+    VOUT_OFFSET(JH7110_U0_DC8200_CLK_PIX1), 1, 1, 0));
+
+static struct clk *starfive_clk_mux(void __iomem *reg,
+  const char *name,
+  unsigned int offset,
+  u8 width,
+  const char * const *parent_names,
+  u8 num_parents)
+{
+	return  clk_register_mux(NULL, name, parent_names, num_parents, 0,
+    reg + offset, STARFIVE_CLK_MUX_SHIFT, width, 0);
+}
+
+static struct clk *starfive_clk_composite(void __iomem *reg,
+  const char *name,
+  const char * const *parent_names,
+  unsigned int num_parents,
+  unsigned int offset,
+  unsigned int mux_width,
+  unsigned int gate_width,
+  unsigned int div_width)
+{
+	struct clk *clk = ERR_PTR(-ENOMEM);
+	struct clk_divider *div = NULL;
+	struct clk_gate *gate = NULL;
+	struct clk_mux *mux = NULL;
+	int mask_arry[4] = {0x1, 0x3, 0x7, 0xF};
+	int mask;
+
+	if (mux_width) {
+		if (mux_width > 4)
+			goto fail;
+		else
+			mask = mask_arry[mux_width-1];
+
+		mux = kzalloc(sizeof(*mux), GFP_KERNEL);
+		if (!mux)
+			goto fail;
+
+		mux->reg = reg + offset;
+		mux->mask = mask;
+		mux->shift = STARFIVE_CLK_MUX_SHIFT;
+		mux->num_parents = num_parents;
+		mux->flags = 0;
+		mux->parent_names = parent_names;
+	}
+
+#define VOUT_OFFSET(id) (((id) - JH7110_CLK_VOUT_START) * 4)
+#define STARFIVE_CLK_MUX_SHIFT		24 /*[29:24]*/
+```
+
 TODO: Reconcile the above drivers with the [Official Linux Driver](https://lupyuen.github.io/articles/display2)
 
 TODO: Test on NuttX
