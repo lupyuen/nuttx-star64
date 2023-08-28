@@ -5891,7 +5891,7 @@ Based on [DOM VOUT CRG](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vou
     - 1: Assert reset
     - 0: De-assert reset
 
-TODO: clk_u0_dc8200_clk_pix1: Offset 0x20
+TODO: clk_u0_dc8200_clk_pix0: Offset 0x1c
 
 - Bits [24:29]:	clk_mux_sel	(Default 0)
 
