@@ -5858,7 +5858,7 @@ Linux Clocks and Resets Mapped Nicely:
 
 See the [JH7110 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/memory_map_display.html) and [Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/controller_registers_display.html)
 
-Matching with [DOM VOUT CFG](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vout_crg.html), here are the Clock Enable Registers....
+Based on [DOM VOUT CFG](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vout_crg.html), here are the Clock Enable Registers....
 
 - clk_u0_dc8200_clk_axi: Offset Address: 16'h10
 - clk_u0_dc8200_clk_core: Offset Address: 16'h14
