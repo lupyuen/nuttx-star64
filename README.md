@@ -6,6 +6,8 @@
 
 Read the articles...
 
+-   ["RISC-V Star64 JH7110: Poking the Display Controller with U-Boot Bootloader"](https://lupyuen.github.io/articles/display3)
+
 -   ["RISC-V Star64 JH7110: Inside the Display Controller"](https://lupyuen.github.io/articles/display2)
 
 -   ["RTOS on a RISC-V SBC: Star64 JH7110 + Apache NuttX"](https://www.hackster.io/lupyuen/rtos-on-a-risc-v-sbc-star64-jh7110-apache-nuttx-2a7429)
