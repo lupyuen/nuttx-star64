@@ -5858,6 +5858,23 @@ Linux Clocks and Resets Mapped Nicely:
 
 See the [JH7110 Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/memory_map_display.html) and [Control Registers](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/controller_registers_display.html)
 
+Matching with [DOM VOUT CFG](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vout_crg.html), here are the Clock Enable Registers....
+
+- clk_u0_dc8200_clk_axi: Offset Address: 16'h10
+- clk_u0_dc8200_clk_core: Offset Address: 16'h14
+- clk_u0_dc8200_clk_ahb: Offset Address: 16'h18
+- clk_u0_dc8200_clk_pix0: Offset Address: 16'h1c
+- clk_u0_dc8200_clk_pix1: Offset Address: 16'h20
+- clk_dom_vout_top_lcd_clk: Offset Address: 16'h24
+- clk_u0_cdns_dsiTx_clk_apb: Offset Address: 16'h28
+- clk_u0_cdns_dsiTx_clk_sys: Offset Address: 16'h2c
+- clk_u0_cdns_dsiTx_clk_dpi: Offset Address: 16"30
+- clk_u0_cdns_dsiTx_clk_txesc: Offset Address: 16'h34
+- clk_u0_mipitx_dphy_clk_txesc: Offset Address: 16'h38
+- clk_u0_hdmi_tx_clk_mclk: Offset Address: 16'h3c
+- clk_u0_hdmi_tx_clk_bclk: Offset Address: 16'h40
+- clk_u0_hdmi_tx_clk_sys: Offset Address: 16'h44
+
 TODO: Reconcile the above drivers with the [Official Linux Driver](https://lupyuen.github.io/articles/display2)
 
 TODO: Test on NuttX
