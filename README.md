@@ -5675,6 +5675,8 @@ And here's our analysis of the HDMI Driver in U-Boot:
 
 - [inno_hdmi_tx_ctrl](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L376-L387): Config Video Format Identification Code. bist mode: 0x00, normal mode: 0x10, phy mode: 0x4
 
+See [hdmi_read](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L22-L30) and [hdmi_write](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L22-L30)
+
 Here's the Device Tree for U-Boot:
 
 - [starfive_visionfive2.dts](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/arch/riscv/dts/starfive_visionfive2.dts)
