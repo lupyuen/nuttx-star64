@@ -5677,6 +5677,8 @@ And here's our analysis of the HDMI Driver in U-Boot:
 
 See [hdmi_read](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L22-L30) and [hdmi_write](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/drivers/video/starfive/sf_hdmi.c#L22-L30)
 
+[U0_HDMITX Base Address](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html) is 0x2959_0000
+
 Here's the Device Tree for U-Boot:
 
 - [starfive_visionfive2.dts](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/arch/riscv/dts/starfive_visionfive2.dts)
