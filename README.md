@@ -5679,6 +5679,8 @@ See [hdmi_read](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_
 
 [U0_HDMITX Base Address](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html) is 0x2959_0000
 
+TODO: Is sf_vop_priv.regs_hi = 0x2940_0000 or 0x2948_0000?
+
 Here's the Device Tree for U-Boot:
 
 - [starfive_visionfive2.dts](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFive2_devel/arch/riscv/dts/starfive_visionfive2.dts)
@@ -6813,6 +6815,64 @@ void board_late_initialize(void) {
 // Test HDMI
 int test_hdmi(void) { ... }
 ```
+
+# Read the Star64 JH7110 Display Controller Registers with U-Boot Bootloader
+
+TODO
+
+From [jh7110_appinit.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/hdmi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L154-L215):
+
+```c
+// Display Subsystem Base Address
+// https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/memory_map_display.html
+#define DISPLAY_BASE_ADDRESS (0x29400000)
+
+// DOM VOUT Control Registers
+// https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/memory_map_display.html
+#define CRG_BASE_ADDRESS     (DISPLAY_BASE_ADDRESS + 0x1C0000)
+
+// DOM VOUT Control Registers
+// https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/dom_vout_crg.html
+
+#define clk_u0_dc8200_clk_axi   (CRG_BASE_ADDRESS + 0x10)
+#define clk_u0_dc8200_clk_core  (CRG_BASE_ADDRESS + 0x14)
+#define clk_u0_dc8200_clk_ahb   (CRG_BASE_ADDRESS + 0x18)
+#define clk_u0_dc8200_clk_pix0  (CRG_BASE_ADDRESS + 0x1c)
+#define clk_u0_dc8200_clk_pix1  (CRG_BASE_ADDRESS + 0x20)
+#define clk_u0_hdmi_tx_clk_mclk (CRG_BASE_ADDRESS + 0x3c)
+#define clk_u0_hdmi_tx_clk_bclk (CRG_BASE_ADDRESS + 0x40)
+#define clk_u0_hdmi_tx_clk_sys  (CRG_BASE_ADDRESS + 0x44)
+#define CLK_ICG (1 << 31)
+
+#define Software_RESET_assert0_addr_assert_sel (CRG_BASE_ADDRESS + 0x38)
+#define rstn_u0_dc8200_rstn_axi   (1 << 0)
+#define rstn_u0_dc8200_rstn_ahb   (1 << 1)
+#define rstn_u0_dc8200_rstn_core  (1 << 2)
+#define rstn_u0_hdmi_tx_rstn_hdmi (1 << 9)
+```
+
+U-Boot Commands:
+
+```text
+run display_on
+mw 295C0010 0x80000000 1
+mw 295C0014 0x80000000 1
+mw 295C0018 0x80000000 1
+mw 295C001c 0x80000000 1
+mw 295C0020 0x80000000 1
+mw 295C003c 0x80000000 1
+mw 295C0040 0x80000000 1
+mw 295C0044 0x80000000 1
+
+md 295C0038 0x80000000 1
+mw 295C0038 0x???????? 1
+md 295C0038 0x80000000 1
+
+md 29400000 0x20
+md 29480000 0x20
+```
+
+TODO: Did we overwrite any default values for Clock Mux and Multiplier?
 
 # JH7110 System Configuration Registers
 
