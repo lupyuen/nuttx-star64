@@ -6710,17 +6710,17 @@ md 295C0000 0x20
 Sure can! Run this in U-Boot...
 
 ```text
-## Create the command to power up the Display Controller
-setenv display_on 'mw 1703000c 0x10 1 ; mw 17030044 0xff 1 ; mw 17030044 0x05 1 ; mw 17030044 0x50 1 ; mw 13020028 0x80000000 1 ; mw 1302004c 0x80000000 1 ; mw 13020098 0x80000000 1 ; mw 1302009c 0x80000000 1 ; mw 130200e8 0x80000000 1 ; mw 130200f0 0x80000000 1 ; mw 130200f4 0x80000000 1 ; mw 130200f8 0x80000000 1 ; mw 130200fc 0x80000000 1 ; mw 130202fc 0x7e7f600 1 ; mw 13020308 0xfb9fffff 1 ; md 295C0000 0x20 ; '
+## Create the command to power up the Video Output
+setenv video_on 'mw 1703000c 0x10 1 ; mw 17030044 0xff 1 ; mw 17030044 0x05 1 ; mw 17030044 0x50 1 ; mw 13020028 0x80000000 1 ; mw 1302004c 0x80000000 1 ; mw 13020098 0x80000000 1 ; mw 1302009c 0x80000000 1 ; mw 130200e8 0x80000000 1 ; mw 130200f0 0x80000000 1 ; mw 130200f4 0x80000000 1 ; mw 130200f8 0x80000000 1 ; mw 130200fc 0x80000000 1 ; mw 130202fc 0x7e7f600 1 ; mw 13020308 0xfb9fffff 1 ; md 295C0000 0x20 ; '
 
 ## Check that it's correct
-printenv display_on
+printenv video_on
 
 ## Save it for future reboots
 saveenv
 
-## Run the command to power up the Display Controller
-run display_on
+## Run the command to power up the Video Output
+run video_on
 ```
 
 (The `run` feels a bit like BASIC)
@@ -6728,7 +6728,7 @@ run display_on
 We should see...
 
 ```text
-StarFive # run display_on
+StarFive # run video_on
 295c0000: 00000004 00000004 00000004 0000000c  ................
 295c0010: 00000000 00000000 00000000 00000000  ................
 295c0020: 00000000 00000000 00000000 00000000  ................
@@ -6854,7 +6854,7 @@ From [jh7110_appinit.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/hdm
 U-Boot Commands:
 
 ```text
-run display_on
+run video_on
 mw 295C0010 0x80000000 1
 mw 295C0014 0x80000000 1
 mw 295C0018 0x80000000 1
@@ -6885,7 +6885,7 @@ md 295C0000 0x20
 U-Boot Log:
 
 ```text
-StarFive # run display_on
+StarFive # run video_on
 295c0000: 00000004 00000004 00000004 0000000c  ................
 295c0010: 00000000 00000000 00000000 00000000  ................
 295c0020: 00000000 00000000 00000000 00000000  ................
@@ -7055,6 +7055,31 @@ StarFive # md 295C0000 0x20
 295c0060: 00000000 00000000 00000000 00000000  ................
 295c0070: 00000000 00000000 00000000 00000000  ................
 StarFive # 
+```
+
+U-Boot Script:
+
+```text
+## Create the command to power up the Display Controller
+setenv display_on 'mw 295C0010 0x80000000 1 ; mw 295C0014 0x80000000 1 ; mw 295C0018 0x80000000 1 ; mw 295C001c 0x80000000 1 ; mw 295C0020 0x80000000 1 ; mw 295C003c 0x80000000 1 ; mw 295C0040 0x80000000 1 ; mw 295C0044 0x80000000 1 ; mw 295C0048 0 1 ; md 29400000 0x20 ; '
+
+## Check that it's correct
+printenv display_on
+
+## Save it for future reboots
+saveenv
+
+## Run the command to power up the Video Output
+run video_on
+
+## Run the command to power up the Display Controller
+run display_on
+```
+
+We should see...
+
+```text
+
 ```
 
 # JH7110 System Configuration Registers
