@@ -6,7 +6,7 @@
 
 Read the articles...
 
--   ["RISC-V Star64 JH7110: Poking the Display Controller with U-Boot Bootloader"](https://lupyuen.github.io/articles/display3)
+-   ["RISC-V Star64 JH7110: Power Up the Display Controller with U-Boot Bootloader"](https://lupyuen.github.io/articles/display3)
 
 -   ["RISC-V Star64 JH7110: Inside the Display Controller"](https://lupyuen.github.io/articles/display2)
 
