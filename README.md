@@ -7004,7 +7004,7 @@ StarFive # md 29400030 1
 StarFive # 
 ```
 
-Based on [vs_dc_hw.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1301-L1361...
+Based on [vs_dc_hw.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1301-L1361)...
 
 - revision = 0x5720
 	
