@@ -7100,6 +7100,23 @@ StarFive # run display_on
 29400070: 00000000 08050000 00000002 00000000  ................
 ```
 
+TODO: NuttX Log
+
+```text
+## Flattened Device Tree blob at 46000000
+   Booting using the fdt blob at 0x46000000
+   Using Device Tree in place at 0000000046000000, end 000000004600f43a
+
+Starting kernel ...
+
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+BCboard_late_initialize: revision=0x5720, chip_id=0x30e
+
+NuttShell (NSH) NuttX-12.0.3
+nsh> 
+```
+
 # JH7110 System Configuration Registers
 
 TODO
