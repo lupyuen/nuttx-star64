@@ -5633,6 +5633,10 @@ And the [MIPI Parameter Configuration](https://doc-en.rvspace.org/VisionFive2/DG
 
 # HDMI Driver for U-Boot Bootloader
 
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Power Up the Display Controller with U-Boot Bootloader"](https://lupyuen.github.io/articles/display3)
+
 We're building the NuttX HDMI Driver for Star64 JH7110 RISC-V SBC.
 
 [__Justin (Fishwaldo)__](https://fosstodon.org/@Fishwaldo/110902984442385966) suggests that we check out the simpler HDMI Driver in __U-Boot Bootloader__...
@@ -5990,6 +5994,10 @@ TODO: Do we really need I2C for testing HDMI?
 
 ![Star64 JH7110 Display Controller is alive!](https://lupyuen.github.io/images/display3-title.png)
 
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Power Up the Display Controller with U-Boot Bootloader"](https://lupyuen.github.io/articles/display3)
+
 In the olden days we would `peek` and `poke` the Display Controller, to see weird and wonderful displays.
 
 Today (46 years later), we poke around the Display Controller of Star64 JH7110 SBC with a modern tool (not BASIC): U-Boot Bootloader!
@@ -6112,6 +6120,10 @@ Can we poke the PMU Registers and Clock and Reset Registers to power it up?
 Let's find out...
 
 # Power Management Registers for Star64 JH7110 Display Controller
+
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Power Up the Display Controller with U-Boot Bootloader"](https://lupyuen.github.io/articles/display3)
 
 _Can we poke the Power Management Registers to power up the Display Controller?_
 
@@ -6324,6 +6336,10 @@ StarFive #
 Let's poke the Clock and Reset Registers...
 
 # Clock and Reset Registers for Star64 JH7110 Display Controller
+
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Power Up the Display Controller with U-Boot Bootloader"](https://lupyuen.github.io/articles/display3)
 
 _VOUT Power is already enabled via PMU. How do we poke the Clock and Reset Registers to power up the Display Controller?_
 
@@ -6686,6 +6702,10 @@ StarFive # md 29590000 0x40
 
 # Automate U-Boot to Power Up Display Controller
 
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Power Up the Display Controller with U-Boot Bootloader"](https://lupyuen.github.io/articles/display3)
+
 _That's a long list of U-Boot Commands. Can we automate this?_
 
 ```text
@@ -6818,7 +6838,9 @@ int test_hdmi(void) { ... }
 
 # Read the Star64 JH7110 Display Controller Registers with U-Boot Bootloader
 
-TODO
+Read the article...
+
+-   ["RISC-V Star64 JH7110: Power Up the Display Controller with U-Boot Bootloader"](https://lupyuen.github.io/articles/display3)
 
 From [jh7110_appinit.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/hdmi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L154-L215):
 
