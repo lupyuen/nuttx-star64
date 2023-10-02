@@ -2192,11 +2192,11 @@ Why does it work? Dropped UDP Packets? We should check with Wireshark
 
 __Before Fixing:__ TFTP Transfer Rate is 125 KiB/s (with 5 timeouts)
 
-[(See the log)](https://gist.github.com/lupyuen/b36278130fbd281d03fc20189de5485e)
+[(See the log: xinetd + tftpd on Raspberry Pi 4 32-bit)](https://gist.github.com/lupyuen/b36278130fbd281d03fc20189de5485e)
 
 __After Fixing:__ TFTP Transfer Rate is 1.1 MiB/s (with NO timeouts)
 
-[(See the log)](https://gist.github.com/lupyuen/19ab2e16c0c2bb46175bcd8fba7116f2)
+[(See the log: rs-tftpd-timeout on Raspberry Pi 4 32-bit)](https://gist.github.com/lupyuen/19ab2e16c0c2bb46175bcd8fba7116f2)
 
 Yep it works! No more TFTP Timeouts!
 
