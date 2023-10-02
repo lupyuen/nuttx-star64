@@ -7179,6 +7179,24 @@ From [Bus Connection](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/bus_conne
 
 TODO: Do we need to bother with Bus Connections?
 
+# Strange Workaround for TFTP Timeout with U-Boot Bootloader
+
+__TODO:__ Why does TFTP time out so often on our SBC? Is it because our TFTP Server sends packets too quickly to our SBC? Can we [__throttle our TFTP Server__](https://github.com/altugbakan/rs-tftpd/blob/main/src/worker.rs#L128) to send packets slower?
+
+Frequent TFTP Timeouts ("T" below) are affecting our NuttX Testing on Star64 JH7110 SBC.  Effective transfer rate is only 430 kbps!
+
+```text
+Loading: . ##############T ###################################################
+. ####################T #########T ####################################
+. 53.7 KiB/s
+```
+
+[(Source)](https://gist.github.com/lupyuen/9bdb1f5478318631d0480f03f6041d83#file-jh7110-nuttx-math-log-L140-L173)
+
+TODO
+
+https://github.com/lupyuen/rs-tftpd-timeout
+
 # PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
