@@ -2142,7 +2142,7 @@ autoload:
 if set to “no” (any string beginning with ‘n’), “bootp” and “dhcp” will just load perform a lookup of the configuration from the BOOTP server, but not try to load any image.
 ```
 
-# Strange Workaround for TFTP Timeout with U-Boot Bootloader
+# Strange Workaround for TFTP Timeout in U-Boot Bootloader
 
 Why does TFTP time out so often on our SBC? Is it because our TFTP Server sends packets too quickly to our SBC?
 
