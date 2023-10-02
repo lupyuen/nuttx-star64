@@ -2188,7 +2188,7 @@ fn send_window<T: Socket>(
     })?;
 ```
 
-Why does it work? Dropped UDP Packets? We should check with Wireshark
+Let's test this...
 
 __Before Fixing:__ TFTP Transfer Rate is 125 KiB/s (with 5 timeouts)
 
@@ -2204,7 +2204,9 @@ __After Fixing:__ TFTP Transfer Rate is 1.1 MiB/s (with NO timeouts)
 
 Yep it works! No more TFTP Timeouts!
 
-Tested on 32-bit Raspberry Pi 4 and on macOS x64.
+(Tested on 32-bit Raspberry Pi 4 and on macOS x64)
+
+TODO: Why does it work? Dropped UDP Packets? We should check with Wireshark
 
 TODO: What if we throttle our TFTP Server to send packets slower? Nope doesn't help
 
