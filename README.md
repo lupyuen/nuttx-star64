@@ -2160,6 +2160,10 @@ TODO: This fixes the TFTP Timeout by sending every TFTP Packet twice. Why does i
 
 https://github.com/lupyuen/rs-tftpd-timeout
 
+Before: https://gist.github.com/lupyuen/b36278130fbd281d03fc20189de5485e
+
+After: https://gist.github.com/lupyuen/19ab2e16c0c2bb46175bcd8fba7116f2
+
 # Hang in Enter Critical Section
 
 Read the article...
