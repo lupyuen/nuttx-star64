@@ -2144,7 +2144,7 @@ if set to “no” (any string beginning with ‘n’), “bootp” and “dhcp�
 
 # Strange Workaround for TFTP Timeout with U-Boot Bootloader
 
-__TODO:__ Why does TFTP time out so often on our SBC? Is it because our TFTP Server sends packets too quickly to our SBC? Can we [__throttle our TFTP Server__](https://github.com/altugbakan/rs-tftpd/blob/main/src/worker.rs#L128) to send packets slower?
+Why does TFTP time out so often on our SBC? Is it because our TFTP Server sends packets too quickly to our SBC?
 
 Frequent TFTP Timeouts ("T" below) are affecting our NuttX Testing on Star64 JH7110 SBC.  Effective transfer rate is only 430 kbps!
 
@@ -2156,13 +2156,55 @@ Loading: . ##############T ###################################################
 
 [(Source)](https://gist.github.com/lupyuen/9bdb1f5478318631d0480f03f6041d83#file-jh7110-nuttx-math-log-L140-L173)
 
-TODO: This fixes the TFTP Timeout by sending every TFTP Packet twice. Why does it work? Dropped UDP Packets? Check with Wireshark
+Let's try something: We send every TFTP Packet twice.
 
-https://github.com/lupyuen/rs-tftpd-timeout
+From https://github.com/lupyuen/rs-tftpd-timeout/blob/main/src/worker.rs#L232-L255
 
-Before: https://gist.github.com/lupyuen/b36278130fbd281d03fc20189de5485e
+```rust
+fn send_window<T: Socket>(
+  socket: &T,
+  window: &Window,
+  mut block_num: u16,
+) -> Result<(), Box<dyn Error>> {
+  // For Every Frame...
+  for frame in window.get_elements() {
+    
+    // Send the TFTP Packet
+    socket.send(&Packet::Data {
+      block_num,
+      data: frame.to_vec(),
+    })?;
 
-After: https://gist.github.com/lupyuen/19ab2e16c0c2bb46175bcd8fba7116f2
+    // Wait 1 millisecond
+    static mut DELAY_MS: u64 = 1;
+    let millis = std::time::Duration::from_millis(DELAY_MS);
+    std::thread::sleep(millis);
+
+    // Send the same TFTP Packet again
+    // Why does this work?
+    socket.send(&Packet::Data {
+      block_num,
+      data: frame.to_vec(),
+    })?;
+```
+
+Why does it work? Dropped UDP Packets? We should check with Wireshark
+
+__Before Fixing:__ TFTP Transfer Rate is 125 KiB/s (with 5 timeouts)
+
+[(See the log)](https://gist.github.com/lupyuen/b36278130fbd281d03fc20189de5485e)
+
+__After Fixing:__ TFTP Transfer Rate is 1.1 MiB/s (with NO timeouts)
+
+[(See the log)](https://gist.github.com/lupyuen/19ab2e16c0c2bb46175bcd8fba7116f2)
+
+Yep it works! No more TFTP Timeouts!
+
+Tested on 32-bit Raspberry Pi 4 and on macOS x64.
+
+TODO: What if we throttle our TFTP Server to send packets slower? Nope doesn't help
+
+TODO: What if we we reduce the timeout? Nope doesn't work
 
 # Hang in Enter Critical Section
 
