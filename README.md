@@ -2190,15 +2190,19 @@ fn send_window<T: Socket>(
 
 Let's test this...
 
-__Before Fixing:__ TFTP Transfer Rate is 125 KiB/s (with 5 timeouts)
+__Before Fixing:__ TFTP Transfer Rate is 48.8 KiB/s (with 6 timeouts)
 
 [(See the log: xinetd + tftpd on Raspberry Pi 4 32-bit)](https://gist.github.com/lupyuen/b36278130fbd281d03fc20189de5485e)
+
+[(Watch the Demo on YouTube)](https://youtu.be/MPBc2Qec6jo)
 
 [(Based on this configuration)](https://community.arm.com/oss-platforms/w/docs/495/tftp-remote-network-kernel-using-u-boot)
 
 __After Fixing:__ TFTP Transfer Rate is 1.1 MiB/s (with NO timeouts)
 
 [(See the log: rs-tftpd-timeout on Raspberry Pi 4 32-bit)](https://gist.github.com/lupyuen/19ab2e16c0c2bb46175bcd8fba7116f2)
+
+[(Watch the Demo on YouTube)](https://youtu.be/ABpi2ABln5o)
 
 [(Based on rs-tftpd-timeout)](https://github.com/lupyuen/rs-tftpd-timeout/blob/main/src/worker.rs#L232-L255)
 
