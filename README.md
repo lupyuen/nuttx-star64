@@ -24,6 +24,8 @@ Read the articles...
 
 -   ["Star64 JH7110 RISC-V SBC: Boot from Network with U-Boot and TFTP"](https://lupyuen.github.io/articles/tftp)
 
+-   ["Strange Workaround for TFTP Timeout in U-Boot Bootloader (Star64 JH7110 SBC)"](https://lupyuen.github.io/articles/tftp2)
+
 Earlier articles...
 
 -   ["Booting RISC-V Linux on Star64 JH7110 SBC"](https://lupyuen.github.io/articles/linux)
