@@ -2226,7 +2226,6 @@ Nope this TFTP Timeout seems specific to Star64 JH7110. We downloaded a 9 MB fil
 
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100 9015k    0 9015k    0     0  2374k      0 --:--:--  0:00:03 --:--:-- 2379k
 100 9015k    0 9015k    0     0  2374k      0 --:--:--  0:00:03 --:--:-- 2374k
 
 # After Fixing TFTP Server: 0.4 Mbps
@@ -2234,7 +2233,6 @@ Nope this TFTP Timeout seems specific to Star64 JH7110. We downloaded a 9 MB fil
 
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100 9015k  100 9015k    0     0   411k      0  0:00:21  0:00:21 --:--:--  410k
 100 9015k  100 9015k    0     0   411k      0  0:00:21  0:00:21 --:--:--  411k
 ```
 
