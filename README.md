@@ -2216,6 +2216,32 @@ TODO: What if we throttle our TFTP Server to send packets slower? Nope doesn't h
 
 TODO: What if we we reduce the timeout? Nope doesn't work
 
+_Does this problem happen for devices other than Star64 JH7110?_
+
+Nope this TFTP Timeout seems specific to Star64 JH7110. We downloaded a 9 MB file from Pi to macOS over TFTP on Wired Ethernet...
+
+```text
+# Before Fixing TFTP Server: 2.4 Mbps
+→ curl --output initrd tftp://192.168.31.10/initrd
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 9015k    0 9015k    0     0  2374k      0 --:--:--  0:00:03 --:--:-- 2379k
+100 9015k    0 9015k    0     0  2374k      0 --:--:--  0:00:03 --:--:-- 2374k
+
+# After Fixing TFTP Server: 0.4 Mbps
+→ curl --output initrd tftp://192.168.31.10/initrd
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 9015k  100 9015k    0     0   411k      0  0:00:21  0:00:21 --:--:--  410k
+100 9015k  100 9015k    0     0   411k      0  0:00:21  0:00:21 --:--:--  411k
+```
+
+The fixed TFTP Server is slower because of the 1 millisecond delay between packets. And we sent every packet twice.
+
+So maybe U-Boot Bootloader on Star64 JH7110 is too slow to catch all the TFTP Packets?
+
 # Hang in Enter Critical Section
 
 Read the article...
