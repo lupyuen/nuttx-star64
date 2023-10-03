@@ -2221,14 +2221,14 @@ _Does this problem happen for devices other than Star64 JH7110?_
 Nope this TFTP Timeout seems specific to Star64 JH7110. We downloaded a 9 MB file from Pi to macOS over TFTP on Wired Ethernet...
 
 ```text
-# Before Fixing TFTP Server: 2.4 Mbps
+# Before Fixing TFTP Server: 19 Mbps
 → curl --output initrd tftp://192.168.31.10/initrd
 
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100 9015k    0 9015k    0     0  2374k      0 --:--:--  0:00:03 --:--:-- 2374k
 
-# After Fixing TFTP Server: 0.4 Mbps
+# After Fixing TFTP Server: 3.3 Mbps
 → curl --output initrd tftp://192.168.31.10/initrd
 
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
