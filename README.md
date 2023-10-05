@@ -2146,6 +2146,10 @@ if set to “no” (any string beginning with ‘n’), “bootp” and “dhcp�
 
 # Strange Workaround for TFTP Timeout in U-Boot Bootloader
 
+Read the article...
+
+-   ["Strange Workaround for TFTP Timeout in U-Boot Bootloader (Star64 JH7110 SBC)"](https://lupyuen.github.io/articles/tftp2)
+
 Why does TFTP time out so often on our SBC? Is it because our TFTP Server sends packets too quickly to our SBC?
 
 Frequent TFTP Timeouts ("T" below) are affecting our NuttX Testing on Star64 JH7110 SBC.  Effective transfer rate is only 430 kbps!
