@@ -24,7 +24,7 @@ Read the articles...
 
 -   ["Star64 JH7110 RISC-V SBC: Boot from Network with U-Boot and TFTP"](https://lupyuen.github.io/articles/tftp)
 
--   ["Strange Workaround for TFTP Timeout in U-Boot Bootloader (Star64 JH7110 SBC)"](https://lupyuen.github.io/articles/tftp2)
+-   ["Strange Workaround for TFTP Timeout in U-Boot Bootloader (Star64 JH7110 RISC-V SBC)"](https://lupyuen.github.io/articles/tftp2)
 
 Earlier articles...
 
@@ -2148,7 +2148,7 @@ if set to “no” (any string beginning with ‘n’), “bootp” and “dhcp�
 
 Read the article...
 
--   ["Strange Workaround for TFTP Timeout in U-Boot Bootloader (Star64 JH7110 SBC)"](https://lupyuen.github.io/articles/tftp2)
+-   ["Strange Workaround for TFTP Timeout in U-Boot Bootloader (Star64 JH7110 RISC-V SBC)"](https://lupyuen.github.io/articles/tftp2)
 
 Why does TFTP time out so often on our SBC? Is it because our TFTP Server sends packets too quickly to our SBC?
 
