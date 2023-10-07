@@ -6021,8 +6021,8 @@ From [clk-jh7110.c](https://github.com/starfive-tech/u-boot/blob/JH7110_VisionFi
 
 ```c
 static const char *u0_dc8200_clk_pix_sels[2] = {
-	[0] = "dc8200_pix0",
-	[1] = "hdmitx0_pixelclk",
+  [0] = "dc8200_pix0",
+  [1] = "hdmitx0_pixelclk",
 };
 
 clk_dm(JH7110_U0_DC8200_CLK_PIX0,
@@ -6046,7 +6046,7 @@ static struct clk *starfive_clk_mux(void __iomem *reg,
   const char * const *parent_names,
   u8 num_parents)
 {
-	return  clk_register_mux(NULL, name, parent_names, num_parents, 0,
+  return  clk_register_mux(NULL, name, parent_names, num_parents, 0,
     reg + offset, STARFIVE_CLK_MUX_SHIFT, width, 0);
 }
 
@@ -6059,30 +6059,30 @@ static struct clk *starfive_clk_composite(void __iomem *reg,
   unsigned int gate_width,
   unsigned int div_width)
 {
-	struct clk *clk = ERR_PTR(-ENOMEM);
-	struct clk_divider *div = NULL;
-	struct clk_gate *gate = NULL;
-	struct clk_mux *mux = NULL;
-	int mask_arry[4] = {0x1, 0x3, 0x7, 0xF};
-	int mask;
+  struct clk *clk = ERR_PTR(-ENOMEM);
+  struct clk_divider *div = NULL;
+  struct clk_gate *gate = NULL;
+  struct clk_mux *mux = NULL;
+  int mask_arry[4] = {0x1, 0x3, 0x7, 0xF};
+  int mask;
 
-	if (mux_width) {
-		if (mux_width > 4)
-			goto fail;
-		else
-			mask = mask_arry[mux_width-1];
+  if (mux_width) {
+    if (mux_width > 4)
+      goto fail;
+    else
+      mask = mask_arry[mux_width-1];
 
-		mux = kzalloc(sizeof(*mux), GFP_KERNEL);
-		if (!mux)
-			goto fail;
+    mux = kzalloc(sizeof(*mux), GFP_KERNEL);
+    if (!mux)
+      goto fail;
 
-		mux->reg = reg + offset;
-		mux->mask = mask;
-		mux->shift = STARFIVE_CLK_MUX_SHIFT;
-		mux->num_parents = num_parents;
-		mux->flags = 0;
-		mux->parent_names = parent_names;
-	}
+    mux->reg = reg + offset;
+    mux->mask = mask;
+    mux->shift = STARFIVE_CLK_MUX_SHIFT;
+    mux->num_parents = num_parents;
+    mux->flags = 0;
+    mux->parent_names = parent_names;
+  }
 
 #define VOUT_OFFSET(id) (((id) - JH7110_CLK_VOUT_START) * 4)
 #define STARFIVE_CLK_MUX_SHIFT		24 /*[29:24]*/
@@ -7133,7 +7133,7 @@ StarFive #
 Based on [vs_dc_hw.c](https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/gpu/drm/verisilicon/vs_dc_hw.c#L1301-L1361)...
 
 - revision = 0x5720
-	
+  
   Which means hw.rev = DC_REV_0
 
 - chip id = 0x30e
@@ -7325,6 +7325,132 @@ interrupts = <35>;
 TODO: Enable Clocks JH7110_I2C0_CLK_CORE, JH7110_I2C0_CLK_APB
 
 TODO: Deassert Reset RSTN_U0_DW_I2C_APB
+
+Clocks and Resets: https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html
+
+```text
+U0 Clock I2C APB
+Table 139. U0 Clock I2C APB Register Description
+Offset	16’h228
+Access	RW
+Bit	Name	Default	Description
+[31]	clk_icg	0	
+1: Clock enable
+0: Clock disable
+
+U1 Clock I2C APB
+Table 140. U1 Clock I2C APB Register Description
+Offset	16’h22c
+Access	RW
+Bit	Name	Default	Description
+[31]	clk_icg	0	
+1: Clock enable
+0: Clock disable
+
+U2 Clock I2C APB
+Table 141. U2 Clock I2C APB Register Description
+Offset	16’h230
+Access	RW
+Bit	Name	Default	Description
+[31]	clk_icg	0	
+1: Clock enable
+0: Clock disable
+
+U3 Clock I2C APB
+Table 142. U3 Clock I2C APB Register Description
+Offset	16’h234
+Access	RW
+Bit	Name	Default	Description
+[31]	clk_icg	0	
+1: Clock enable
+0: Clock disable
+
+U4 Clock I2C APB
+Table 143. U4 Clock I2C APB Register Description
+Offset	16’h238
+Access	RW
+Bit	Name	Default	Description
+[31]	clk_icg	0	
+1: Clock enable
+0: Clock disable
+
+U5 Clock I2C APB
+Table 144. U5 Clock I2C APB Register Description
+Offset	16’h23c
+Access	RW
+Bit	Name	Default	Description
+[31]	clk_icg	0	
+1: Clock enable
+0: Clock disable
+
+U6 Clock I2C APB
+Table 145. U6 Clock I2C APB Register Description
+Offset	16’h240
+Access	RW
+Bit	Name	Default	Description
+[31]	clk_icg	0	
+1: Clock enable
+0: Clock disable
+
+Software RESET 2 Address Selector
+Table 193. Software RESET 2 Address Selector Register Description
+Offset	16’h300
+Access	RW
+Bit	Name	Default	Description
+[12]	rstn_u0_i2c_rstn_apb	0	
+1: Assert reset
+0: De-assert reset
+[13]	rstn_u1_i2c_rstn_apb	1	
+1: Assert reset
+0: De-assert reset
+[14]	rstn_u2_i2c_rstn_apb	1	
+1: Assert reset
+0: De-assert reset
+[15]	rstn_u3_i2c_rstn_apb	1	
+1: Assert reset
+0: De-assert reset
+[16]	rstn_u4_i2c_rstn_apb	1	
+1: Assert reset
+0: De-assert reset
+[17]	rstn_u5_i2c_rstn_apb	1	
+1: Assert reset
+0: De-assert reset
+[18]	rstn_u6_i2c_rstn_apb	1	
+1: Assert reset
+0: De-assert reset
+```
+
+I2C Devices: https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html
+
+```text
+&i2c0 {
+    clock-frequency = <100000>;        
+    i2c-sda-hold-time-ns = <300>;      
+    i2c-sda-falling-time-ns = <510>;   
+    i2c-scl-falling-time-ns = <510>;   
+    auto_calc_scl_lhcnt;
+    pinctrl-names = "default";
+    pinctrl-0 = <&i2c0_pins>;
+    status = "disabled";
+
+    ac108_a: ac108@3b {                    // i2c_client 1
+      compatible = "x-power,ac108_0";
+      reg = <0x3b>;
+      #sound-dai-cells = <0>;
+      data-protocol = <0>;
+    };
+
+    wm8960: codec@1a {                    //i2c_client 2
+      compatible = "wlf,wm8960";
+      reg = <0x1a>;
+      #sound-dai-cells = <0>;
+
+      wlf,shared-lrclk;
+    };
+};
+```
+
+NXP WM8960 stereo codec for digital audio
 
 # PineTab-V Factory Test Code
 
