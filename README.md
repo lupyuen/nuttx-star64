@@ -7420,6 +7420,29 @@ Bit	Name	Default	Description
 0: De-assert reset
 ```
 
+SYS SYSCON: https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_syscon.html
+
+```text
+SYS SYSCONSAIF SYSCFG 20
+Table 6. SYS SYSCONSAIF SYSCFG 20 Register Description
+Offset	0x14
+Default	0xd54d54
+Bit	Name	Access	Default	Description
+[25]	u0_i2c_ic_en	RO	0x0	I2C interface enable.
+
+SYS SYSCONSAIF SYSCFG 156
+Table 40. SYS SYSCONSAIF SYSCFG 156 Register Description
+Offset	0x9c
+Default	0x400
+Bit	Name	Access	Default	Description
+[0]	u1_i2c_ic_en	RO	0x0	I2C interface enable.
+[15]	u2_i2c_ic_en	RO	0x0	I2C interface enable.
+[16]	u3_i2c_ic_en	RO	0x0	I2C interface enable.
+[17]	u4_i2c_ic_en	RO	0x0	I2C interface enable.
+[18]	u5_i2c_ic_en	RO	0x0	I2C interface enable.
+[19]	u6_i2c_ic_en	RO	0x0	I2C interface enable.
+```
+
 I2C Devices: https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html
 
 ```text
