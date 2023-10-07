@@ -7311,12 +7311,15 @@ Register base address "0x10030000" and range "0x10000".
 100300f0: 00000000 00000000 00000000 00000000  ................
 ```
 
+https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html
+
 ```text
-		clocks = <&clkgen JH7110_I2C0_CLK_CORE>,
-			 <&clkgen JH7110_I2C0_CLK_APB>;
-		clock-names = "ref", "pclk";
-		resets = <&rstgen RSTN_U0_DW_I2C_APB>;
-		interrupts = <35>;
+clocks =
+  <&clkgen JH7110_I2C0_CLK_CORE>,
+  <&clkgen JH7110_I2C0_CLK_APB>;
+clock-names = "ref", "pclk";
+resets = <&rstgen RSTN_U0_DW_I2C_APB>;
+interrupts = <35>;
 ```
 
 TODO: Enable Clocks JH7110_I2C0_CLK_CORE, JH7110_I2C0_CLK_APB
