@@ -3641,6 +3641,15 @@ __ramdisk_end  = ORIGIN(ramdisk) + LENGTH(ramdisk);
 
 TODO: How to exclude the RAM Disk from being allocated to NuttX Apps?
 
+Is Page Heap Size defined by CONFIG_ARCH_PGPOOL_SIZE?
+
+From https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L33-L34
+
+```text
+CONFIG_ARCH_PGPOOL_SIZE=4194304
+CONFIG_ARCH_PGPOOL_VBASE=0x40600000
+```
+
 # Increase Page Heap Size
 
 TODO: How to increase the Page Heap Size, so that NuttX Apps will have more RAM?
@@ -3667,6 +3676,15 @@ MEMORY
     pgram (rwx) : ORIGIN = 0x40600000, LENGTH = 4096K   /* w/ cache */
     ramdisk (rwx) : ORIGIN = 0x40A00000, LENGTH = 16M   /* w/ cache */
 }
+```
+
+Is Page Heap Size defined by CONFIG_ARCH_PGPOOL_SIZE?
+
+From https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L33-L34
+
+```text
+CONFIG_ARCH_PGPOOL_SIZE=4194304
+CONFIG_ARCH_PGPOOL_VBASE=0x40600000
 ```
 
 # No UART Output from NuttX Shell
