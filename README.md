@@ -3621,7 +3621,25 @@ __ramdisk_size = LENGTH(ramdisk);
 __ramdisk_end  = ORIGIN(ramdisk) + LENGTH(ramdisk);
 ```
 
-TODO: How do we exclude the RAM Disk from being allocated to NuttX Apps?
+TODO: How to exclude the RAM Disk from being allocated to NuttX Apps?
+
+# Increase RAM Disk Limit
+
+RAM Disk (initrd) is limited to 16 MB...
+
+From https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/scripts/ld.script
+
+```text
+MEMORY
+{
+    kflash (rx) : ORIGIN = 0x40200000, LENGTH = 2048K   /* w/ cache */
+    ksram (rwx) : ORIGIN = 0x40400000, LENGTH = 2048K   /* w/ cache */
+    pgram (rwx) : ORIGIN = 0x40600000, LENGTH = 4096K   /* w/ cache */
+    ramdisk (rwx) : ORIGIN = 0x40A00000, LENGTH = 16M   /* w/ cache */
+}
+```
+
+TODO: If initrd exceeds 16 MB, how to increase the RAM Disk Limit?
 
 # No UART Output from NuttX Shell
 
