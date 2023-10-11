@@ -3751,7 +3751,9 @@ Let's test to see if it works...
 
 # Test the Page Heap
 
-_In the previous section we increased the Page Heap Size from 4 MB to 16 MB. How do we test this?_
+_In the previous section we increased the NuttX Page Heap Size from 4 MB to 16 MB, so that NuttX Apps will have more Dynamic Memory (malloc)..._
+
+_How do we test this?_
 
 We run a loop in our `hello` app to allocate 8 KB blocks repeatedly...
 
