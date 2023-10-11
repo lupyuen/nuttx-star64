@@ -3789,7 +3789,7 @@ Which is around 1.2 MB.
 
 __After: Page Heap Size is now 16 MB__
 
-The `hello` app crashes after allocating 1603-plus blocks of 8 KB...
+The `hello` app crashes after allocating 1,603-plus blocks of 8 KB...
 
 ```text
 nsh> hello
