@@ -3618,7 +3618,7 @@ TODO: Remember to update UBoot Script
 
 Note that the RAM Disk is mapped into the Page Heap (`__pgheap_size`) in the Linker Script...
 
-From https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/scripts/ld.script
+From [ld.script](https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/scripts/ld.script):
 
 ```text
 MEMORY
@@ -3645,7 +3645,7 @@ _Won't the RAM Disk get incorrectly allocated to NuttX Apps?_
 
 Nope, that won't happen because the Actual Page Heap Size (without RAM Disk) is defined by `CONFIG_ARCH_PGPOOL_SIZE` in the NuttX Config...
 
-From https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L33-L34
+From [nsh/defconfig](https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L33-L34):
 
 ```bash
 CONFIG_ARCH_PGPOOL_SIZE=4194304
@@ -3662,8 +3662,6 @@ _NuttX Apps will allocate Dynamic Memory (malloc) from the NuttX Page Heap..._
 
 _Why does NuttX report that the Page Heap Size is 20 MB?_
 
-From https://gist.github.com/lupyuen/fe062fe61a646c465329b80b1fe5fcac#file-nuttx-heap-log-L161-L165
-
 ```text
 NuttShell (NSH) NuttX-12.0.3
 nsh> free
@@ -3672,9 +3670,11 @@ nsh> free
         Page:   20971520     643072   20328448   20328448
 ```
 
+[(Source)](https://gist.github.com/lupyuen/fe062fe61a646c465329b80b1fe5fcac#file-nuttx-heap-log-L161-L165)
+
 That's because the 20 MB (`__pgheap_size`) includes the 4 MB Page Heap + 16 MB RAM Disk, as defined in the Linker Script...
 
-From https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/scripts/ld.script
+From [ld.script](https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/scripts/ld.script):
 
 ```text
 MEMORY
@@ -3693,7 +3693,7 @@ __pgheap_size = LENGTH(pgram) + LENGTH(ramdisk);
 
 By default the Page Heap Size is actually 4 MB, as defined by `CONFIG_ARCH_PGPOOL_SIZE` in the NuttX Config...
 
-From https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L33-L34
+From [nsh/defconfig](https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L33-L34):
 
 ```bash
 CONFIG_ARCH_PGPOOL_SIZE=4194304
@@ -3704,7 +3704,7 @@ _How to increase the Page Heap Size, so that NuttX Apps will have more Dynamic M
 
 This is how we increase the Page Heap Size from 4 MB to 16 MB...
 
-From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/malloc/boards/risc-v/jh7110/star64/scripts/ld.script#L25-L26
+From [ld.script](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/malloc/boards/risc-v/jh7110/star64/scripts/ld.script#L25-L26):
 
 ```text
     /* Previously: LENGTH = 4096K */
@@ -3718,7 +3718,7 @@ Note that the RAM Disk Origin shifts down to make room for the increased Page He
 
 Then we update `CONFIG_ARCH_PGPOOL_SIZE` in the NuttX Config...
 
-From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/malloc/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L33-L34
+From [nsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/malloc/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L33-L34):
 
 ```bash
 ## Previously 4194304 (4 MB)
@@ -3737,8 +3737,6 @@ make
 
 Now NuttX reports that the Free Memory is 32 MB (16 MB Page Heap + 16 MB RAM Disk)...
 
-From https://gist.github.com/lupyuen/83980edd8d970d5530070fd78f6b0242#file-nuttx-heap-increase-ok-log-L162-L166
-
 ```text
 NuttShell (NSH) NuttX-12.0.3
 nsh> free
@@ -3746,6 +3744,8 @@ nsh> free
         Kmem:    2065400      15000    2050400    2049040     50      4
         Page:   33554432     643072   32911360   32911360
 ```
+
+[(Source)](https://gist.github.com/lupyuen/83980edd8d970d5530070fd78f6b0242#file-nuttx-heap-increase-ok-log-L162-L166)
 
 Let's test to see if it works...
 
@@ -3755,7 +3755,7 @@ _In the previous section we increased the Page Heap Size from 4 MB to 16 MB. How
 
 We run a loop in our `hello` app to allocate 8 KB blocks repeatedly...
 
-From https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/malloc/examples/hello/hello_main.c#L41-L47
+From [hello_main.c](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/malloc/examples/hello/hello_main.c#L41-L47):
 
 ```c
   for (i = 0; ; i++)
@@ -3771,8 +3771,6 @@ __Before: Page Heap Size was 4 MB__
 
 The `hello` app crashes after allocating 160-plus blocks of 8 KB...
 
-From https://gist.github.com/lupyuen/fe062fe61a646c465329b80b1fe5fcac#file-nuttx-heap-log-L184-L188
-
 ```text
 nsh> hello
 ...
@@ -3781,13 +3779,13 @@ i=riscv_exception: EXCEPTION: Store/AMO access fault. MCAUSE: 0000000000000007, 
 riscv_exception: PANIC!!! Exception = 0000000000000007
 ```
 
+[(Source)](https://gist.github.com/lupyuen/fe062fe61a646c465329b80b1fe5fcac#file-nuttx-heap-log-L184-L188)
+
 Which is around 1.2 MB.
 
 __After: Page Heap Size is now 16 MB__
 
 The `hello` app crashes after allocating 1603-plus blocks of 8 KB...
-
-https://gist.github.com/lupyuen/83980edd8d970d5530070fd78f6b0242#file-nuttx-heap-increase-ok-log-L332-L333
 
 ```text
 nsh> hello
@@ -3796,13 +3794,14 @@ i=1630
 iriscv_exception: EXCEPTION: Store/AMO access fault. MCAUSE: 0000000000000007, EPC: 0000000040206652, MTVAL: 0000000000000000
 ```
 
+[(Source)](https://gist.github.com/lupyuen/83980edd8d970d5530070fd78f6b0242#file-nuttx-heap-increase-ok-log-L332-L333)
+
 Which is around 13 MB. So yep the increase in Page Heap Size works!
 
 _Why does it crash?_
 
-Based on the Crash Dump...
-
-https://gist.github.com/lupyuen/83980edd8d970d5530070fd78f6b0242#file-nuttx-heap-increase-ok-log-L332-L333
+Based on the [Crash Dump](https://gist.github.com/lupyuen/83980edd8d970d5530070fd78f6b0242#file-nuttx-heap-increase-ok-log-L332-L333
+)...
 
 ```text
 riscv_exception: 
