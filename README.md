@@ -3769,6 +3769,8 @@ From [hello_main.c](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/ma
   printf("malloc failed at i=%d\n", i);
 ```
 
+We run the Heap Test Code before and after increasing the Page Heap Size...
+
 __Before: Page Heap Size was 4 MB__
 
 The `hello` app crashes after allocating 160-plus blocks of 8 KB...
