@@ -3798,7 +3798,25 @@ iriscv_exception: EXCEPTION: Store/AMO access fault. MCAUSE: 0000000000000007, E
 
 Which is around 13 MB. So yep the increase in Page Heap Size works!
 
+_Why does it crash?_
 
+Based on the Crash Dump...
+
+https://gist.github.com/lupyuen/83980edd8d970d5530070fd78f6b0242#file-nuttx-heap-increase-ok-log-L332-L333
+
+```text
+riscv_exception: 
+EXCEPTION: Store/AMO access fault
+MCAUSE: 7
+EPC: 40206652
+MTVAL: 0
+```
+
+The Exception Program Counter (EPC) says 0x40206652, which is inside the code for `memset()`. (We looked up the NuttX Disassemly)
+
+MTVAL is 0, which means that `memset()` crashed while accessing a Null Pointer. Maybe `printf` tried to allocate a Dynamic Buffer and failed?
+
+TODO: NuttX QEMU doesn't crash when we run the same Heap Test, the app exits gracefully to the NuttX Shell. Might need more investigation. [(See this)](https://github.com/lupyuen2/wip-pinephone-nuttx-apps/blob/malloc2/examples/hello/hello_main.c#L53-L73)
 
 # No UART Output from NuttX Shell
 
