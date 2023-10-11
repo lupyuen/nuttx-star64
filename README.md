@@ -3594,9 +3594,34 @@ TODO: Why no shell?
 
 TODO: Why `nx_start_application: ret=3`?
 
-TODO: Check User Address Space
+# Memory Map for RAM Disk
 
-TODO: Boot from MicroSD with Initial RAM Disk
+Note that the RAM Disk is mapped into the Page Heap...
+
+From https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/scripts/ld.script
+
+```text
+MEMORY
+{
+    kflash (rx) : ORIGIN = 0x40200000, LENGTH = 2048K   /* w/ cache */
+    ksram (rwx) : ORIGIN = 0x40400000, LENGTH = 2048K   /* w/ cache */
+    pgram (rwx) : ORIGIN = 0x40600000, LENGTH = 4096K   /* w/ cache */
+    ramdisk (rwx) : ORIGIN = 0x40A00000, LENGTH = 16M   /* w/ cache */
+}
+
+/* Note: Page Heap includes RAM Disk */
+
+__pgheap_start = ORIGIN(pgram);
+__pgheap_size = LENGTH(pgram) + LENGTH(ramdisk);
+
+/* Application ramdisk */
+
+__ramdisk_start = ORIGIN(ramdisk);
+__ramdisk_size = LENGTH(ramdisk);
+__ramdisk_end  = ORIGIN(ramdisk) + LENGTH(ramdisk);
+```
+
+TODO: How do we exclude the RAM Disk from being allocated to NuttX Apps?
 
 # No UART Output from NuttX Shell
 
