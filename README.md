@@ -3596,7 +3596,7 @@ TODO: Why `nx_start_application: ret=3`?
 
 # Increase RAM Disk Limit
 
-RAM Disk (initrd) is limited to 16 MB...
+Note that the Initial RAM Disk (initrd) is limited to __16 MB__...
 
 From https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/scripts/ld.script
 
@@ -3610,9 +3610,22 @@ MEMORY
 }
 ```
 
-TODO: If initrd exceeds 16 MB, how to increase the RAM Disk Limit?
+_If initrd exceeds 16 MB, how to increase the RAM Disk Limit?_
 
-TODO: Remember to update UBoot Script
+Edit the Linker Script above and change the Ram Disk Length accordingly.
+
+Remember to update the U-Boot Script for TFTP...
+
+```bash
+## Assume Initial RAM Disk is max 16 MB
+setenv ramdisk_size 0x1000000
+```
+
+[(Source)](https://lupyuen.github.io/articles/tftp#test-u-boot-with-tftp)
+
+`ramdisk_size` needs to be increased also.
+
+TODO: Can we fix the U-Boot Script so that it doesn't hardcode the RAM Disk Size?
 
 # Memory Map for RAM Disk
 
