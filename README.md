@@ -8030,7 +8030,7 @@ Which means Register S2 is 0.
 
 And `48(s2)` means S2 + 48, which is `0x30`. Yep we have the right line of crashing code!
 
-TODO: Why did this fail? Is `this_entry` null? Because we ran out of Heap Memory?
+TODO: Why did this fail? Is `this_entry` null? Because we ran out of Heap Memory? Let's add an assertion check for `this_entry != NULL`
 
 ```text
 /Users/Luppy/riscv/apps/interpreters/umb-scheme/architecture.c:556
