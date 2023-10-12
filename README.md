@@ -7949,6 +7949,202 @@ This produces the Device Tree for QEMU RISC-V...
 
 Which is helpful for browsing the Memory Addresses of I/O Peripherals.
 
+# Scheme Interpreter crashes on NuttX
+
+_Why does Scheme Interpreter crash on NuttX?_
+
+Let's run the Scheme Interpreter on NuttX QEMU, for easier debugging...
+
+https://github.com/KenDickey/nuttx-umb-scheme
+
+(Remember to run `make menuconfig > Save Config` after setting CONFIG_LIBM, CONFIG_ARCH_FLOAT_H and CONFIG_ARCH_SETJMP_H)
+
+Here's the output...
+
+https://gist.github.com/lupyuen/5c225a3a30086cd35455463955f5ff64
+
+Our Crash Dump (see below) says...
+
+```text
+EXCEPTION: Load page fault. 
+MCAUSE: 000000000000000d, 
+EPC: 00000000c000f366, 
+MTVAL: 0000000000000030
+```
+
+Exception Program Counter is `c000f366`. We disregard the `c000` because NuttX maps the Scheme App into the RISC-V User Memory Space. So actual Program Counter is `f366`
+
+We look up `f366` in the disassembly...
+
+```bash
+## Dump the scheme disassembly to scheme.S
+riscv64-unknown-elf-objdump \
+  -t -S --demangle --line-numbers --wide \
+  ../apps/bin/scheme \
+  >scheme.S \
+  2>&1
+```
+
+And we see this disassembly...
+
+```text
+000000000000f360 <.L29>:
+/Users/Luppy/riscv/apps/interpreters/umb-scheme/architecture.c:556
+		while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
+    f360:	0004b903          	ld	s2,0(s1)
+    f364:	8522                	mv	a0,s0
+    /* Crashes here */
+    f366:	03093583          	ld	a1,48(s2)
+    f36a:	00000097          	auipc	ra,0x0
+    f36e:	000080e7          	jalr	ra # f36a <.L29+0xa>
+```
+
+_Are we sure that's the crashing code?_
+
+```text
+    /* Crashes here */
+    f366:	03093583          	ld	a1,48(s2)
+```
+
+Our Crash Dump (see below) says...
+
+```text
+MTVAL: 0000000000000030
+```
+
+Which means that our Scheme App tried to access address `0x30`, which is invalid.
+
+_So `48(s2)` should equal `0x30`?_
+
+The Crash Dump says...
+
+```text
+up_dump_register: 
+S0: 00000000c01017f8 
+S1: 00000000c0201ef0 
+S2: 0000000000000000 
+S3: 0000000000000000
+```
+
+Which means Register S2 is 0.
+
+And `48(s2)` means S2 + 48, which is `0x30`. Yep we have the right line of crashing code!
+
+TODO: Why did this fail? Is `this_entry` null? Because we ran out of Heap Memory?
+
+```text
+/Users/Luppy/riscv/apps/interpreters/umb-scheme/architecture.c:556
+		while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
+```
+
+Here the Crash Dump:
+
+```text
+[    9.783000] riscv_exception: EXCEPTION: Load page fault. MCAUSE: 000000000000000d, EPC: 00000000c000f366, MTVAL: 0000000000000030
+[    9.783000] riscv_exception: PANIC!!! Exception = 000000000000000d
+[    9.783000] _assert: Current Version: NuttX  12.3.0-RC0 322455f Oct 12 2023 15:48:34 risc-v
+[    9.783000] _assert: Assertion failed panic: at file: common/riscv_exception.c:85 task: /system/bin/init process: /system/bin/init 0xc000004a
+[    9.783000] up_dump_register: EPC: 00000000c000f366
+[    9.783000] up_dump_register: A0: 00000000c01017f8 A1: 000000000fffffff A2: 00000000c01017fe A3: 0000000000000000
+[    9.783000] up_dump_register: A4: 00000000000003f1 A5: 0000000000001610 A6: 00000000c0226380 A7: fffffffffffffff8
+[    9.783000] up_dump_register: T0: 000000008000729a T1: 00000000c0003af8 T2: 00000000000001ff T3: 000000000000006c
+[    9.783000] up_dump_register: T4: 0000000000000068 T5: 0000000000000009 T6: 000000000000002a
+[    9.783000] up_dump_register: S0: 00000000c01017f8 S1: 00000000c0201ef0 S2: 0000000000000000 S3: 0000000000000000
+[    9.783000] up_dump_register: S4: 00000000c001ea34 S5: 00000000c0166038 S6: 00000000c01017f8 S7: 000000000000003b
+[    9.783000] up_dump_register: S8: 0000000000000021 S9: 0000000000000019 S10: 0000000000000000 S11: 0000000000000000
+[    9.783000] up_dump_register: SP: 00000000c0202210 FP: 00000000c01017f8 TP: 0000000000000000 RA: 00000000c000cbda
+[    9.783000] dump_stack: User Stack:
+[    9.783000] dump_stack:   base: 0xc0202040
+[    9.783000] dump_stack:   size: 00003008
+[    9.783000] dump_stack:     sp: 0xc0202210
+[    9.783000] stack_dump: 0xc0202200: 00000063 00000000 c000c00e 00000000 c001ea34 00000000 c0165f78 00000000
+[    9.783000] stack_dump: 0xc0202220: c0166040 00000000 0000006c 00000000 c0265a50 00000000 c000cbda 00000000
+[    9.783000] stack_dump: 0xc0202240: c0265a50 00000000 00000019 00000000 00000021 00000000 0000003b 00000000
+[    9.783000] stack_dump: 0xc0202260: c01017f8 00000000 c0166038 00000000 c001ea34 00000000 c0265a50 00000000
+[    9.783000] stack_dump: 0xc0202280: c0166040 00000000 c0166048 00000000 c01660a0 00000000 c000cdc8 00000000
+[    9.783000] stack_dump: 0xc02022a0: c001ea34 00000000 c0265a50 00000000 c0166040 00000000 c0166048 00000000
+[    9.783000] stack_dump: 0xc02022c0: c01660a0 00000000 c000cdc8 00000000 c001ea34 00000000 c0165f78 00000000
+[    9.783000] stack_dump: 0xc02022e0: c0166040 00000000 c0166048 00000000 c0265a50 00000000 c000c6e0 00000000
+[    9.783000] stack_dump: 0xc0202300: c0166048 00000000 00000000 00000000 c0101cb0 00000000 c0165f98 00000000
+[    9.783000] stack_dump: 0xc0202320: c0165f18 00000000 c0165ff4 00000000 c0166048 00000000 c0265a50 00000000
+[    9.783000] stack_dump: 0xc0202340: c0101cb0 00000000 c0166048 00000000 c01660a0 00000000 c000cdc8 00000000
+[    9.783000] stack_dump: 0xc0202360: c0101cb0 00000000 c0265a50 00000000 c0101cb0 00000000 c0166048 00000000
+[    9.783000] stack_dump: 0xc0202380: c01660a0 00000000 c000cf0a 00000000 c0166048 00000000 c0265a50 00000000
+[    9.783000] stack_dump: 0xc02023a0: c0101cb0 00000000 c0166048 00000000 c01660a0 00000000 c000cf0a 00000000
+[    9.783000] stack_dump: 0xc02023c0: c0166048 00000000 c0265a50 00000000 c0101cb0 00000000 c0166048 00000000
+[    9.783000] stack_dump: 0xc02023e0: c01660a0 00000000 c000cdc8 00000000 c0101cb0 00000000 c0265a50 00000000
+[    9.783000] stack_dump: 0xc0202400: c0101cb0 00000000 c0166048 00000000 c01660a0 00000000 c000cf0a 00000000
+[    9.783000] stack_dump: 0xc0202420: c0166048 00000000 c0265a50 00000000 c0101cb0 00000000 c0166048 00000000
+[    9.783000] stack_dump: 0xc0202440: c01660a0 00000000 c000cf0a 00000000 c0166048 00000000 c0265a50 00000000
+[    9.783000] stack_dump: 0xc0202460: c0101cb0 00000000 c0166048 00000000 c01660a0 00000000 c000cf0a 00000000
+[    9.783000] stack_dump: 0xc0202480: c0166048 00000000 0000c34f 00000000 c0265a50 00000000 c01660a0 00000000
+[    9.783000] stack_dump: 0xc02024a0: 00000000 00000000 c00025fa 00000000 00000000 00000000 00000000 00000000
+[    9.783000] stack_dump: 0xc02024c0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    9.783000] stack_dump: 0xc02024e0: 00000001 00000000 c0265a20 00000000 c0265a50 00000000 c0008112 00000000
+[    9.783000] stack_dump: 0xc0202500: 00000000 00000000 00000000 00000000 c0166048 00000000 c0002558 00000000
+[    9.783000] stack_dump: 0xc0202520: 00000000 00000000 c00028c4 00000000 deadbeef deadbeef 00000000 00000000
+[    9.783000] stack_dump: 0xc0202540: 6c756e28 2e2f296c 65686373 de00656d deadbeef deadbeef deadbeef deadbeef
+[    9.783000] stack_dump: 0xc0202560: deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef
+[    9.783000] stack_dump: 0xc0202580: deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef
+[    9.783000] stack_dump: 0xc02025a0: deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef
+[    9.783000] stack_dump: 0xc02025c0: deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef
+[    9.783000] stack_dump: 0xc02025e0: deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef
+[    9.783000] stack_dump: 0xc0202600: deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef
+[    9.783000] stack_dump: 0xc0202620: deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef
+[    9.783000] stack_dump: 0xc0202640: 636c6557 20656d6f 55206f74 5320424d 6d656863 76202c65 69737265 33206e6f
+[    9.783000] stack_dump: 0xc0202660: 2020322e 79706f43 68676972 63282074 39312029 312c3838 20363939 6c6c6957
+[    9.783000] stack_dump: 0xc0202680: 206d6169 61432052 6562706d 0a2e6c6c 20424d55 65686353 6320656d 73656d6f
+[    9.783000] stack_dump: 0xc02026a0: 74697720 42412068 554c4f53 594c4554 204f4e20 52524157 59544e41 6854202e
+[    9.783000] stack_dump: 0xc02026c0: 69207369 72662073 73206565 7774666f 20657261 0a646e61 20756f79 20657261
+[    9.783000] stack_dump: 0xc02026e0: 65657266 206f7420 69646572 69727473 65747562 20746920 65646e75 65632072
+[    9.783000] stack_dump: 0xc0202700: 69617472 6f63206e 7469646e 736e6f69 65530a2e 68742065 4d552065 63532042
+[    9.783000] stack_dump: 0xc0202720: 656d6568 6c655220 65736165 746f4e20 66207365 6420726f 69617465 202e736c
+[    9.783000] stack_dump: 0xc0202740: 7079540a 28602065 74697865 6f206029 6f432072 6f72746e 20642d6c 65206f74
+[    9.783000] stack_dump: 0xc0202760: 2e746978 de000a0a deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef
+[    9.783000] stack_dump: 0xc0202780: deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef
+[    9.783000] stack_dump: 0xc02027a0: deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef
+[    9.783000] stack_dump: 0xc02027c0: deadbeef deadbeef deadbeef deadbeef deadbeef deadbeef 00000000 00000000
+[    9.783000] stack_dump: 0xc02027e0: 00000000 00000000 c00023f6 00000000 deadbeef deadbeef 8000a9f8 00000000
+[    9.783000] stack_dump: 0xc0202800: 00000000 00000000 00030d51 00000000 c0101060 00000000 c001d630 00000000
+[    9.783000] stack_dump: 0xc0202820: 00000000 00000000 c0101060 00000000 c001d640 00000000 00000000 00000000
+[    9.783000] stack_dump: 0xc0202840: c01011e0 00000000 c001d650 00000000 00000000 00000000 c01011e0 00000000
+[    9.783000] stack_dump: 0xc0202860: c001d660 00000000 00000000 00000000 c0101210 00000000 c001d670 00000000
+[    9.783000] stack_dump: 0xc0202880: 00000000 00000000 c01014b0 00000000 c001d420 00000000 c0202888 00000000
+[    9.783000] stack_dump: 0xc02028a0: 00000000 00000000 c0202870 00000000 00000000 00000000 c0200560 00000000
+[    9.783000] stack_dump: 0xc02028c0: c01014b0 00000000 c001d420 00000000 00000000 00000000 c0202888 00000000
+[    9.783000] stack_dump: 0xc02028e0: c0202870 00000000 00000000 00000000 c0200580 00000000 c01014b0 00000000
+[    9.783000] stack_dump: 0xc0202900: c001d420 00000000 c02028f8 00000000 c0202888 00000000 c0202870 00000000
+[    9.783000] stack_dump: 0xc0202920: 00000000 00000000 c02005b0 00000000 c01014b0 00000000 c001d420 00000000
+[    9.783000] stack_dump: 0xc0202940: c02028c0 00000000 c0202888 00000000 c0202870 00000000 00000000 00000000
+[    9.783000] stack_dump: 0xc0202960: c02005f0 00000000 c01014b0 00000000 c001d420 00000000 c02028c0 00000000
+[    9.783000] stack_dump: 0xc0202980: c0202888 00000000 c0202870 00000000 00000000 00000000 c0200630 00000000
+[    9.783000] stack_dump: 0xc02029a0: c01014b0 00000000 c001d420 00000000 c02028c0 00000000 c0202888 00000000
+[    9.783000] stack_dump: 0xc02029c0: c0202870 00000000 00000000 00000000 c0200670 00000000 c01014b0 00000000
+[    9.783000] stack_dump: 0xc02029e0: c001d420 00000000 c02028c0 00000000 c0202888 00000000 c0202870 00000000
+[    9.783000] stack_dump: 0xc0202a00: 00000000 00000000 c02006b0 00000000 c01014b0 00000000 c001d420 00000000
+[    9.783000] stack_dump: 0xc0202a20: c02028c0 00000000 c0202888 00000000 c0202870 00000000 00000000 00000000
+[    9.783000] stack_dump: 0xc0202a40: c02006f0 00000000 c01014b0 00000000 c001d420 00000000 c02028c0 00000000
+[    9.783000] stack_dump: 0xc0202a60: c0202888 00000000 c0202870 00000000 00000000 00000000 c0200730 00000000
+[    9.783000] stack_dump: 0xc0202a80: c01014b0 00000000 c001d420 00000000 c02028c0 00000000 c0202888 00000000
+[    9.783000] stack_dump: 0xc0202aa0: c0202870 00000000 00000000 00000000 c0200770 00000000 c01014b0 00000000
+[    9.783000] stack_dump: 0xc0202ac0: c001d420 00000000 c02028c0 00000000 c0202888 00000000 c0202870 00000000
+[    9.783000] stack_dump: 0xc0202ae0: 00000000 00000000 c02007b0 00000000 c0101360 00000000 c001d420 00000000
+[    9.783000] stack_dump: 0xc0202b00: 00000001 00000000 c0200308 00000000 c02007d0 00000000 c0101360 00000000
+[    9.783000] stack_dump: 0xc0202b20: c001d420 00000000 00000000 00000000 c02003a8 00000000 c02007f0 00000000
+[    9.783000] stack_dump: 0xc0202b40: c0101360 00000000 c001d420 00000000 00000000 00000000 c0200448 00000000
+[    9.783000] stack_dump: 0xc0202b60: c0200810 00000000 c0101270 00000000 c001d720 00000000 00000000 00000000
+[    9.783000] stack_dump: 0xc0202b80: c0101240 00000000 c001d420 00000000 c0202870 00000000 00000000 00000000
+[    9.783000] stack_dump: 0xc0202ba0: c0202870 00000000 00000000 00000000 00000000 00000000 c0101390 00000000
+[    9.783000] stack_dump: 0xc0202bc0: c001d420 00000000 c001f490 00000000 00000000 00000000 c000fc58 00000000
+[    9.783000] stack_dump: 0xc0202be0: 00000001 00000000 fffffffe ffffffff c01014b0 00000000 c001d420 00000000
+[    9.783000] dump_tasks:    PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
+[    9.783000] dump_tasks:   ----   --- --- -------- ------- --- ------- ---------- ---------------- 0x802002b0      2048      2040    99.6%!   irq
+[    9.783000] dump_task:       0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80206010      3056      1520    49.7%    Idle_Task
+[    9.783000] dump_task:       1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020a050      1968       752    38.2%    lpwork 0x802015f0 0x80201618
+[    9.783000] dump_task:       2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      3008       848    28.1%    /system/bin/init
+[    9.783000] dump_task:       3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
+```
+
 # TODO
 
 TODO: Port [__up_mtimer_initialize__](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/star64a/arch/risc-v/src/qemu-rv/qemu_rv_timerisr.c#L151-L210) to Star64
