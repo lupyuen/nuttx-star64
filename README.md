@@ -7972,7 +7972,7 @@ EPC: 00000000c000f366,
 MTVAL: 0000000000000030
 ```
 
-Exception Program Counter is `c000f366`. We disregard the `c000` because NuttX maps the Scheme App into the RISC-V User Memory Space. So actual Program Counter is `f366`
+Exception Program Counter is `c000f366`. We disregard the `c000` because NuttX maps the Scheme App into the RISC-V User Memory Space at `c0000000`. So actual Program Counter is `f366`
 
 We look up `f366` in the disassembly...
 
@@ -7990,7 +7990,7 @@ And we see this disassembly...
 ```text
 000000000000f360 <.L29>:
 /Users/Luppy/riscv/apps/interpreters/umb-scheme/architecture.c:556
-		while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
+    while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
     f360:	0004b903          	ld	s2,0(s1)
     f364:	8522                	mv	a0,s0
     /* Crashes here */
@@ -8006,13 +8006,13 @@ _Are we sure that's the crashing code?_
     f366:	03093583          	ld	a1,48(s2)
 ```
 
-Our Crash Dump (see below) says...
+Let's check the RISC-V Registers. Our Crash Dump (see below) says...
 
 ```text
 MTVAL: 0000000000000030
 ```
 
-Which means that our Scheme App tried to access address `0x30`, which is invalid.
+Which means that our Scheme App crashed while accessing address `0x30`, which is invalid.
 
 _So `48(s2)` should equal `0x30`?_
 
@@ -8034,7 +8034,7 @@ TODO: Why did this fail? Is `this_entry` null? Because we ran out of Heap Memory
 
 ```text
 /Users/Luppy/riscv/apps/interpreters/umb-scheme/architecture.c:556
-		while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
+  while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
 ```
 
 Here the Crash Dump:
