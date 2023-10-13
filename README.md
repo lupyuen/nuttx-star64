@@ -8186,6 +8186,7 @@ TODO: What about other Code Addresses in the Stack Dump?
 
 ```text
 → grep 'c00[0-1]....' --only-matching /tmp/a.log
+c000f366
 c000004a
 c0003af8
 c001ea34
@@ -8213,58 +8214,92 @@ c000fc58
 TODO: Match to Disassembly. The Code Addresses are the __Return Addresses__. So we match to the previous instruction
 
 ```text
-c0003af8:
+c000f366: (The crashing code, from previous section)
+apps/interpreters/umb-scheme/architecture.c:556
+Public Object Intern_Name(String name) { ...
+  while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
+
+c0003af8: (We skip this, not really meaningful)
 nuttx/libs/libc/stdio/lib_libfilelock.c:64
 void funlockfile(FAR struct file_struct *stream) {
   nxrmutex_unlock(&stream->fs_lock);
 
-c000cbda:
+c000cbda: Read() calls Intern_Name()
 apps/interpreters/umb-scheme/io.c:336
-		Value_Register = Intern_Name( Token_String ) ;
+/* Read a Scheme object from |Input_File|; leave it in Value_Register. */
+Public	void Read( FILE *Input_File ) { ...
+    Value_Register = Intern_Name( Token_String ) ;
 
-c000c00e:
+c000c00e: Read_Symbol() calls Peek_Char()
 apps/interpreters/umb-scheme/io.c:726
-	while ( !Is_Delimiter( Peek_Char( Input_File ) ) )
+/* We do a naive scan, scanning up to a delimiter.  This allows for more than
+   is described in the formal syntax. We do eliminate control characters. */
+Private	void Read_Symbol( Ch , Input_File )
+  Character	Ch ;		/* Leading character of symbol. */
+  FILE*		Input_File ;	/* Containing remaining chars. */
+{ ...
+  while ( !Is_Delimiter( Peek_Char( Input_File ) ) )
 
-c000cdc8:
+c000cdc8: Read_List() calls Read()
 apps/interpreters/umb-scheme/io.c:446
-	Read( Input_File ) ;
+/* Read list from Input_File and leave it in Value_Register. This allows 
+the input `( . x )' (it treats it as equivalent to x), which is not strictly 
+legal according to the manual. */
+Private	void Read_List( FILE* Input_File ) { ...
+  Read( Input_File ) ;
 
-c000c6e0:
+c000c6e0: Read() calls itself recursively
 apps/interpreters/umb-scheme/io.c:415 (discriminator 4)
-		Read( Input_File ) ;
+/* Read a Scheme object from |Input_File|; leave it in Value_Register. */
+Public	void Read( FILE* Input_File ) { ...
+   case Comma_At_Token :
+    Read( Input_File ) ;
 
-c000cf0a:
+c000cf0a: Read_List() calls itself recursively
 apps/interpreters/umb-scheme/io.c:483 (discriminator 4)
-		Read_List( Input_File ) ;
+/* Read list from Input_File and leave it in Value_Register. This allows 
+the input `( . x )' (it treats it as equivalent to x), which is not strictly 
+legal according to the manual. */
+Private	void Read_List( FILE* Input_File ) { ...
+  Read_List( Input_File ) ;
 
-c00025fa:
+c00025fa: Read_Eval_Print() calls Read()
 apps/interpreters/umb-scheme/steering.c:208
-		Read( input );
+Public void Read_Eval_Print( input )
+  FILE*	input;	/* C file from which expressions are Read() */
+{ ...
+  Read( input );
 
-c0008112:
+c0008112: Load() calls Read_Eval_Print()
 apps/interpreters/umb-scheme/primitive.c:1479
-	Read_Eval_Print(load_file);
+/* (load filename). Used to load the standard prelude, hence is public. */
+Public void Load() { ...
+  Read_Eval_Print(load_file);
 
-c0002558:
+c0002558: (We skip this, not really meaningful)
 apps/interpreters/umb-scheme/steering.c:197 (discriminator 2)
-	Save(); Load(); Restore();
+Private	void	Load_File(String Filename) { ...
+  Save(); Load(); Restore();
 
-c00028c4:
+c00028c4: Steering() calls Load_File()
 apps/interpreters/umb-scheme/steering.c:142
-		Load_File(STANDARD_PRELUDE_PATHNAME);
+Private void Steering() { ...
+    Load_File(STANDARD_PRELUDE_PATHNAME);
 
-c00023f6:
+c00023f6: NuttX _start() calls Scheme main()
 nuttx/arch/risc-v/src/common/crt0.c:187
+void _start(int argc, char *argv[]) { ...
   /* Call the main() entry point passing argc and argv. */
   ret = main(argc, argv);
 
-c000fc58:
+c000fc58: (We skip this, not really meaningful)
 apps/interpreters/umb-scheme/number.c:148
 /* (number? object) */
 Private void Number_Predicate() {
    Value_Register = Is_Number(Top(1)) ? The_True_Object
 ```
+
+TODO: Interpret the calls
 
 # TODO
 
