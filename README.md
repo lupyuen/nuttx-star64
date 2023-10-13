@@ -3863,7 +3863,7 @@ Apparently it doesn't work. Maybe because we're running in NuttX Kernel Mode? (I
 
 This is how we increase the App Stack Size to 8192 in `.config`...
 
-```text
+```bash
 CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE=8192
 ```
 
@@ -3873,11 +3873,11 @@ After increasing the App Stack Size, our App no longer crashes!
 
 - [After Setting CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE](https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505)
 
-This is how we increase the Interrupt Stack Size and other Kernel Stack Sizes...
+This is how we increase the Default Stack Size, Interrupt Stack Size and other Kernel Stack Sizes...
 
 From [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/7b8ee95d2dfd848051da17ab7dd74b56ef59c94d)
 
-```text
+```bash
 CONFIG_ARCH_INTERRUPTSTACK=8192
 CONFIG_ARCH_KERNEL_STACKSIZE=8192
 CONFIG_DEFAULT_TASK_STACKSIZE=8192
@@ -8278,9 +8278,11 @@ CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE=8192
 
 After increasing the App Stack Size, the Scheme App doesn't crash any more!
 
-https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505
+- [Before Setting CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE](https://gist.github.com/lupyuen/5c225a3a30086cd35455463955f5ff64)
 
-To be safe, we increase the Interrupt Stack Size and other Kernel Stack Sizes: [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/7b8ee95d2dfd848051da17ab7dd74b56ef59c94d)
+- [After Setting CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE](https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505)
+
+To be safe, we increase the Default Stack Size, Interrupt Stack Size and other Kernel Stack Sizes: [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/7b8ee95d2dfd848051da17ab7dd74b56ef59c94d)
 
 ```bash
 CONFIG_ARCH_INTERRUPTSTACK=8192
