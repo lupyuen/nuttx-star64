@@ -8085,27 +8085,17 @@ PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE
   3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
 ```
 
-After increasing the Stack Size to 8192, the Scheme App doesn't crash any more!
+We increase the App Stack Size to 8192...
+
+```text
+CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE=8192
+```
+
+After increasing the App Stack Size, the Scheme App doesn't crash any more!
 
 https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505
 
-TODO: Which setting is the one that works?
-
-```text
-→ grep STACKSIZE .config               
-CONFIG_ARCH_KERNEL_STACKSIZE=8192
-CONFIG_INIT_STACKSIZE=8192
-CONFIG_PTHREAD_CLEANUP_STACKSIZE=0
-CONFIG_SCHED_LPWORKSTACKSIZE=8192
-CONFIG_DEFAULT_TASK_STACKSIZE=8192
-CONFIG_IDLETHREAD_STACKSIZE=8192
-CONFIG_ELF_STACKSIZE=8192
-CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE=8192
-CONFIG_EXAMPLES_HELLO_STACKSIZE=8192
-CONFIG_INTERPRETERS_UMB_SCHEME_STACKSIZE=8192
-CONFIG_SYSTEM_NSH_STACKSIZE=8192
-CONFIG_TESTING_GETPRIME_STACKSIZE=8192
-```
+TODO: How to increase the Kernel Stack Size
 
 Check the next section for the Stack Dump analysis...
 
