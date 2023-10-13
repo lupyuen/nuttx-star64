@@ -8186,7 +8186,9 @@ Here's the Crash Dump:
 
 # Analyse the Stack Dump
 
-_What are the Function Calls in the Scheme App leading to the crash?_
+_In the previous section, we saw the Scheme App crashing on NuttX QEMU..._
+
+_What are the Function Calls leading to the crash?_
 
 Let's construct the Stack Backtrace. We search for other Code Addresses in the Stack Dump above...
 
