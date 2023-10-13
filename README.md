@@ -8075,7 +8075,7 @@ Public Object Intern_Name(String name) { ...
   while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
 ```
 
-But the stack is full! Let's increase the Kernel and App Stacks...
+But the stack is full! Let's increase the Interrupt and App Stack Sizes...
 
 ```text
 PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
@@ -8096,7 +8096,11 @@ After increasing the App Stack Size, the Scheme App doesn't crash any more!
 
 https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505
 
-TODO: How to increase the Kernel Stack Size
+TODO: How to increase the Interrupt Stack Size
+
+```text
+CONFIG_ARCH_INTERRUPTSTACK=8192
+```
 
 Check the next section for the Stack Dump analysis...
 
