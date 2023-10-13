@@ -7968,21 +7968,21 @@ pushd ../apps/interpreters
 git submodule add https://github.com/KenDickey/nuttx-umb-scheme umb-scheme
 popd
 
+## We use the updated NuttX Config from:
+## https://github.com/lupyuen2/wip-pinephone-nuttx/blob/malloc2a/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig
+##   CONFIG_ARCH_SETJMP_H=y
+##   CONFIG_LIBM=y
+##   CONFIG_ARCH_PGPOOL_SIZE=16777216
+## And the updated Linker Script from:
+## https://github.com/lupyuen2/wip-pinephone-nuttx/blob/malloc2a/boards/risc-v/qemu-rv/rv-virt/scripts/ld-kernel64.script#L25
+##   pgram (rwx) : ORIGIN = 0x80400000, LENGTH = 16M
 make distclean
 tools/configure.sh rv-virt:knsh64
-## Edit .config and append:
-## CONFIG_LIBM=y
-## CONFIG_ARCH_FLOAT_H=y
-## CONFIG_ARCH_SETJMP_H=y
-
-make menuconfig
-## Save Config and Exit
-
 make
 ## Remember to build the Apps Filesystem
 
 pushd ../apps/interpreters/umb-scheme
-cp prelude.scheme ../../bin
+cp prelude.scheme ../../bin/
 popd
 
 qemu-system-riscv64 \
@@ -8066,7 +8066,7 @@ Which means Register S2 is 0.
 
 And `48(s2)` means S2 + 48, which is `0x30`. Yep we have the right line of crashing code!
 
-TODO: Why did this fail? Is `this_entry` null?
+Why did this fail? Is `this_entry` null?
 
 ```text
 apps/interpreters/umb-scheme/architecture.c:556
@@ -8074,7 +8074,7 @@ Public Object Intern_Name(String name) { ...
   while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
 ```
 
-TODO: Stack is full! Increase the Kernel and App Stacks...
+But the stack is full! Let's increase the Kernel and App Stacks...
 
 ```text
 PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
@@ -8083,6 +8083,28 @@ PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE
   1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020a050      1968       752    38.2%    lpwork 0x802015f0 0x80201618
   2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      3008       744    24.7%    /system/bin/init
   3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
+```
+
+After increasing the Stack Size to 8192, Scheme App doesn't crash any more!
+
+https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505
+
+TODO: Which setting is the one that works?
+
+```text
+→ grep STACKSIZE .config               
+CONFIG_ARCH_KERNEL_STACKSIZE=8192
+CONFIG_INIT_STACKSIZE=8192
+CONFIG_PTHREAD_CLEANUP_STACKSIZE=0
+CONFIG_SCHED_LPWORKSTACKSIZE=8192
+CONFIG_DEFAULT_TASK_STACKSIZE=8192
+CONFIG_IDLETHREAD_STACKSIZE=8192
+CONFIG_ELF_STACKSIZE=8192
+CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE=8192
+CONFIG_EXAMPLES_HELLO_STACKSIZE=8192
+CONFIG_INTERPRETERS_UMB_SCHEME_STACKSIZE=8192
+CONFIG_SYSTEM_NSH_STACKSIZE=8192
+CONFIG_TESTING_GETPRIME_STACKSIZE=8192
 ```
 
 Check the next section for the Stack Dump analysis...
