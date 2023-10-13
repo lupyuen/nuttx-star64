@@ -8021,7 +8021,7 @@ And we see this disassembly...
 
 ```text
 000000000000f360 <.L29>:
-/Users/Luppy/riscv/apps/interpreters/umb-scheme/architecture.c:556
+apps/interpreters/umb-scheme/architecture.c:556
     while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
     f360:	0004b903          	ld	s2,0(s1)
     f364:	8522                	mv	a0,s0
@@ -8065,11 +8065,14 @@ And `48(s2)` means S2 + 48, which is `0x30`. Yep we have the right line of crash
 TODO: Why did this fail? Is `this_entry` null? Because we ran out of Heap Memory? Let's add an assertion check for `this_entry != NULL`
 
 ```text
-/Users/Luppy/riscv/apps/interpreters/umb-scheme/architecture.c:556
+apps/interpreters/umb-scheme/architecture.c:556
+Public Object Intern_Name(String name) { ...
   while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
 ```
 
-Here the Crash Dump:
+Check the next section for the Stack Dump analysis...
+
+Here's the Crash Dump:
 
 ```text
 [    9.783000] riscv_exception: EXCEPTION: Load page fault. MCAUSE: 000000000000000d, EPC: 00000000c000f366, MTVAL: 0000000000000030
@@ -8183,7 +8186,6 @@ TODO: What about other Code Addresses in the Stack Dump?
 
 ```text
 → grep 'c00[0-1]....' --only-matching /tmp/a.log
-c000f366
 c000004a
 c0003af8
 c001ea34
@@ -8210,7 +8212,58 @@ c000fc58
 
 TODO: Match to Disassembly
 
+```text
+c0003af8:
+nuttx/libs/libc/stdio/lib_libfilelock.c:64
+void funlockfile(FAR struct file_struct *stream)
 
+c000cbda:
+apps/interpreters/umb-scheme/io.c:336
+		Value_Register = Intern_Name( Token_String ) ;
+
+c000c00e:
+apps/interpreters/umb-scheme/io.c:726
+	while ( !Is_Delimiter( Peek_Char( Input_File ) ) )
+
+c000cdc8:
+apps/interpreters/umb-scheme/io.c:448
+	if ( Value_Register == The_Rparen_Object )
+
+c000c6e0:
+apps/interpreters/umb-scheme/io.c:416 (discriminator 4)
+		Push( Value_Register ) ;
+
+c000cf0a:
+apps/interpreters/umb-scheme/io.c:484 (discriminator 4)
+		if ( Is_Error( Top( 1 ) ) )
+
+c00025fa:
+apps/interpreters/umb-scheme/steering.c:210
+		if (Value_Register == The_Eof_Object) break;
+
+c0008112:
+apps/interpreters/umb-scheme/primitive.c:1481
+	Set_Printing(save_printing_state);
+
+c0002558:
+apps/interpreters/umb-scheme/steering.c:197 (discriminator 2)
+	Save(); Load(); Restore();
+
+c00028c4:
+apps/interpreters/umb-scheme/steering.c:142
+		Load_File(STANDARD_PRELUDE_PATHNAME);
+
+c00023f6:
+nuttx/arch/risc-v/src/common/crt0.c:191
+  /* Call exit() if/when the main() returns */
+  exit(ret);
+
+c000fc58:
+apps/interpreters/umb-scheme/number.c:148
+/* (number? object) */
+Private void Number_Predicate() {
+   Value_Register = Is_Number(Top(1)) ? The_True_Object
+```
 
 # TODO
 
