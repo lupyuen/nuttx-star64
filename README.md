@@ -8332,6 +8332,8 @@ Check the next section for the Stack Dump analysis...
 
 # Analyse the Stack Dump for Scheme Interpreter
 
+TODO: What if we enable RTOS Features > Stack Backtrace in menuconfig? (SCHED_BACKTRACE)
+
 _In the previous section, we saw the Scheme App crashing on NuttX QEMU..._
 
 _What are the Function Calls leading to the crash?_
