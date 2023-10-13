@@ -8299,7 +8299,7 @@ TODO: Why is Interrupt Stack full again?
 
 Check the next section for the Stack Dump analysis...
 
-# Analyse the Stack Dump
+# Analyse the Stack Dump for Scheme Interpreter
 
 _In the previous section, we saw the Scheme App crashing on NuttX QEMU..._
 
