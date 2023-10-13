@@ -7957,7 +7957,39 @@ Let's run the Scheme Interpreter on NuttX QEMU, for easier debugging...
 
 https://github.com/KenDickey/nuttx-umb-scheme
 
-(Remember to run `make menuconfig > Save Config` after setting CONFIG_LIBM, CONFIG_ARCH_FLOAT_H and CONFIG_ARCH_SETJMP_H)
+Here are the steps...
+
+```bash
+pushd ../apps/interpreters
+git submodule add https://github.com/KenDickey/nuttx-umb-scheme umb-scheme
+popd
+
+make distclean
+tools/configure.sh rv-virt:knsh64
+## Edit .config and append:
+## CONFIG_LIBM=y
+## CONFIG_ARCH_FLOAT_H=y
+## CONFIG_ARCH_SETJMP_H=y
+
+make menuconfig
+## Save Config and Exit
+
+make
+## Remember to build the Apps Filesystem
+
+pushd ../apps/interpreters/umb-scheme
+cp prelude.scheme ../../bin
+popd
+
+qemu-system-riscv64 \
+  -semihosting \
+  -M virt,aclint=on \
+  -cpu rv64 \
+  -smp 8 \
+  -bios none \
+  -kernel nuttx \
+  -nographic
+```
 
 Here's the output...
 
@@ -8143,6 +8175,66 @@ Here the Crash Dump:
 [    9.783000] dump_task:       1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020a050      1968       752    38.2%    lpwork 0x802015f0 0x80201618
 [    9.783000] dump_task:       2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      3008       848    28.1%    /system/bin/init
 [    9.783000] dump_task:       3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
+```
+
+# Analyse the Stack Dump
+
+TODO: What about other Code Addresses in the Stack Dump?
+
+```text
+→ grep 'c00[0-1]....' --only-matching /tmp/a.log
+c000f366
+c000004a
+c000f366
+c0003af8
+c001ea34
+c000cbda
+c000c00e
+c001ea34
+c000cbda
+c001ea34
+c000cdc8
+c001ea34
+c000cdc8
+c001ea34
+c000c6e0
+c000cdc8
+c000cf0a
+c000cf0a
+c000cdc8
+c000cf0a
+c000cf0a
+c000cf0a
+c00025fa
+c0008112
+c0002558
+c00028c4
+c00023f6
+c001d630
+c001d640
+c001d650
+c001d660
+c001d670
+c001d420
+c001d420
+c001d420
+c001d420
+c001d420
+c001d420
+c001d420
+c001d420
+c001d420
+c001d420
+c001d420
+c001d420
+c001d420
+c001d420
+c001d720
+c001d420
+c001d420
+c001f490
+c000fc58
+c001d420
 ```
 
 # TODO
