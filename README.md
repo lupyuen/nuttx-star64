@@ -8282,10 +8282,10 @@ apps/interpreters/umb-scheme/primitive.c:1479
 Public void Load() { ...
   Read_Eval_Print(load_file);
 
-c0002558: (We skip this, not really meaningful)
+c0002558: Load_File() calls Load()
 apps/interpreters/umb-scheme/steering.c:197 (discriminator 2)
 Private	void	Load_File(String Filename) { ...
-  Save(); Load(); Restore();
+  Load();
 
 c00028c4: Steering() calls Load_File()
 apps/interpreters/umb-scheme/steering.c:142
@@ -8313,7 +8313,11 @@ When we read the Function Calls from bottom to top...
 
     (NuttX starts our Scheme App)
 
-1.  [Steering() calls Load_File()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/steering.c#L138-L143)
+1.  [main() calls Steering(), which calls Load_File()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/steering.c#L138-L143)
+
+    (Scheme App loads the Prelude Script)
+
+1.  [LoadFile() calls Load()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/steering.c#L197)
 
     (Scheme App loads the Prelude Script)
 
@@ -8325,21 +8329,9 @@ When we read the Function Calls from bottom to top...
 
     (Scheme App reads the Prelude Script)
 
-1.  [Read_List() calls itself recursively](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/io.c#L483)
-
-    (Scheme App reads the Prelude Script as a Scheme List)
-
 1.  [Read() calls itself recursively](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/io.c#L415)
 
     (Scheme App reads the Scheme Expressions recursively)
-
-1.  [Read_List() calls Read()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/io.c#L446)
-
-    (Scheme App reads the Scheme Expressions recursively)
-
-1.  [Read_Symbol() calls Peek_Char()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/io.c#L725-L726)
-
-    (Scheme App reads a Scheme Symbol)
 
 1.  [Read() calls Intern_Name()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/io.c#L333-L337)
 
