@@ -3861,7 +3861,7 @@ _But we already set [CONFIG_YOURAPPNAME_STACKSIZE=8192](https://github.com/KenDi
 
 Apparently it doesn't work. Maybe because we're running in NuttX Kernel Mode? (Instead of NuttX Flat Mode)
 
-This is how we increase the App Stack Size to 8192...
+This is how we increase the App Stack Size to 8192 in `.config`...
 
 ```text
 CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE=8192
@@ -8270,9 +8270,9 @@ _But we already set [CONFIG_INTERPRETERS_UMB_SCHEME_STACKSIZE=8192](https://gith
 
 Apparently it doesn't work. Maybe because we're running in NuttX Kernel Mode? (Instead of NuttX Flat Mode)
 
-This is how we increase the App Stack Size to 8192...
+This is how we increase the App Stack Size to 8192 in `.config`...
 
-```text
+```bash
 CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE=8192
 ```
 
@@ -8282,7 +8282,7 @@ https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505
 
 To be safe, we increase the Interrupt Stack Size and other Kernel Stack Sizes: [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/7b8ee95d2dfd848051da17ab7dd74b56ef59c94d)
 
-```text
+```bash
 CONFIG_ARCH_INTERRUPTSTACK=8192
 CONFIG_ARCH_KERNEL_STACKSIZE=8192
 CONFIG_DEFAULT_TASK_STACKSIZE=8192
