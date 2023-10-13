@@ -8210,12 +8210,13 @@ c001f490
 c000fc58
 ```
 
-TODO: Match to Disassembly
+TODO: Match to Disassembly. The Code Addresses are the __Return Addresses__. So we match to the previous instruction
 
 ```text
 c0003af8:
 nuttx/libs/libc/stdio/lib_libfilelock.c:64
-void funlockfile(FAR struct file_struct *stream)
+void funlockfile(FAR struct file_struct *stream) {
+  nxrmutex_unlock(&stream->fs_lock);
 
 c000cbda:
 apps/interpreters/umb-scheme/io.c:336
@@ -8226,24 +8227,24 @@ apps/interpreters/umb-scheme/io.c:726
 	while ( !Is_Delimiter( Peek_Char( Input_File ) ) )
 
 c000cdc8:
-apps/interpreters/umb-scheme/io.c:448
-	if ( Value_Register == The_Rparen_Object )
+apps/interpreters/umb-scheme/io.c:446
+	Read( Input_File ) ;
 
 c000c6e0:
-apps/interpreters/umb-scheme/io.c:416 (discriminator 4)
-		Push( Value_Register ) ;
+apps/interpreters/umb-scheme/io.c:415 (discriminator 4)
+		Read( Input_File ) ;
 
 c000cf0a:
-apps/interpreters/umb-scheme/io.c:484 (discriminator 4)
-		if ( Is_Error( Top( 1 ) ) )
+apps/interpreters/umb-scheme/io.c:483 (discriminator 4)
+		Read_List( Input_File ) ;
 
 c00025fa:
-apps/interpreters/umb-scheme/steering.c:210
-		if (Value_Register == The_Eof_Object) break;
+apps/interpreters/umb-scheme/steering.c:208
+		Read( input );
 
 c0008112:
-apps/interpreters/umb-scheme/primitive.c:1481
-	Set_Printing(save_printing_state);
+apps/interpreters/umb-scheme/primitive.c:1479
+	Read_Eval_Print(load_file);
 
 c0002558:
 apps/interpreters/umb-scheme/steering.c:197 (discriminator 2)
@@ -8254,9 +8255,9 @@ apps/interpreters/umb-scheme/steering.c:142
 		Load_File(STANDARD_PRELUDE_PATHNAME);
 
 c00023f6:
-nuttx/arch/risc-v/src/common/crt0.c:191
-  /* Call exit() if/when the main() returns */
-  exit(ret);
+nuttx/arch/risc-v/src/common/crt0.c:187
+  /* Call the main() entry point passing argc and argv. */
+  ret = main(argc, argv);
 
 c000fc58:
 apps/interpreters/umb-scheme/number.c:148
