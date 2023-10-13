@@ -8085,7 +8085,7 @@ PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE
   3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
 ```
 
-After increasing the Stack Size to 8192, Scheme App doesn't crash any more!
+After increasing the Stack Size to 8192, the Scheme App doesn't crash any more!
 
 https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505
 
