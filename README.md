@@ -3875,7 +3875,7 @@ After increasing the App Stack Size, our App no longer crashes!
 
 This is how we increase the Default Stack Size, Interrupt Stack Size and other Kernel Stack Sizes...
 
-From [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/7b8ee95d2dfd848051da17ab7dd74b56ef59c94d)
+From [nsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/5441201b82755f979958e8b33a955554bbe345b6)
 
 ```bash
 CONFIG_ARCH_INTERRUPTSTACK=8192
@@ -3898,6 +3898,28 @@ PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE
 ```
 
 TODO: Why is Interrupt Stack full again?
+
+_How do we search menuconfig for a setting like CONFIG_DEFAULT_TASK_STACKSIZE?_
+
+Normally we don't edit `.config` directly. We do it in menuconfig like this...
+
+1.  Run `make menuconfig`
+
+1.  Press "`/`" to search
+
+1.  Enter `CONFIG_DEFAULT_TASK_STACKSIZE` (or a substring)
+
+    We should see the location of the setting
+    
+    (Like "RTOS Features > Stack and Heap Information")
+
+1.  To update the NuttX Build Config:
+
+    ```bash
+    make savedefconfig \
+      && grep -v CONFIG_HOST defconfig \
+      >boards/risc-v/jh7110/star64/configs/nsh/defconfig
+    ```
 
 # No UART Output from NuttX Shell
 
