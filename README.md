@@ -8220,7 +8220,7 @@ We match the above Code Addresses to the Scheme App Disassembly (from the previo
 Note that these Code Addresses are the __Return Addresses__. So we look up the Previous Instruction that appears in the Scheme App Disassembly...
 
 ```text
-c000f366: (The crashing code, from previous section)
+c000f366: Intern_Name() calls Get_Symbol_Name() (The crashing code, from previous section)
 apps/interpreters/umb-scheme/architecture.c:556
 Public Object Intern_Name(String name) { ...
   while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
@@ -8304,6 +8304,50 @@ apps/interpreters/umb-scheme/number.c:148
 Private void Number_Predicate() {
    Value_Register = Is_Number(Top(1)) ? The_True_Object
 ```
+
+_What does this Stack Backtrace tell us?_
+
+When we read the Function Calls from bottom to top...
+
+1.  [NuttX _start() calls Scheme main()](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/malloc2a/arch/risc-v/src/common/crt0.c#L184-L187)
+
+    (NuttX starts our Scheme App)
+
+1.  [Steering() calls Load_File()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/steering.c#L138-L143)
+
+    (Scheme App loads the Prelude Script)
+
+1.  [Load() calls Read_Eval_Print()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/primitive.c#L1477-L1479)
+
+    (Scheme App executes the Prelude Script)
+
+1.  [Read_Eval_Print() calls Read()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/steering.c#L207-L208)
+
+    (Scheme App reads the Prelude Script)
+
+1.  [Read_List() calls itself recursively](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/io.c#L483)
+
+    (Scheme App reads the Prelude Script as a Scheme List)
+
+1.  [Read() calls itself recursively](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/io.c#L415)
+
+    (Scheme App reads the Scheme Expressions recursively)
+
+1.  [Read_List() calls Read()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/io.c#L446)
+
+    (Scheme App reads the Scheme Expressions recursively)
+
+1.  [Read_Symbol() calls Peek_Char()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/io.c#L725-L726)
+
+    (Scheme App reads a Scheme Symbol)
+
+1.  [Read() calls Intern_Name()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/io.c#L333-L337)
+
+    (Scheme App maps a Symbol Token to the Internal Name)
+
+1.  [Intern_Name() calls Get_Symbol_Name()](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/architecture.c#L553-L556)
+
+    (Scheme App tries to get the Symbol Token's Internal Name and crashes here)
 
 TODO: Interpret the calls
 
