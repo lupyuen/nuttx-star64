@@ -8124,7 +8124,7 @@ Which means Register S2 is 0.
 
 And `48(s2)` means S2 + 48, which is `0x30`. Yep we have the right line of crashing code!
 
-Why did this fail? Is `this_entry` null?
+Why did this fail? Is `this_entry` null? From [architecture.c](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/architecture.c#L553-L556):
 
 ```text
 apps/interpreters/umb-scheme/architecture.c:556
@@ -8257,6 +8257,15 @@ Meanwhile here's the Complete Crash Dump...
 
 _Scheme Interpreter crashes on NuttX because the App Stack Size is too small (2000 bytes)..._
 
+```text
+PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
+---   --- --- -------- ------- --- ------- ---------- ---------------- 0x802002b0      2048      2040    99.6%!   irq
+  0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80206010      3056      1808    59.1%    Idle_Task
+  1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020a050      1968       752    38.2%    lpwork 0x802015f0 0x80201618
+  2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      3008       744    24.7%    /system/bin/init
+  3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
+```
+
 _But we already set [CONFIG_INTERPRETERS_UMB_SCHEME_STACKSIZE=8192](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/Kconfig)!_
 
 Apparently it doesn't work. Maybe because we're running in NuttX Kernel Mode? (Instead of NuttX Flat Mode)
@@ -8271,9 +8280,7 @@ After increasing the App Stack Size, the Scheme App doesn't crash any more!
 
 https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505
 
-To be safe, we increase the Interrupt Stack Size and other Kernel Stack Sizes...
-
-From [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/7b8ee95d2dfd848051da17ab7dd74b56ef59c94d)
+To be safe, we increase the Interrupt Stack Size and other Kernel Stack Sizes: [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/7b8ee95d2dfd848051da17ab7dd74b56ef59c94d)
 
 ```text
 CONFIG_ARCH_INTERRUPTSTACK=8192
