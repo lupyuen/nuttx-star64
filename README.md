@@ -8184,7 +8184,9 @@ Here's the Crash Dump:
 
 # Analyse the Stack Dump
 
-TODO: What about other Code Addresses in the Stack Dump?
+_What are the Function Calls in the Scheme App leading to the crash?_
+
+We search for other Code Addresses in the Stack Dump above...
 
 ```text
 → grep 'c00[0-1]....' --only-matching /tmp/a.log
@@ -8213,7 +8215,9 @@ c001f490
 c000fc58
 ```
 
-TODO: Match to Disassembly. The Code Addresses are the __Return Addresses__. So we match to the previous instruction
+We match the above Code Addresses to the Scheme App Disassembly (from the previous section).
+
+Note that these Code Addresses are the __Return Addresses__. So we look up the Previous Instruction that appears in the Scheme App Disassembly...
 
 ```text
 c000f366: (The crashing code, from previous section)
