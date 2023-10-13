@@ -8132,7 +8132,7 @@ Public Object Intern_Name(String name) { ...
   while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
 ```
 
-But the stack is full! Let's increase the Interrupt and App Stack Sizes...
+But the App Stack is full!
 
 ```text
 PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
@@ -8143,49 +8143,9 @@ PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE
   3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
 ```
 
-_But we already set [CONFIG_INTERPRETERS_UMB_SCHEME_STACKSIZE=8192](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/Kconfig)!_
+In the next section, we increase the Interrupt and App Stack Sizes.
 
-Apparently it doesn't work. Maybe because we're running in NuttX Kernel Mode? (Instead of NuttX Flat Mode)
-
-This is how we increase the App Stack Size to 8192...
-
-```text
-CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE=8192
-```
-
-After increasing the App Stack Size, the Scheme App doesn't crash any more!
-
-https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505
-
-To be safe, we increase the Interrupt Stack Size and other Kernel Stack Sizes...
-
-From [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/7b8ee95d2dfd848051da17ab7dd74b56ef59c94d)
-
-```text
-CONFIG_ARCH_INTERRUPTSTACK=8192
-CONFIG_ARCH_KERNEL_STACKSIZE=8192
-CONFIG_DEFAULT_TASK_STACKSIZE=8192
-CONFIG_IDLETHREAD_STACKSIZE=8192
-## Use Default Values:
-## CONFIG_INIT_STACKSIZE=8192
-## CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE=8192
-```
-
-This shows that the Interrupt and Kernel Stacks have been increased...
-
-```text
-PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
----   --- --- -------- ------- --- ------- ---------- ---------------- 0x802002b0      8192      8184    99.9%!   irq
-  0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80208010      8176      1824    22.3%    Idle_Task
-  1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020c050      8112       720     8.8%    lpwork 0x80202df0 0x80202e18
-  2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      8128       848    10.4%    /system/bin/init
-```
-
-TODO: Why is Interrupt Stack full again?
-
-Check the next section for the Stack Dump analysis...
-
-Here's the Crash Dump:
+Meanwhile here's the Complete Crash Dump...
 
 ```text
 [    9.783000] riscv_exception: EXCEPTION: Load page fault. MCAUSE: 000000000000000d, EPC: 00000000c000f366, MTVAL: 0000000000000030
@@ -8292,6 +8252,52 @@ Here's the Crash Dump:
 [    9.783000] dump_task:       2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      3008       848    28.1%    /system/bin/init
 [    9.783000] dump_task:       3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
 ```
+
+# Increase Stack Size for Scheme Interpreter
+
+_Scheme Interpreter crashes on NuttX because the App Stack Size is too small (2000 bytes)..._
+
+_But we already set [CONFIG_INTERPRETERS_UMB_SCHEME_STACKSIZE=8192](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/Kconfig)!_
+
+Apparently it doesn't work. Maybe because we're running in NuttX Kernel Mode? (Instead of NuttX Flat Mode)
+
+This is how we increase the App Stack Size to 8192...
+
+```text
+CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE=8192
+```
+
+After increasing the App Stack Size, the Scheme App doesn't crash any more!
+
+https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505
+
+To be safe, we increase the Interrupt Stack Size and other Kernel Stack Sizes...
+
+From [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/7b8ee95d2dfd848051da17ab7dd74b56ef59c94d)
+
+```text
+CONFIG_ARCH_INTERRUPTSTACK=8192
+CONFIG_ARCH_KERNEL_STACKSIZE=8192
+CONFIG_DEFAULT_TASK_STACKSIZE=8192
+CONFIG_IDLETHREAD_STACKSIZE=8192
+## Use Default Values:
+## CONFIG_INIT_STACKSIZE=8192
+## CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE=8192
+```
+
+This shows that the Interrupt and Kernel Stacks have been increased...
+
+```text
+PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
+---   --- --- -------- ------- --- ------- ---------- ---------------- 0x802002b0      8192      8184    99.9%!   irq
+  0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80208010      8176      1824    22.3%    Idle_Task
+  1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020c050      8112       720     8.8%    lpwork 0x80202df0 0x80202e18
+  2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      8128       848    10.4%    /system/bin/init
+```
+
+TODO: Why is Interrupt Stack full again?
+
+Check the next section for the Stack Dump analysis...
 
 # Analyse the Stack Dump
 
