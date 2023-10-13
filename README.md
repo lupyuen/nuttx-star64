@@ -8096,9 +8096,9 @@ After increasing the App Stack Size, the Scheme App doesn't crash any more!
 
 https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505
 
-TODO: How to increase the Interrupt Stack Size
+To be safe, we increase the Interrupt Stack Size and other Kernel Stack Sizes...
 
-https://github.com/lupyuen2/wip-pinephone-nuttx/blob/malloc2a/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig
+https://github.com/lupyuen2/wip-pinephone-nuttx/commit/7b8ee95d2dfd848051da17ab7dd74b56ef59c94d
 
 ```text
 CONFIG_ARCH_INTERRUPTSTACK=8192
@@ -8108,6 +8108,8 @@ CONFIG_IDLETHREAD_STACKSIZE=8192
 ## Restore to default:
 ## CONFIG_INIT_STACKSIZE=8192
 ```
+
+This shows that the Interrupt and Kernel Stacks have been increased...
 
 ```text
 PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
