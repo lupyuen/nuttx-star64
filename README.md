@@ -8098,8 +8098,23 @@ https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505
 
 TODO: How to increase the Interrupt Stack Size
 
+https://github.com/lupyuen2/wip-pinephone-nuttx/blob/malloc2a/boards/risc-v/qemu-rv/rv-virt/configs/knsh64/defconfig
+
 ```text
 CONFIG_ARCH_INTERRUPTSTACK=8192
+CONFIG_ARCH_KERNEL_STACKSIZE=8192
+CONFIG_DEFAULT_TASK_STACKSIZE=8192
+CONFIG_IDLETHREAD_STACKSIZE=8192
+## Restore to default:
+## CONFIG_INIT_STACKSIZE=8192
+```
+
+```text
+PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
+---   --- --- -------- ------- --- ------- ---------- ---------------- 0x802002b0      8192      8184    99.9%!   irq
+  0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80208010      8176      1824    22.3%    Idle_Task
+  1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020c050      8112       720     8.8%    lpwork 0x80202df0 0x80202e18
+  2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      8128       848    10.4%    /system/bin/init
 ```
 
 Check the next section for the Stack Dump analysis...
