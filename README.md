@@ -44,6 +44,8 @@ Let's port Apache NuttX RTOS to [Pine64 Star64](https://wiki.pine64.org/wiki/STA
 
 (Based on [StarFive JH7110 SoC](https://doc-en.rvspace.org/Doc_Center/jh7110.html))
 
+(NuttX works OK on StarFive VisionFive 2 SBC too)
+
 Hopefully NuttX will run on Pine64 PineTab-V, which is also based on StarFive JH7110 SoC.
 
 # NuttX Automated Daily Build for Star64
