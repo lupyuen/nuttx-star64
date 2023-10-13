@@ -8186,7 +8186,7 @@ Here's the Crash Dump:
 
 _What are the Function Calls in the Scheme App leading to the crash?_
 
-We search for other Code Addresses in the Stack Dump above...
+Let's construct the Stack Backtrace. We search for other Code Addresses in the Stack Dump above...
 
 ```text
 → grep 'c00[0-1]....' --only-matching /tmp/a.log
