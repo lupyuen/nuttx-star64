@@ -8066,12 +8066,23 @@ Which means Register S2 is 0.
 
 And `48(s2)` means S2 + 48, which is `0x30`. Yep we have the right line of crashing code!
 
-TODO: Why did this fail? Is `this_entry` null? Because we ran out of Heap Memory? Let's add an assertion check for `this_entry != NULL`
+TODO: Why did this fail? Is `this_entry` null?
 
 ```text
 apps/interpreters/umb-scheme/architecture.c:556
 Public Object Intern_Name(String name) { ...
   while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0
+```
+
+TODO: Stack is full! Increase the Kernel and App Stacks...
+
+```text
+PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
+---   --- --- -------- ------- --- ------- ---------- ---------------- 0x802002b0      2048      2040    99.6%!   irq
+  0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80206010      3056      1808    59.1%    Idle_Task
+  1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020a050      1968       752    38.2%    lpwork 0x802015f0 0x80201618
+  2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      3008       744    24.7%    /system/bin/init
+  3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
 ```
 
 Check the next section for the Stack Dump analysis...
