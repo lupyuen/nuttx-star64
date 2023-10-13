@@ -7981,9 +7981,10 @@ tools/configure.sh rv-virt:knsh64
 make
 ## Remember to build the Apps Filesystem
 
-pushd ../apps/interpreters/umb-scheme
-cp prelude.scheme ../../bin/
-popd
+## Copy scheme prelude
+cp \
+  ../apps/interpreters/umb-scheme/prelude.scheme \
+  ../apps/bin/
 
 qemu-system-riscv64 \
   -semihosting \
