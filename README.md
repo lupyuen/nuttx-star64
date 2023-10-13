@@ -8304,6 +8304,8 @@ After increasing the App Stack Size, the Scheme App doesn't crash any more!
 
 - [After Setting CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE](https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505)
 
+- [Scheme runs OK on Star64 yay!](https://gist.github.com/lupyuen/1e009a3343da70257d6f24400339053f)
+
 To be safe, we increase the Default Stack Size, Interrupt Stack Size and other Kernel Stack Sizes: [knsh64/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/7b8ee95d2dfd848051da17ab7dd74b56ef59c94d)
 
 ```bash
