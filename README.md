@@ -8330,11 +8330,13 @@ PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE
 
 TODO: Why is Interrupt Stack full again?
 
+TODO: Explore [Run Time Stack Checking](https://cwiki.apache.org/confluence/plugins/servlet/mobile?contentId=139629451#content/view/139629451)
+
 Check the next section for the Stack Dump analysis...
 
 # Analyse the Stack Dump for Scheme Interpreter
 
-TODO: What if we enable RTOS Features > Stack Backtrace in menuconfig? (SCHED_BACKTRACE)
+TODO: Enable "RTOS Features > Stack Backtrace" in menuconfig (SCHED_BACKTRACE)
 
 _In the previous section, we saw the Scheme App crashing on NuttX QEMU..._
 
