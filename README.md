@@ -3847,12 +3847,12 @@ TODO: NuttX QEMU doesn't crash when we run the same Heap Test, the app exits gra
 The Default Stack Sizes for NuttX Kernel and NuttX Apps are rather small. This might crash our NuttX Apps when they run out of Stack Space...
 
 ```text
-PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
----   --- --- -------- ------- --- ------- ---------- ---------------- 0x802002b0      2048      2040    99.6%!   irq
-  0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80206010      3056      1808    59.1%    Idle_Task
-  1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020a050      1968       752    38.2%    lpwork 0x802015f0 0x80201618
-  2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      3008       744    24.7%    /system/bin/init
-  3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
+STACKSIZE  USED  FILLED   COMMAND
+     2048  2040   99.6%!  irq
+     3056  1808   59.1%   Idle_Task
+     1968   752   38.2%   lpwork 0x802015f0 0x80201618
+     3008   744   24.7%   /system/bin/init
+     2000  2000  100.0%!  scheme
 ```
 
 Let's increase the Interrupt and App Stack Sizes.
@@ -3890,11 +3890,11 @@ CONFIG_IDLETHREAD_STACKSIZE=8192
 The log shows that the Interrupt and Kernel Stacks have been increased...
 
 ```text
-PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
----   --- --- -------- ------- --- ------- ---------- ---------------- 0x802002b0      8192      8184    99.9%!   irq
-  0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80208010      8176      1824    22.3%    Idle_Task
-  1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020c050      8112       720     8.8%    lpwork 0x80202df0 0x80202e18
-  2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      8128       848    10.4%    /system/bin/init
+STACKSIZE  USED  FILLED   COMMAND
+     8192  8184   99.9%!  irq
+     8176  1824   22.3%   Idle_Task
+     8112   720    8.8%   lpwork 0x80202df0 0x80202e18
+     8128   848   10.4%   /system/bin/init
 ```
 
 TODO: Why is Interrupt Stack full again?
@@ -8157,12 +8157,12 @@ Public Object Intern_Name(String name) { ...
 But the App Stack is full!
 
 ```text
-PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
----   --- --- -------- ------- --- ------- ---------- ---------------- 0x802002b0      2048      2040    99.6%!   irq
-  0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80206010      3056      1808    59.1%    Idle_Task
-  1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020a050      1968       752    38.2%    lpwork 0x802015f0 0x80201618
-  2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      3008       744    24.7%    /system/bin/init
-  3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
+STACKSIZE  USED  FILLED   COMMAND
+     2048  2040   99.6%!  irq
+     3056  1808   59.1%   Idle_Task
+     1968   752   38.2%   lpwork 0x802015f0 0x80201618
+     3008   744   24.7%   /system/bin/init
+     2000  2000  100.0%!  scheme
 ```
 
 In the next section, we increase the Interrupt and App Stack Sizes.
@@ -8280,12 +8280,12 @@ Meanwhile here's the Complete Crash Dump...
 _Scheme Interpreter crashes on NuttX because the App Stack Size is too small (2000 bytes)..._
 
 ```text
-PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
----   --- --- -------- ------- --- ------- ---------- ---------------- 0x802002b0      2048      2040    99.6%!   irq
-  0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80206010      3056      1808    59.1%    Idle_Task
-  1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020a050      1968       752    38.2%    lpwork 0x802015f0 0x80201618
-  2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      3008       744    24.7%    /system/bin/init
-  3     3 100 RR       Task    --- Running            0000000000000000 0xc0202030      2000      2000   100.0%!   scheme �F�0� r�������������������d���&���P����������\��������
+STACKSIZE  USED  FILLED   COMMAND
+     2048  2040   99.6%!  irq
+     3056  1808   59.1%   Idle_Task
+     1968   752   38.2%   lpwork 0x802015f0 0x80201618
+     3008   744   24.7%   /system/bin/init
+     2000  2000  100.0%!  scheme
 ```
 
 _But we already set [CONFIG_INTERPRETERS_UMB_SCHEME_STACKSIZE=8192](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/Kconfig)!_
@@ -8321,11 +8321,11 @@ CONFIG_IDLETHREAD_STACKSIZE=8192
 This shows that the Interrupt and Kernel Stacks have been increased...
 
 ```text
-PID GROUP PRI POLICY   TYPE    NPX STATE   EVENT      SIGMASK          STACKBASE  STACKSIZE      USED   FILLED    COMMAND
----   --- --- -------- ------- --- ------- ---------- ---------------- 0x802002b0      8192      8184    99.9%!   irq
-  0     0   0 FIFO     Kthread N-- Ready              0000000000000000 0x80208010      8176      1824    22.3%    Idle_Task
-  1     1 100 RR       Kthread --- Waiting Semaphore  0000000000000000 0x8020c050      8112       720     8.8%    lpwork 0x80202df0 0x80202e18
-  2     2 100 RR       Task    --- Waiting Semaphore  0000000000000000 0xc0202040      8128       848    10.4%    /system/bin/init
+STACKSIZE  USED  FILLED   COMMAND
+     8192  8184   99.9%!  irq
+     8176  1824   22.3%   Idle_Task
+     8112   720    8.8%   lpwork 0x80202df0 0x80202e18
+     8128   848   10.4%   /system/bin/init
 ```
 
 TODO: Why is Interrupt Stack full again?
