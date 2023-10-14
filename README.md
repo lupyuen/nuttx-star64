@@ -8090,6 +8090,17 @@ MTVAL: 0000000000000030
 
 Exception Program Counter is `c000f366`. We disregard the `c000` because NuttX maps the Scheme App into the RISC-V User Memory Space at `c0000000`. So actual Program Counter is `f366`
 
+```bash
+CONFIG_ARCH_DATA_NPAGES=128
+CONFIG_ARCH_DATA_VBASE=0xC0100000
+CONFIG_ARCH_HEAP_NPAGES=128
+CONFIG_ARCH_HEAP_VBASE=0xC0200000
+CONFIG_ARCH_TEXT_NPAGES=128
+CONFIG_ARCH_TEXT_VBASE=0xC0000000
+```
+
+[(Source)](https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L25-L39)
+
 We look up `f366` in the disassembly...
 
 ```bash
@@ -8332,15 +8343,15 @@ TODO: Why is Interrupt Stack full again?
 
 TODO: Explore [Run Time Stack Checking](https://cwiki.apache.org/confluence/plugins/servlet/mobile?contentId=139629451#content/view/139629451)
 
-Check the next section for the Stack Dump analysis...
+Read on to find out what caused the App Stack to overflow...
 
 # Analyse the Stack Dump for Scheme Interpreter
 
 TODO: Enable "RTOS Features > Stack Backtrace" in menuconfig (SCHED_BACKTRACE)
 
-_In the previous section, we saw the Scheme App crashing on NuttX QEMU..._
+_In the previous section, we saw the Scheme App crashing on NuttX QEMU due to Stack Overflow..._
 
-_What are the Function Calls leading to the crash?_
+_But why? What are the Function Calls leading to the crash?_
 
 Let's construct the Stack Backtrace. We search for other Code Addresses in the Stack Dump above...
 
@@ -8372,6 +8383,8 @@ c000fc58
 ```
 
 We match the above Code Addresses to the Scheme App Disassembly (from the previous section).
+
+[(Remember to disregard the `c00` prefix because that's the RISC-V User Memory Space)](https://github.com/apache/nuttx/blob/master/boards/risc-v/jh7110/star64/configs/nsh/defconfig#L25-L39)
 
 Note that these Code Addresses are the __Return Addresses__. So we look up the Previous Instruction that appears in the Scheme App Disassembly...
 
@@ -8497,7 +8510,9 @@ When we read the Function Calls from bottom to top...
 
     (Scheme App tries to get the Symbol Token's Internal Name and crashes here)
 
-TODO: Interpret the calls
+_So why did the Scheme App crash with a Stack Overflow?_
+
+TODO: Recursion
 
 # TODO
 
