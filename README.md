@@ -8038,7 +8038,7 @@ _Why does Scheme Interpreter crash on NuttX?_
 
 Let's run the Scheme Interpreter on NuttX QEMU, for easier debugging...
 
-https://github.com/KenDickey/nuttx-umb-scheme
+[github.com/KenDickey/nuttx-umb-scheme](https://github.com/KenDickey/nuttx-umb-scheme)
 
 Here are the steps...
 
@@ -8077,7 +8077,7 @@ qemu-system-riscv64 \
 
 Here's the output...
 
-https://gist.github.com/lupyuen/5c225a3a30086cd35455463955f5ff64
+- [NuttX Scheme crashes on QEMU](https://gist.github.com/lupyuen/5c225a3a30086cd35455463955f5ff64)
 
 Our Crash Dump (see below) says...
 
@@ -8162,15 +8162,16 @@ _Why did this fail? Is `this_entry` null?_
 From [architecture.c](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/architecture.c#L553-L556):
 
 ```text
-apps/interpreters/umb-scheme/architecture.c:556
-Public Object Intern_Name(String name) { ...
+Public Object Intern_Name(String name) {
   Integer hash_value = Hash(name);
   if (hash_entry == NULL) { ... }
   else {
     // hash_entry is non-NULL
     Boolean at_end = FALSE;
+
     // this_entry becomes non-NULL
     Entry * this_entry = hash_entry;
+
     // Crashes here
     while (strcmp(name, Get_Symbol_Name(this_entry->Symbol)) != 0 { ...
 ```
