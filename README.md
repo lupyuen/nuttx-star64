@@ -8510,7 +8510,20 @@ When we read the Function Calls from bottom to top...
 
     (Scheme App tries to get the Symbol Token's Internal Name and crashes here)
 
+Which says that the Scheme App tried to load the Scheme Prelude Script at startup. And crashed with a Stack Overflow.
+
 _So why did the Scheme App crash with a Stack Overflow?_
+
+Remember that our NuttX App Stack was only 2000 bytes...
+
+```text
+STACKSIZE  USED  FILLED   COMMAND
+     2048  2040   99.6%!  irq
+     3056  1808   59.1%   Idle_Task
+     1968   752   38.2%   lpwork 0x802015f0 0x80201618
+     3008   744   24.7%   /system/bin/init
+     2000  2000  100.0%!  scheme
+```
 
 TODO: Recursion
 
