@@ -8081,7 +8081,7 @@ Here's the output...
 
 Our Crash Dump (see below) says...
 
-```text
+```yaml
 EXCEPTION: Load page fault. 
 MCAUSE: 000000000000000d, 
 EPC: 00000000c000f366, 
