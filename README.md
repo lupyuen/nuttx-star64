@@ -8145,7 +8145,7 @@ _So `48(s2)` should equal `0x30`?_
 
 The Crash Dump says...
 
-```text
+```yaml
 up_dump_register: 
 S0: 00000000c01017f8 
 S1: 00000000c0201ef0 
@@ -8161,7 +8161,7 @@ _Why did this fail? Is `this_entry` null?_
 
 From [architecture.c](https://github.com/KenDickey/nuttx-umb-scheme/blob/main/architecture.c#L553-L556):
 
-```text
+```c
 Public Object Intern_Name(String name) {
   Integer hash_value = Hash(name);
   if (hash_entry == NULL) { ... }
@@ -8405,7 +8405,7 @@ We match the above Code Addresses to the Scheme App Disassembly (from the previo
 
 Note that these Code Addresses are the __Return Addresses__. So we look up the Previous Instruction that appears in the Scheme App Disassembly...
 
-```text
+```c
 c000f366: Intern_Name() calls Get_Symbol_Name() (The crashing code, from previous section)
 apps/interpreters/umb-scheme/architecture.c:556
 Public Object Intern_Name(String name) { ...
