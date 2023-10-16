@@ -7649,6 +7649,8 @@ TODO: Enable Clocks JH7110_I2C0_CLK_CORE, JH7110_I2C0_CLK_APB
 
 TODO: Deassert Reset RSTN_U0_DW_I2C_APB
 
+From [Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_structure.html), I2C is clocked by clk_apb0 / clk_apb12
+
 System CRG Clocks and Resets: https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html
 
 ```text
@@ -7744,6 +7746,8 @@ Bit	Name	Default	Description
 1: Assert reset
 0: De-assert reset
 ```
+
+TODO: What are U0 to U6?
 
 SYS SYSCON: https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_syscon.html
 
