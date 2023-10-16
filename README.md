@@ -7649,12 +7649,14 @@ TODO: Enable Clocks JH7110_I2C0_CLK_CORE, JH7110_I2C0_CLK_APB
 
 TODO: Deassert Reset RSTN_U0_DW_I2C_APB
 
-Clocks and Resets: https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html
+System CRG Clocks and Resets: https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html
 
 ```text
+0x00_1302_0000	0x00_1302_FFFF	64KB	RW A	System CRG
+
 U0 Clock I2C APB
 Table 139. U0 Clock I2C APB Register Description
-Offset	16’h228
+Offset	0x228
 Access	RW
 Bit	Name	Default	Description
 [31]	clk_icg	0	
@@ -7663,7 +7665,7 @@ Bit	Name	Default	Description
 
 U1 Clock I2C APB
 Table 140. U1 Clock I2C APB Register Description
-Offset	16’h22c
+Offset	0x22c
 Access	RW
 Bit	Name	Default	Description
 [31]	clk_icg	0	
@@ -7672,7 +7674,7 @@ Bit	Name	Default	Description
 
 U2 Clock I2C APB
 Table 141. U2 Clock I2C APB Register Description
-Offset	16’h230
+Offset	0x230
 Access	RW
 Bit	Name	Default	Description
 [31]	clk_icg	0	
@@ -7681,7 +7683,7 @@ Bit	Name	Default	Description
 
 U3 Clock I2C APB
 Table 142. U3 Clock I2C APB Register Description
-Offset	16’h234
+Offset	0x234
 Access	RW
 Bit	Name	Default	Description
 [31]	clk_icg	0	
@@ -7690,7 +7692,7 @@ Bit	Name	Default	Description
 
 U4 Clock I2C APB
 Table 143. U4 Clock I2C APB Register Description
-Offset	16’h238
+Offset	0x238
 Access	RW
 Bit	Name	Default	Description
 [31]	clk_icg	0	
@@ -7699,7 +7701,7 @@ Bit	Name	Default	Description
 
 U5 Clock I2C APB
 Table 144. U5 Clock I2C APB Register Description
-Offset	16’h23c
+Offset	0x23c
 Access	RW
 Bit	Name	Default	Description
 [31]	clk_icg	0	
@@ -7708,7 +7710,7 @@ Bit	Name	Default	Description
 
 U6 Clock I2C APB
 Table 145. U6 Clock I2C APB Register Description
-Offset	16’h240
+Offset	0x240
 Access	RW
 Bit	Name	Default	Description
 [31]	clk_icg	0	
@@ -7717,7 +7719,7 @@ Bit	Name	Default	Description
 
 Software RESET 2 Address Selector
 Table 193. Software RESET 2 Address Selector Register Description
-Offset	16’h300
+Offset	0x300
 Access	RW
 Bit	Name	Default	Description
 [12]	rstn_u0_i2c_rstn_apb	0	
@@ -7746,6 +7748,8 @@ Bit	Name	Default	Description
 SYS SYSCON: https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_syscon.html
 
 ```text
+0x00_1303_0000	0x00_1303_FFFF	64KB	RW A	System SYSCON
+
 SYS SYSCONSAIF SYSCFG 20
 Table 6. SYS SYSCONSAIF SYSCFG 20 Register Description
 Offset	0x14
