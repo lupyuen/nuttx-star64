@@ -7802,12 +7802,14 @@ I2C Devices: https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source
 
 NXP WM8960 stereo codec for digital audio
 
-TODO: What are these?
+TODO: What are these messages from U-Boot?
 
 ```text
 clk u5_dw_i2c_clk_core already disabled
 clk u5_dw_i2c_clk_apb already disabled
 ```
+
+[(Source)](https://gist.github.com/lupyuen/1e009a3343da70257d6f24400339053f)
 
 # PineTab-V Factory Test Code
 
