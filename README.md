@@ -7802,6 +7802,13 @@ I2C Devices: https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source
 
 NXP WM8960 stereo codec for digital audio
 
+TODO: What are these?
+
+```text
+clk u5_dw_i2c_clk_core already disabled
+clk u5_dw_i2c_clk_apb already disabled
+```
+
 # PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
