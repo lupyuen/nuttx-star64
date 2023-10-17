@@ -7729,6 +7729,8 @@ From [System CRG Clocks and Resets](https://doc-en.rvspace.org/JH7110/TRM/JH7110
 
 What are U0 to U6? They represent the 7 I2C Ports in JH7110
 
+In U-Boot, we inspect the System SYSCRG Registers for I2C...
+
 ```bash
 $ md 0x13020228 7
 13020228: 00000000 00000000 00000000 00000000  ................
@@ -7737,6 +7739,8 @@ $ md 0x13020228 7
 $ md 0x13020300 1
 13020300: ffe5efcc                             ....
 ```
+
+TODO
 
 From [SYS SYSCON](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_syscon.html):
 
@@ -7753,6 +7757,8 @@ From [SYS SYSCON](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_syscon.ht
   - Bit 18: u5_i2c_ic_en - I2C interface enable (Read-Only, Default 0)
   - Bit 19: u6_i2c_ic_en - I2C interface enable (Read-Only, Default 0)
 
+In U-Boot, we inspect the System SYSCON Registers for I2C...
+
 ```bash
 $ md 0x13030014 1
 13030014: 00d54d54                             TM..
@@ -7760,6 +7766,8 @@ $ md 0x13030014 1
 $ md 0x1303009c 1
 1303009c: 00042600     
 ```
+
+TODO
 
 I2C Devices: https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html
 
