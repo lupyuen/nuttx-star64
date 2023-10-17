@@ -7606,13 +7606,13 @@ From [Bus Connection](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/bus_conne
 
 TODO: Do we need to bother with Bus Connections?
 
-# I2C Driver for Star64 JH7110
+# Power Up the I2C Controller for Star64 JH7110
 
-TODO
+Let's power up the I2C Controller for Star64 JH7110.
 
-https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html
+According to the [I2C Device Tree Configuration](https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html)...
 
-Register base address "0x10030000" and range "0x10000".
+I2C Base Address is 0x10030000, with range 0x10000. Let's dump the I2C Registers with U-Boot Bootloader...
 
 ```text
 # md 0x10030000
@@ -7634,24 +7634,34 @@ Register base address "0x10030000" and range "0x10000".
 100300f0: 00000000 00000000 00000000 00000000  ................
 ```
 
-https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html
+_The I2C Registers are empty?_
+
+That's because we haven't powered up the I2C Controller.
+
+According to the [I2C Device Tree Configuration](https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html), the I2C Clocks and I2C Resets are...
 
 ```text
 clocks =
   <&clkgen JH7110_I2C0_CLK_CORE>,
   <&clkgen JH7110_I2C0_CLK_APB>;
-clock-names = "ref", "pclk";
-resets = <&rstgen RSTN_U0_DW_I2C_APB>;
+clock-names =
+  "ref", "pclk";
+resets = 
+  <&rstgen RSTN_U0_DW_I2C_APB>;
 interrupts = <35>;
 ```
 
-TODO: Enable Clocks JH7110_I2C0_CLK_CORE, JH7110_I2C0_CLK_APB
+_How to enable Clocks JH7110_I2C0_CLK_CORE, JH7110_I2C0_CLK_APB?_
 
-TODO: Deassert Reset RSTN_U0_DW_I2C_APB
+_And deassert Reset RSTN_U0_DW_I2C_APB?_
 
-From [Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_structure.html): I2C is clocked by clk_apb0 / clk_apb12
+From [JH7110 Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_structure.html) we see that...
 
-From [System CRG Clocks and Resets](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html):
+- I2C is clocked by clk_apb0 / clk_apb12
+
+- There are 7 I2C Ports (named U0 to U6, as we'll soon see)
+
+From [JH7110 System CRG Clocks and Resets](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html), here are the I2C Clocks and Resets...
 
 - System CRG Base Address: 0x00_1302_0000
 
@@ -7727,7 +7737,7 @@ From [System CRG Clocks and Resets](https://doc-en.rvspace.org/JH7110/TRM/JH7110
   - 1: Assert reset
   - 0: De-assert reset
 
-What are U0 to U6? They represent the 7 I2C Ports in JH7110
+(What are U0 to U6? They represent the 7 I2C Ports in JH7110)
 
 In U-Boot, we inspect the System SYSCRG Registers for I2C...
 
@@ -7822,7 +7832,7 @@ Which says that...
 
 TODO: Let's check again after enabling I2C
 
-I2C Devices: https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html
+FYI: I2C Port U0 is connected to these devices, according to the [JH7110 Device Tree](https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html)...
 
 ```text
 &i2c0 {
@@ -7852,7 +7862,9 @@ I2C Devices: https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source
 };
 ```
 
-NXP WM8960 stereo codec for digital audio
+- X-Powers AC108 is the ADC for I2S Digital Audio
+
+- NXP WM8960 is the Stereo Codec for Digital Audio
 
 TODO: What are these messages from U-Boot?
 
@@ -7862,6 +7874,10 @@ clk u5_dw_i2c_clk_apb already disabled
 ```
 
 [(Source)](https://gist.github.com/lupyuen/1e009a3343da70257d6f24400339053f)
+
+# Explore the I2C Controller for Star64 JH7110
+
+TODO
 
 # PineTab-V Factory Test Code
 
