@@ -7615,7 +7615,7 @@ https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html
 Register base address "0x10030000" and range "0x10000".
 
 ```text
-# md 10030000
+# md 0x10030000
 10030000: 00000000 00000000 00000000 00000000  ................
 10030010: 00000000 00000000 00000000 00000000  ................
 10030020: 00000000 00000000 00000000 00000000  ................
@@ -7649,129 +7649,109 @@ TODO: Enable Clocks JH7110_I2C0_CLK_CORE, JH7110_I2C0_CLK_APB
 
 TODO: Deassert Reset RSTN_U0_DW_I2C_APB
 
-From [Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_structure.html), I2C is clocked by clk_apb0 / clk_apb12
+From [Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_structure.html): I2C is clocked by clk_apb0 / clk_apb12
 
-System CRG Clocks and Resets: https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html
+From [System CRG Clocks and Resets](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_crg.html):
 
-```text
-0x00_1302_0000	0x00_1302_FFFF	64KB	RW A	System CRG
+- System CRG Base Address: 0x00_1302_0000
 
-U0 Clock I2C APB
-Table 139. U0 Clock I2C APB Register Description
-Offset	0x228
-Access	RW
-Bit	Name	Default	Description
-[31]	clk_icg	0	
-1: Clock enable
-0: Clock disable
+- U0 Clock I2C APB (Offset	0x228)
 
-U1 Clock I2C APB
-Table 140. U1 Clock I2C APB Register Description
-Offset	0x22c
-Access	RW
-Bit	Name	Default	Description
-[31]	clk_icg	0	
-1: Clock enable
-0: Clock disable
+  Bit 31:	clk_icg	(Default 0)
+  - 1: Clock enable
+  - 0: Clock disable
 
-U2 Clock I2C APB
-Table 141. U2 Clock I2C APB Register Description
-Offset	0x230
-Access	RW
-Bit	Name	Default	Description
-[31]	clk_icg	0	
-1: Clock enable
-0: Clock disable
+- U1 Clock I2C APB (Offset 0x22c)
 
-U3 Clock I2C APB
-Table 142. U3 Clock I2C APB Register Description
-Offset	0x234
-Access	RW
-Bit	Name	Default	Description
-[31]	clk_icg	0	
-1: Clock enable
-0: Clock disable
+  Bit 31: clk_icg (Default 0)	
+  - 1: Clock enable
+  - 0: Clock disable
 
-U4 Clock I2C APB
-Table 143. U4 Clock I2C APB Register Description
-Offset	0x238
-Access	RW
-Bit	Name	Default	Description
-[31]	clk_icg	0	
-1: Clock enable
-0: Clock disable
+- U2 Clock I2C APB (Offset 0x230)
 
-U5 Clock I2C APB
-Table 144. U5 Clock I2C APB Register Description
-Offset	0x23c
-Access	RW
-Bit	Name	Default	Description
-[31]	clk_icg	0	
-1: Clock enable
-0: Clock disable
+  Bit 31: clk_icg (Default 0)	
+  - 1: Clock enable
+  - 0: Clock disable
 
-U6 Clock I2C APB
-Table 145. U6 Clock I2C APB Register Description
-Offset	0x240
-Access	RW
-Bit	Name	Default	Description
-[31]	clk_icg	0	
-1: Clock enable
-0: Clock disable
+- U3 Clock I2C APB (Offset 0x234)
 
-Software RESET 2 Address Selector
-Table 193. Software RESET 2 Address Selector Register Description
-Offset	0x300
-Access	RW
-Bit	Name	Default	Description
-[12]	rstn_u0_i2c_rstn_apb	0	
-1: Assert reset
-0: De-assert reset
-[13]	rstn_u1_i2c_rstn_apb	1	
-1: Assert reset
-0: De-assert reset
-[14]	rstn_u2_i2c_rstn_apb	1	
-1: Assert reset
-0: De-assert reset
-[15]	rstn_u3_i2c_rstn_apb	1	
-1: Assert reset
-0: De-assert reset
-[16]	rstn_u4_i2c_rstn_apb	1	
-1: Assert reset
-0: De-assert reset
-[17]	rstn_u5_i2c_rstn_apb	1	
-1: Assert reset
-0: De-assert reset
-[18]	rstn_u6_i2c_rstn_apb	1	
-1: Assert reset
-0: De-assert reset
+  Bit 31: clk_icg (Default 0)	
+  - 1: Clock enable
+  - 0: Clock disable
+
+- U4 Clock I2C APB (Offset 0x238)
+
+  Bit 31: clk_icg (Default 0)	
+  - 1: Clock enable
+  - 0: Clock disable
+
+- U5 Clock I2C APB (Offset 0x23c)
+
+  Bit 31: clk_icg (Default 0)	
+  - 1: Clock enable
+  - 0: Clock disable
+
+- U6 Clock I2C APB (Offset 0x240)
+
+  Bit 31: clk_icg (Default 0)	
+  - 1: Clock enable
+  - 0: Clock disable
+
+- Software RESET 2 Address Selector (Offset	0x300)
+
+  Bit 12: rstn_u0_i2c_rstn_apb (Default 0)	
+  - 1: Assert reset
+  - 0: De-assert reset
+
+  Bit 13: rstn_u1_i2c_rstn_apb (Default 1)	
+  - 1: Assert reset
+  - 0: De-assert reset
+
+  Bit 14: rstn_u2_i2c_rstn_apb (Default 1)	
+  - 1: Assert reset
+  - 0: De-assert reset
+
+  Bit 15: rstn_u3_i2c_rstn_apb (Default 1)	
+  - 1: Assert reset
+  - 0: De-assert reset
+
+  Bit 16: rstn_u4_i2c_rstn_apb (Default 1)	
+  - 1: Assert reset
+  - 0: De-assert reset
+
+  Bit 17: rstn_u5_i2c_rstn_apb (Default 1)	
+  - 1: Assert reset
+  - 0: De-assert reset
+
+  Bit 18: rstn_u6_i2c_rstn_apb (Default 1)	
+  - 1: Assert reset
+  - 0: De-assert reset
+
+What are U0 to U6? They represent the 7 I2C Ports in JH7110
+
+```bash
+md 0x13020228 7
+md 0x13020300 1
 ```
 
-TODO: What are U0 to U6?
+From [SYS SYSCON](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_syscon.html):
 
-SYS SYSCON: https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_syscon.html
+- Base Address of System SYSCON: 0x00_1303_0000
 
-```text
-0x00_1303_0000	0x00_1303_FFFF	64KB	RW A	System SYSCON
+- SYS SYSCONSAIF SYSCFG 20 (Offset 0x14, Default 0xd54d54)
+  - Bit 25: u0_i2c_ic_en - I2C interface enable (Read-Only, default 0x0)
 
-SYS SYSCONSAIF SYSCFG 20
-Table 6. SYS SYSCONSAIF SYSCFG 20 Register Description
-Offset	0x14
-Default	0xd54d54
-Bit	Name	Access	Default	Description
-[25]	u0_i2c_ic_en	RO	0x0	I2C interface enable.
+- SYS SYSCONSAIF SYSCFG 156 (Offset 0x9c, Default 0x400)
+  - Bit 00: u1_i2c_ic_en - I2C interface enable (Read-Only, Default 0)
+  - Bit 15: u2_i2c_ic_en - I2C interface enable (Read-Only, Default 0)
+  - Bit 16: u3_i2c_ic_en - I2C interface enable (Read-Only, Default 0)
+  - Bit 17: u4_i2c_ic_en - I2C interface enable (Read-Only, Default 0)
+  - Bit 18: u5_i2c_ic_en - I2C interface enable (Read-Only, Default 0)
+  - Bit 19: u6_i2c_ic_en - I2C interface enable (Read-Only, Default 0)
 
-SYS SYSCONSAIF SYSCFG 156
-Table 40. SYS SYSCONSAIF SYSCFG 156 Register Description
-Offset	0x9c
-Default	0x400
-Bit	Name	Access	Default	Description
-[0]	u1_i2c_ic_en	RO	0x0	I2C interface enable.
-[15]	u2_i2c_ic_en	RO	0x0	I2C interface enable.
-[16]	u3_i2c_ic_en	RO	0x0	I2C interface enable.
-[17]	u4_i2c_ic_en	RO	0x0	I2C interface enable.
-[18]	u5_i2c_ic_en	RO	0x0	I2C interface enable.
-[19]	u6_i2c_ic_en	RO	0x0	I2C interface enable.
+```bash
+md 0x13030014 1
+md 0x1303009c 1
 ```
 
 I2C Devices: https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html
