@@ -7877,7 +7877,9 @@ clk u5_dw_i2c_clk_apb already disabled
 
 # Explore the I2C Controller for Star64 JH7110
 
-TODO
+TODO: Not linked in any section, appears when we search for "I2C"...
+
+[I2C Register Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_descript_i2c.html)
 
 # PineTab-V Factory Test Code
 
