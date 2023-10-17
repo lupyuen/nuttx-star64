@@ -7657,7 +7657,7 @@ _And deassert Reset RSTN_U0_DW_I2C_APB?_
 
 From [JH7110 Clock Structure](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/clock_structure.html) we see that...
 
-- I2C is clocked by clk_apb0 / clk_apb12
+- I2C is clocked by clk_apb0 and clk_apb12
 
 - There are 7 I2C Ports (named U0 to U6, as we'll soon see)
 
