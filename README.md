@@ -7610,12 +7610,12 @@ TODO: Do we need to bother with Bus Connections?
 
 Let's power up the I2C Controller for Star64 JH7110.
 
-According to the [I2C Device Tree Configuration](https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html)...
+According to the [I2C Device Tree Configuration](https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html): I2C Base Address is 0x10030000, with range 0x10000.
 
-I2C Base Address is 0x10030000, with range 0x10000. Let's dump the I2C Registers with U-Boot Bootloader...
+Let's dump the I2C Registers with U-Boot Bootloader...
 
-```text
-# md 0x10030000
+```bash
+$ md 0x10030000
 10030000: 00000000 00000000 00000000 00000000  ................
 10030010: 00000000 00000000 00000000 00000000  ................
 10030020: 00000000 00000000 00000000 00000000  ................
@@ -7752,7 +7752,7 @@ $ md 0x13020300 1
 
 Which says that...
 
-- All I2C Clocks are Disabled
+- All I2C Clocks are Disabled (except U5)
 
 - All I2C Resets are Asserted (except U0 and U5)
 
@@ -7766,7 +7766,6 @@ $ md 0x13020228 7
 13020238: 80000000 80000000 80000000           ............
 
 ## Deassert the I2C Resets
-
 $ mw 0x13020300 0xffe00fcc 1
 $ md 0x13020300 1
 13020300: ffe00fcc                             ....
