@@ -7876,15 +7876,13 @@ clk u5_dw_i2c_clk_apb already disabled
 
 # Explore the I2C Controller for Star64 JH7110
 
-TODO: Not linked in any section, appears when we search for "I2C"...
+TODO: Not linked in any section, appears when we search for "I2C": [I2C Register Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_descript_i2c.html)
 
-[I2C Register Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_descript_i2c.html)
-
-Based on [DesignWare I2C](https://github.com/torvalds/linux/blob/master/drivers/i2c/busses/i2c-designware-core.h)
-
-Adapt this NuttX Driver: [nuttx/arch/arm/src/cxd56xx/cxd56_i2c.c](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c.c)
+JH7110 I2C is based on [DesignWare I2C](https://github.com/torvalds/linux/blob/master/drivers/i2c/busses/i2c-designware-core.h)
 
 [(Search for "DesignWare DW_apb_i2c Databook")](https://www.google.com/search?q=%22DesignWare+DW_apb_i2c+Databook%22)
+
+Which is implemented by this NuttX Driver: [nuttx/arch/arm/src/cxd56xx/cxd56_i2c.c](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c.c)
 
 # PineTab-V Factory Test Code
 
