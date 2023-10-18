@@ -7882,9 +7882,9 @@ TODO: Not linked in any section, appears when we search for "I2C"...
 
 Based on [DesignWare I2C](https://github.com/torvalds/linux/blob/master/drivers/i2c/busses/i2c-designware-core.h)
 
-[nuttx/arch/arm/src/cxd56xx/cxd56_i2c.c](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c.c)
+Adapt this NuttX Driver: [nuttx/arch/arm/src/cxd56xx/cxd56_i2c.c](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c.c)
 
-(Search for “DesignWare DW_apb_i2c Databook”)[https://www.google.com/search?q=%22DesignWare+DW_apb_i2c+Databook%22]
+[(Search for "DesignWare DW_apb_i2c Databook")](https://www.google.com/search?q=%22DesignWare+DW_apb_i2c+Databook%22)
 
 # PineTab-V Factory Test Code
 
