@@ -7608,7 +7608,7 @@ TODO: Do we need to bother with Bus Connections?
 
 # Power Up the I2C Controller for Star64 JH7110
 
-Let's power up the I2C Controller for Star64 JH7110.
+Let's explore the I2C Controller for Star64 JH7110. We need the I2C for  controlling the X-Powers AXP15060 PMIC, which will be used for HDMI Output.
 
 According to the [I2C Device Tree Configuration](https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html): I2C Base Address is 0x10030000, with range 0x10000.
 
@@ -7879,6 +7879,12 @@ clk u5_dw_i2c_clk_apb already disabled
 TODO: Not linked in any section, appears when we search for "I2C"...
 
 [I2C Register Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_descript_i2c.html)
+
+Based on [DesignWare I2C](https://github.com/torvalds/linux/blob/master/drivers/i2c/busses/i2c-designware-core.h)
+
+[nuttx/arch/arm/src/cxd56xx/cxd56_i2c.c](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c.c)
+
+(Search for “DesignWare DW_apb_i2c Databook”)[https://www.google.com/search?q=%22DesignWare+DW_apb_i2c+Databook%22]
 
 # PineTab-V Factory Test Code
 
