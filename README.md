@@ -7889,7 +7889,13 @@ JH7110 I2C is based on [DesignWare I2C](https://github.com/torvalds/linux/blob/m
 
 [(Search for "DesignWare DW_apb_i2c Databook")](https://www.google.com/search?q=%22DesignWare+DW_apb_i2c+Databook%22)
 
-Which is implemented by this NuttX Driver: [arch/arm/src/cxd56xx/cxd56_i2c.c](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c.c)
+Which is implemented by this NuttX Driver:
+
+- [arch/arm/src/cxd56xx/cxd56_i2c.c](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c.c)
+
+- [arch/arm/src/cxd56xx/cxd56_i2c.h](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c.h)
+
+- Bit Bang Version: [cxd56_i2c_bitbang.c](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c_bitbang.c) and [cxd56_i2c_bitbang.h](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c_bitbang.h)
 
 # PineTab-V Factory Test Code
 
