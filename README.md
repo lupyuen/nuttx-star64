@@ -3677,6 +3677,13 @@ This says that the Actual Page Heap Size is 4 MB (excluding the RAM Disk).
 
 Let's increase the Page Heap Size...
 
+TODO: Folks might forget to update `CONFIG_ARCH_PGPOOL_SIZE`. Let's verify that...
+
+```c
+DEBUGASSERT(__pgheap_size ==
+  CONFIG_ARCH_PGPOOL_SIZE + __ramdisk_size)
+```
+
 # Increase Page Heap Size
 
 _NuttX Apps will allocate Dynamic Memory (malloc) from the NuttX Page Heap..._
@@ -7608,7 +7615,7 @@ TODO: Do we need to bother with Bus Connections?
 
 # Power Up the I2C Controller for Star64 JH7110
 
-Let's explore the I2C Controller for Star64 JH7110. We need the I2C for  controlling the X-Powers AXP15060 PMIC, which will be used for HDMI Output.
+Let's explore the I2C Controller for Star64 JH7110. We need the I2C for  controlling the [X-Powers AXP15060 PMIC](https://lupyuen.github.io/articles/display3#appendix-jh7110-display-driver), which will be used for HDMI Output.
 
 According to the [I2C Device Tree Configuration](https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html): I2C Base Address is 0x10030000, with range 0x10000.
 
