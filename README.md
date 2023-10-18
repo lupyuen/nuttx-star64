@@ -7892,101 +7892,54 @@ JH7110 I2C is based on [DesignWare I2C](https://github.com/torvalds/linux/blob/m
 See Page 252: "Figure 8-2: Flowchart for DW_apb_i2c Master"
 
 ```text
-Write 0 to
-IC_ENABLE to
-disable
-DW_apb_i2c
+Write 0 to IC_ENABLE to disable DW_apb_i2c
 
-Program IC_CON register fields as
-required:
-1. Set IC_SLAVE_DISABLE to 1 – Slave
- disabled
-2. Set IC_RESTART_EN to 1 – Enable
- restart mode
-3. Set IC_10BITADDR_MASTER to 0 –
- 7-bit addressing
-4. Set IC_10BITADDR_SLAVE to 0 – 7-bit
- addressing
-5. Set IC_MAX_SPEED_MODE to 1 –
- Standard mode
-6. Set IC_MASTER_MODE to 1 – Master
- enabled
+Program IC_CON register fields as required:
+1. Set IC_SLAVE_DISABLE to 1 – Slave disabled
+2. Set IC_RESTART_EN to 1 – Enable restart mode
+3. Set IC_10BITADDR_MASTER to 0 – 7-bit addressing
+4. Set IC_10BITADDR_SLAVE to 0 – 7-bit addressing
+5. Set IC_MAX_SPEED_MODE to 1 – Standard mode
+6. Set IC_MASTER_MODE to 1 – Master enabled
 
-Set address of
-target Slave by
-writing it to TAR
+Set address of target Slave by writing it to TAR
 
-Write to
-IC_SS_HCNT to
-set HIGH period
-of SCL
+Write to IC_SS_HCNT to set HIGH period of SCL
 
-Write to
-IC_SS_LCNT to
-set LOW period
-of SCL
+Write to IC_SS_LCNT to set LOW period of SCL
 
-Write to
-IC_INTR_MASK to
-enable all
-interrupts
+Write to IC_INTR_MASK to enable all interrupts
 
-Write to
-IC_RX_TL to
-set Rx FIFO
-threshold level
+Write to IC_RX_TL to set Rx FIFO threshold level
 
-Write to
-IC_TX_TL to
-set Tx FIFO
-threshold level
+Write to IC_TX_TL to set Tx FIFO threshold level
 
-Write 1 to
-IC_ENABLE to
-enable
-DW_apb_i2c
+Write 1 to IC_ENABLE to enable DW_apb_i2c
 
-Write to IC_DATA_CMD to
-push Write command and write data
-or Read command Tx FIFO
+Write to IC_DATA_CMD to push Write command and write data or Read command Tx FIFO
 
-Command is
-Write?
+Command is Write?
 
   N:
-  RX_FULL
-  interrupt
-  asserted?
+  RX_FULL interrupt asserted?
 
     Y:
-    Read
-    IC_DATA_CMD[7:0]
-    to retrieve
-    received byte
+    Read IC_DATA_CMD[7:0] to retrieve received byte
 
   Y:
-  TX_EMPTY
-  interrupt
-  asserted?
+  TX_EMPTY interrupt asserted?
 
     Y:
-    More
-    commands
-    to send?
+    More commands to send?
 
       Y:
       Write to IC_DATA_CMD...
 
       N:
-      Is IC_STATUS[5]
-      (MST_ACTIVITY)
-      = 0?
+      Is IC_STATUS[5] (MST_ACTIVITY) = 0?
 
         Y:
-        Write 0 to
-        IC_ENABLE to
-        disable
-        DW_apb_i2c  
+        Write 0 to IC_ENABLE to disable DW_apb_i2c  
 ```
 
 Which is implemented by this NuttX Driver:
@@ -7996,6 +7949,8 @@ Which is implemented by this NuttX Driver:
 - [arch/arm/src/cxd56xx/hardware/cxd56_i2c.h](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/hardware/cxd56_i2c.h)
 
 - Bit Bang Version: [cxd56_i2c_bitbang.c](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c_bitbang.c) and [cxd56_i2c_bitbang.h](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c_bitbang.h)
+
+TODO: Test this with U-Boot
 
 # PineTab-V Factory Test Code
 
