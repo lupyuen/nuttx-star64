@@ -7872,7 +7872,7 @@ clk u5_dw_i2c_clk_core already disabled
 clk u5_dw_i2c_clk_apb already disabled
 ```
 
-[(Source)](https://gist.github.com/lupyuen/1e009a3343da70257d6f24400339053f)
+[(Source)](https://gist.github.com/lupyuen/1e009a3343da70257d6f24400339053f#file-nuttx-scheme-star64-log-L160-L165)
 
 # Explore the I2C Controller for Star64 JH7110
 
