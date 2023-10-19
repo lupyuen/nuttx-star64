@@ -8163,6 +8163,14 @@ $ md 0x12060000 0x40
 
 TODO: I2C Port 5 has I2C Target Address 0x50. Probably in use
 
+TODO: What are the I2C Controller Registers?
+
+TODO: What is I2C Target Address 0x50? 
+
+Not AXP15060 PMIC, which has I2C Address 0x36 [(Page 7)](https://files.pine64.org/doc/datasheet/star64/AXP15060%20datasheet%20V0.1.pdf)
+
+TODO: Check the U-Boot Device Tree
+
 # PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
