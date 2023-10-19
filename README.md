@@ -7619,7 +7619,17 @@ Let's explore the I2C Controller for Star64 JH7110. We need the I2C for  control
 
 According to the [I2C Device Tree Configuration](https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html): I2C Port 0 Base Address is 0x10030000, with range 0x10000.
 
-(There are 7 I2C Ports: I2C0 to I2C6)
+There are 7 I2C Ports: I2C0 to I2C6. From [JH7110 System Memory Map](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/system_memory_map.html)...
+
+| Start Address	| End Address	| Size	| Attribute	| Device/Description |
+|-|-|-|-|-|
+| 0x00_1003_0000	| 0x00_1003_FFFF	| 64KB	| RW A	| I2C0
+| 0x00_1004_0000	| 0x00_1004_FFFF	| 64KB	| RW A	| I2C1
+| 0x00_1005_0000	| 0x00_1005_FFFF	| 64KB	| RW A	| I2C2
+| 0x00_1203_0000	| 0x00_1203_FFFF	| 64KB	| RW A	| I2C3
+| 0x00_1204_0000	| 0x00_1204_FFFF	| 64KB	| RW A	| I2C4
+| 0x00_1205_0000	| 0x00_1205_FFFF	| 64KB	| RW A	| I2C5
+| 0x00_1206_0000	| 0x00_1206_FFFF	| 64KB	| RW A	| I2C6
 
 Let's dump the I2C Registers with U-Boot Bootloader...
 
