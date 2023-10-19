@@ -7887,7 +7887,7 @@ TODO: Not linked in any section, appears when we search for "I2C": [I2C Register
 
 JH7110 I2C is based on [DesignWare I2C](https://github.com/torvalds/linux/blob/master/drivers/i2c/busses/i2c-designware-core.h)
 
-[(Search for "DesignWare DW_apb_i2c Databook")](https://www.google.com/search?q=%22DesignWare+DW_apb_i2c+Databook%22)
+[DesignWare DW_apb_i2c Databook](https://github.com/lupyuen/nuttx-star64/blob/main/designware-apb-i2c.pdf)
 
 See Page 252: "Figure 8-2: Flowchart for DW_apb_i2c Master"
 
