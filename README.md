@@ -7956,19 +7956,74 @@ From [DesignWare DW_apb_i2c Databook](https://github.com/lupyuen/nuttx-star64/bl
 
 - IC_CON (Offset 0x00): I2C Control
 
+  Actual Value: 0x7f
+
+- IC_TAR (Offset 0x04): I2C Target Address
+
+  Default Value: 0x55
+
+  Actual Value: 0x55
+
+- IC_SAR (Offset 0x08): I2C Slave Address
+
+  Default Value: 0x55
+
+  Actual Value: 0x55
+
 - IC_ENABLE (Offset 0x6C): I2C Enable
+
+  Actual Value: 0
 
 - IC_STATUS (Offset 0x70): I2C Status register
 
+  Actual Value: 6
+
+- IC_COMP_PARAM_1 (Offset 0xf4): Component Parameter Register
+
+  Actual Value: 0x1f1fee
+
 - IC_COMP_VERSION (Offset 0xf8): Component Version ID
+
+  Reset Value: "See the releases table in the AMBA 2 release notes" (?)
+
+  Actual Value: 0x3230302a
 
 - IC_COMP_TYPE (Offset 0xfc): DesignWare Component Type Register
 
   Reset Value: 0x44570140
+  
+  Actual Value: Yep correct
 
 - IC_DEVICE_ID (Offset 0xb8): I2C Device ID
 
   Reset Value: IC_DEVICE_ID_VALUE
+
+  Actual Value: 0
+
+The above Actual Values were retrieved from U-Boot...
+
+```bash
+## Omitted: Power Up I2C Controller
+...
+## Dump the I2C Registers
+$ md 0x10030000 0x40
+10030000: 0000007f 00000055 00000055 00000001  ....U...U.......
+10030010: 00000000 00000190 000001d6 0000003c  ............<...
+10030020: 00000082 00000006 00000010 00000000  ................
+10030030: 000008ff 00000000 00000000 00000000  ................
+10030040: 00000000 00000000 00000000 00000000  ................
+10030050: 00000000 00000000 00000000 00000000  ................
+10030060: 00000000 00000000 00000000 00000004  ................
+10030070: 00000006 00000000 00000000 00000001  ................
+10030080: 00000000 00000000 00000000 00000000  ................
+10030090: 00000000 00000064 00000001 00000000  ....d...........
+100300a0: 00000005 00000001 00000000 00000000  ................
+100300b0: 00000000 00000000 00000000 00000000  ................
+100300c0: 00000000 00000000 00000000 00000000  ................
+100300d0: 00000000 00000000 00000000 00000000  ................
+100300e0: 00000000 00000000 00000000 00000000  ................
+100300f0: 00000000 001f1fee 3230302a 44570140  ........*002@.WD
+```
 
 TODO: Read PMIC with U-Boot
 
