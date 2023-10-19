@@ -7617,7 +7617,9 @@ TODO: Do we need to bother with Bus Connections?
 
 Let's explore the I2C Controller for Star64 JH7110. We need the I2C for  controlling the [X-Powers AXP15060 PMIC](https://lupyuen.github.io/articles/display3#appendix-jh7110-display-driver), which will be used for HDMI Output.
 
-According to the [I2C Device Tree Configuration](https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html): I2C Base Address is 0x10030000, with range 0x10000.
+According to the [I2C Device Tree Configuration](https://doc-en.rvspace.org/VisionFive2/DG_I2C/JH7110_SDK/i2c_source_code.html): I2C Port 0 Base Address is 0x10030000, with range 0x10000.
+
+(There are 7 I2C Ports: I2C0 to I2C6)
 
 Let's dump the I2C Registers with U-Boot Bootloader...
 
@@ -7783,7 +7785,7 @@ $ md 0x13030014 1
 $ md 0x1303009c 1
 1303009c: 00042600                             .&..
 
-## Dump the I2C Registers
+## Dump the I2C Registers for I2C Port 0
 $ md 0x10030000 0x40
 10030000: 0000007f 00000055 00000055 00000001  ....U...U.......
 10030010: 00000000 00000190 000001d6 0000003c  ............<...
@@ -7803,7 +7805,7 @@ $ md 0x10030000 0x40
 100300f0: 00000000 001f1fee 3230302a 44570140  ........*002@.WD
 ```
 
-Yep I2C is alive yay!
+Yep I2C Port 0 is alive yay!
 
 TODO: What about [SYS SYSCON](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/sys_syscon.html):
 
@@ -8005,7 +8007,7 @@ The above Actual Values were retrieved from U-Boot...
 ```bash
 ## Omitted: Power Up I2C Controller
 ...
-## Dump the I2C Registers
+## Dump the I2C Registers for I2C Port 0
 $ md 0x10030000 0x40
 10030000: 0000007f 00000055 00000055 00000001  ....U...U.......
 10030010: 00000000 00000190 000001d6 0000003c  ............<...
