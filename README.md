@@ -7952,6 +7952,10 @@ Which is implemented by this NuttX Driver:
 
 TODO: Test this with U-Boot
 
+TODO: Read I2C Controller with U-Boot
+
+TODO: Read PMIC with U-Boot
+
 # PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
