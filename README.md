@@ -7883,13 +7883,11 @@ clk u5_dw_i2c_clk_apb already disabled
 
 # Explore the I2C Controller for Star64 JH7110
 
-TODO: Not linked in any section, appears when we search for "I2C": [I2C Register Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_descript_i2c.html)
+TODO: Not linked in any section, appears when we search for "I2C": [I2C Register Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_descript_i2c.html) (Looks garbled)
 
 JH7110 I2C is based on [DesignWare I2C](https://github.com/torvalds/linux/blob/master/drivers/i2c/busses/i2c-designware-core.h)
 
-[DesignWare DW_apb_i2c Databook](https://github.com/lupyuen/nuttx-star64/blob/main/designware-apb-i2c.pdf)
-
-See Page 252: "Figure 8-2: Flowchart for DW_apb_i2c Master"
+From [DesignWare DW_apb_i2c Databook](https://github.com/lupyuen/nuttx-star64/blob/main/designware-apb-i2c.pdf) Page 252: "Figure 8-2: Flowchart for DW_apb_i2c Master"
 
 ```text
 Write 0 to IC_ENABLE to disable DW_apb_i2c
@@ -7953,6 +7951,24 @@ Which is implemented by this NuttX Driver:
 TODO: Test this with U-Boot
 
 TODO: Read I2C Controller with U-Boot
+
+From [DesignWare DW_apb_i2c Databook](https://github.com/lupyuen/nuttx-star64/blob/main/designware-apb-i2c.pdf) Page 154:
+
+- IC_CON (Offset 0x00): I2C Control
+
+- IC_ENABLE (Offset 0x6C): I2C Enable
+
+- IC_STATUS (Offset 0x70): I2C Status register
+
+- IC_COMP_VERSION (Offset 0xf8): Component Version ID
+
+- IC_COMP_TYPE (Offset 0xfc): DesignWare Component Type Register
+
+  Reset Value: 0x44570140
+
+- IC_DEVICE_ID (Offset 0xb8): I2C Device ID
+
+  Reset Value: IC_DEVICE_ID_VALUE
 
 TODO: Read PMIC with U-Boot
 
