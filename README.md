@@ -7765,6 +7765,8 @@ Which says that...
 
 - All I2C Resets are Asserted (except U0 and U5)
 
+TODO: Why is I2C Port 5 enabled? Is it used by U-Boot?
+
 Let's enable all the I2C Clocks and deassert all the I2C Resets...
 
 ```bash
