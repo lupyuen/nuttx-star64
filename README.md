@@ -8187,7 +8187,7 @@ We run this __`ecall`__ to jump from NuttX (in RISC-V Supervisor Mode) to OpenSB
 
 Like this...
 
-From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L155-L237
+From [jh7110_appinit.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L155-L237)
 
 ```c
 // After NuttX boots on JH7110...
@@ -8212,7 +8212,7 @@ int test_opensbi(void) {
 
 __`sbi_ecall`__ makes an __`ecall`__ to jump from NuttX (in RISC-V Supervisor Mode) to OpenSBI (in RISC-V Machine Mode)...
 
-From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L268-L299
+From [jh7110_appinit.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L268-L299)
 
 ```c
 // Make an ecall to OpenSBI. Based on
@@ -8262,7 +8262,7 @@ _But that's calling the Legacy Console Putchar Function. What about the newer De
 
 Let's call the newer [Debug Console Functions](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-debug-console.adoc) in OpenSBI...
 
-From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L237-L265
+From [jh7110_appinit.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L237-L265)
 
 ```c
   // TODO: Not supported by SBI v0.2, this will return SBI_ERR_NOT_SUPPORTED
