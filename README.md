@@ -3880,6 +3880,8 @@ After increasing the App Stack Size, our App no longer crashes!
 
 - [After Setting CONFIG_POSIX_SPAWN_DEFAULT_STACKSIZE](https://gist.github.com/lupyuen/572e6018ed982fe42b2b5ed40ffae505)
 
+- [Scheme runs OK on Star64 yay!](https://gist.github.com/lupyuen/1e009a3343da70257d6f24400339053f)
+
 This is how we increase the Default Stack Size, Interrupt Stack Size and other Kernel Stack Sizes...
 
 From [nsh/defconfig](https://github.com/lupyuen2/wip-pinephone-nuttx/commit/5441201b82755f979958e8b33a955554bbe345b6)
