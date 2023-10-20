@@ -3908,7 +3908,7 @@ STACKSIZE  USED  FILLED   COMMAND
 
 TODO: Why is Interrupt Stack full again?
 
-_How do we search menuconfig for a setting like CONFIG_DEFAULT_TASK_STACKSIZE?_
+_How do we search menuconfig for a setting like DEFAULT_TASK_STACKSIZE?_
 
 Normally we don't edit `.config` directly. We do it in menuconfig like this...
 
@@ -3916,7 +3916,7 @@ Normally we don't edit `.config` directly. We do it in menuconfig like this...
 
 1.  Press "`/`" to search
 
-1.  Enter `CONFIG_DEFAULT_TASK_STACKSIZE` (or a substring)
+1.  Enter `DEFAULT_TASK_STACKSIZE` (or a substring)
 
     We should see the location of the setting
     
