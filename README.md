@@ -8316,7 +8316,7 @@ It says...
 
 > OpenSBI fully supports SBI specification v0.2
 
-Current version of SBI Spec is 2.0. OpenSBI implements a 4-year-old spec?
+Current version of SBI Spec is 2.0 (draft). OpenSBI implements a 4-year-old spec?
 
 But then we see this: [sbi_ecall.h](https://github.com/starfive-tech/opensbi/blob/c6a092cd80112529cb2e92e180767ff5341b22a3/include/sbi/sbi_ecall.h#L16-L17)
 
