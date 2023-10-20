@@ -8173,6 +8173,65 @@ Not AXP15060 PMIC, which has I2C Address 0x36 [(Page 7)](https://files.pine64.or
 
 TODO: Check the U-Boot Device Tree
 
+# Call OpenSBI from NuttX
+
+TODO
+
+From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L155-L237
+
+```c
+void board_late_initialize(void) {
+  ...
+  // Make an ecall to OpenSBI
+  int test_opensbi(void);
+  int ret = test_opensbi();
+  DEBUGASSERT(ret == OK);
+}
+
+// Make an ecall to OpenSBI. Based on
+// https://github.com/riscv-software-src/opensbi/blob/master/firmware/payloads/test_main.c
+// https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/
+int test_opensbi(void) {
+  // Print `123` to Debug Console with Legacy Console Putchar.
+  // Call sbi_console_putchar: EID 0x01, FID 0
+  // https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-legacy.adoc
+  sbi_ecall(SBI_EXT_0_1_CONSOLE_PUTCHAR, 0, '1', 0, 0, 0, 0, 0);
+  sbi_ecall(SBI_EXT_0_1_CONSOLE_PUTCHAR, 0, '2', 0, 0, 0, 0, 0);
+  sbi_ecall(SBI_EXT_0_1_CONSOLE_PUTCHAR, 0, '3', 0, 0, 0, 0, 0);
+```
+
+From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L237-L265
+
+```c
+  // TODO: Not supported by SBI v0.2, this will return SBI_ERR_NOT_SUPPORTED
+  // Print `456` to Debug Console.
+  // Call sbi_debug_console_write: EID 0x4442434E, FID 0
+  // https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-debug-console.adoc#function-console-write-fid-0
+  const char *str = "456";
+	struct sbiret sret = sbi_ecall(
+    SBI_EXT_DBCN,  // Extension ID
+    SBI_EXT_DBCN_CONSOLE_WRITE,  // Function ID
+		strlen(str),         // Number of bytes
+    (unsigned long)str,  // Address Low
+    0,                   // Address High
+    0, 0, 0              // Unused
+  );
+  _info("sret.value=%d, sret.error=%d\n", sret.value, sret.error);
+  // DEBUGASSERT(sret.error == SBI_SUCCESS);
+  // DEBUGASSERT(sret.value == strlen(str));
+
+  // TODO: Not supported by SBI v0.2, this will return SBI_ERR_NOT_SUPPORTED
+  // Print `789` to Debug Console.
+  // Call sbi_debug_console_write_byte: EID 0x4442434E, FID 2
+  // https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-debug-console.adoc#function-console-write-byte-fid-2
+  sret = sbi_ecall(SBI_EXT_DBCN, SBI_EXT_DBCN_CONSOLE_WRITE_BYTE, '7', 0, 0, 0, 0, 0);
+  sret = sbi_ecall(SBI_EXT_DBCN, SBI_EXT_DBCN_CONSOLE_WRITE_BYTE, '8', 0, 0, 0, 0, 0);
+  sret = sbi_ecall(SBI_EXT_DBCN, SBI_EXT_DBCN_CONSOLE_WRITE_BYTE, '9', 0, 0, 0, 0, 0);
+  _info("sret.value=%d, sret.error=%d\n", sret.value, sret.error);
+  // DEBUGASSERT(sret.error == SBI_SUCCESS);
+  // DEBUGASSERT(sret.value == strlen(str));
+```
+
 # PineTab-V Factory Test Code
 
 The PineTab-V ships with [Factory Test Code](https://wiki.pine64.org/wiki/PineTab-V_Releases#Factory_releases).
