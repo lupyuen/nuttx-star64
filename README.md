@@ -8345,11 +8345,15 @@ Here are the SBI Specs...
 
 Definitely no Debug Console in there!
 
+_When was Debug Console added to the SBI Spec?_
+
 Debug Console appears in [SBI Spec v2.0 RC1](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v2.0-rc1/riscv-sbi.adoc), but there isn't an official SBI Spec v2.0 yet.
 
-What exactly does JH7110 OpenSBI implement? The Debug Console code is already inside: [sbi_ecall_dbcn.c](https://github.com/starfive-tech/opensbi/blob/c6a092cd80112529cb2e92e180767ff5341b22a3/lib/sbi/sbi_ecall_dbcn.c)
+And the Debug Console code is already inside JH7110 OpenSBI: [sbi_ecall_dbcn.c](https://github.com/starfive-tech/opensbi/blob/c6a092cd80112529cb2e92e180767ff5341b22a3/lib/sbi/sbi_ecall_dbcn.c)
 
-Why can't we call the Debug Console? Messy sigh.
+_So why can't we call the Debug Console?_
+
+Our JH7110 Firmware seems to be built in [Jan 2023](https://gist.github.com/lupyuen/1e009a3343da70257d6f24400339053f#file-nuttx-scheme-star64-log-L4). But Debug Console was only implemented in [Feb 2023](https://github.com/starfive-tech/opensbi/commits/c6a092cd80112529cb2e92e180767ff5341b22a3/lib/sbi/sbi_ecall_dbcn.c)! Maybe that's why we can't call the Debug Console on JH7110 OpenSBI.
 
 FYI: Upstream OpenSBI now supports [SBI 2.0](https://github.com/riscv-software-src/opensbi/commit/cbdd86973901b6be2a1a2d3d6b54f3184fdf9a44)
 
