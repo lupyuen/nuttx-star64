@@ -8175,7 +8175,17 @@ TODO: Check the U-Boot Device Tree
 
 # Call OpenSBI from NuttX
 
-TODO
+_How to call OpenSBI in NuttX?_
+
+We run this __`ecall`__ to jump from NuttX (in RISC-V Supervisor Mode) to OpenSBI (in RISC-V Machine Mode)...
+
+- [__riscv_sbi.c: Calling OpenSBI in NuttX__](https://github.com/apache/nuttx/blob/master/arch/risc-v/src/common/supervisor/riscv_sbi.c#L52-L77)
+
+  [(How __`ecall`__ works in OpenSBI)](https://www.thegoodpenguin.co.uk/blog/an-overview-of-opensbi/)
+
+  [(More about OpenSBI)](https://courses.stephenmarz.com/my-courses/cosc562/risc-v/opensbi-calls/)
+
+Like this...
 
 From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L155-L237
 
@@ -8184,7 +8194,6 @@ From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh71
 void board_late_initialize(void) {
   ...
   // Make an ecall to OpenSBI
-  int test_opensbi(void);
   int ret = test_opensbi();
   DEBUGASSERT(ret == OK);
 }
@@ -8200,6 +8209,8 @@ int test_opensbi(void) {
   sbi_ecall(SBI_EXT_0_1_CONSOLE_PUTCHAR, 0, '2', 0, 0, 0, 0, 0);
   sbi_ecall(SBI_EXT_0_1_CONSOLE_PUTCHAR, 0, '3', 0, 0, 0, 0, 0);
 ```
+
+__`sbi_ecall`__ makes an __`ecall`__ to jump from NuttX (in RISC-V Supervisor Mode) to OpenSBI (in RISC-V Machine Mode)...
 
 From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L268-L299
 
@@ -8236,15 +8247,20 @@ static struct sbiret sbi_ecall(unsigned int extid, unsigned int fid,
 }
 ```
 
-From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L300-L310
+When we run our Modified NuttX Kernel on Star64 JH7110, we see `123` printed on the Debug Console. Yay!
 
 ```text
 Starting kernel ...
-BC123test_opensbi: sret.value=0, sret.error=-2
-test_opensbi: sret.value=0, sret.error=-2
+123
 NuttShell (NSH) NuttX-12.0.3
 nsh> 
 ```
+
+[(Source)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L300-L310)
+
+_But that's calling the Legacy Console Putchar Function. What about the newer Debug Console Functions?_
+
+Let's call the newer [Debug Console Functions](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-debug-console.adoc) in OpenSBI...
 
 From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L237-L265
 
@@ -8277,6 +8293,40 @@ From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh71
   // DEBUGASSERT(sret.error == SBI_SUCCESS);
   // DEBUGASSERT(sret.value == strlen(str));
 ```
+
+But it fails with `SBI_ERR_NOT_SUPPORTED`...
+
+```text
+Starting kernel ...
+test_opensbi: sret.value=0, sret.error=-2
+test_opensbi: sret.value=0, sret.error=-2
+```
+
+[(Source)](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L300-L310)
+
+_Why is the Debug Console not supported on JH7110 OpenSBI?_
+
+If we trace the StarFive JH7110 Source Code...
+
+1.  Browse to [github.com/starfive-tech/VisionFive2](https://github.com/starfive-tech/VisionFive2)
+
+1.  Click the [opensbi Folder](https://github.com/starfive-tech/opensbi/tree/c6a092cd80112529cb2e92e180767ff5341b22a3)
+
+It says...
+
+> OpenSBI fully supports SBI specification v0.2
+
+Current version of SBI Spec is 2.0. OpenSBI implements a 4-year-old spec!
+
+_Oops that's an ancient spec! What exactly is in SBI v0.2?_
+
+Here's the SBI Spec v0.2...
+
+- [SBI Spec v0.2](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v0.2.0/riscv-sbi.adoc)
+
+Not much in there. Definitely no Debug Console!
+
+TODO: Call sbi_get_spec_version, sbi_get_impl_id, sbi_get_impl_version, sbi_probe_extension, sbi_get_mvendorid, sbi_get_marchid, sbi_get_mimpid
 
 # PineTab-V Factory Test Code
 
