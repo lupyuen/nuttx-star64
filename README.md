@@ -8351,6 +8351,8 @@ What exactly does JH7110 OpenSBI implement? The Debug Console code is already in
 
 Why can't we call the Debug Console? Messy sigh.
 
+FYI: Upstream OpenSBI now supports [SBI 2.0](https://github.com/riscv-software-src/opensbi/commit/cbdd86973901b6be2a1a2d3d6b54f3184fdf9a44)
+
 TODO: Call sbi_get_spec_version, sbi_get_impl_id, sbi_get_impl_version, sbi_probe_extension, sbi_get_mvendorid, sbi_get_marchid, sbi_get_mimpid
 
 # PineTab-V Factory Test Code
