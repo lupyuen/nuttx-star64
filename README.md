@@ -8337,7 +8337,7 @@ Here are the SBI Specs...
 
 Definitely no Debug Console in there!
 
-Debug Console appears in [SBI Spec v2.0-rc1](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v2.0-rc1/riscv-sbi.adoc), but there isn't an official SBI Spec v2.0 yet.
+Debug Console appears in [SBI Spec v2.0 RC1](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v2.0-rc1/riscv-sbi.adoc), but there isn't an official SBI Spec v2.0 yet.
 
 What exactly does JH7110 OpenSBI implement? The Debug Console code is already inside: [sbi_ecall_dbcn.c](https://github.com/starfive-tech/opensbi/blob/c6a092cd80112529cb2e92e180767ff5341b22a3/lib/sbi/sbi_ecall_dbcn.c)
 
