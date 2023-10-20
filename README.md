@@ -8318,16 +8318,16 @@ It says...
 
 Current version of SBI Spec is 2.0. OpenSBI implements a 4-year-old spec?
 
-But then we see this: [sbi_version.h](https://github.com/starfive-tech/opensbi/blob/c6a092cd80112529cb2e92e180767ff5341b22a3/include/sbi/sbi_version.h#L12-L15)
+But then we see this: [sbi_ecall.h](https://github.com/starfive-tech/opensbi/blob/c6a092cd80112529cb2e92e180767ff5341b22a3/include/sbi/sbi_ecall.h#L16-L17)
 
 ```c
-#define OPENSBI_VERSION_MAJOR 1
-#define OPENSBI_VERSION_MINOR 2
+#define SBI_ECALL_VERSION_MAJOR		1
+#define SBI_ECALL_VERSION_MINOR		0
 ```
 
-So it probably implements SBI v1.2.
+So it probably implements SBI v1.0.
 
-_What exactly is in SBI v0.2 and v1.2?_
+_What exactly is in SBI v0.2 and v1.0?_
 
 Here are the SBI Specs...
 
@@ -8335,13 +8335,11 @@ Here are the SBI Specs...
 
 - [SBI Spec v1.0](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v1.0.0/riscv-sbi.adoc)
 
-  (v1.2 doesn't exist)
-
 Definitely no Debug Console in there!
 
 Debug Console appears in [SBI Spec v2.0-rc1](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v2.0-rc1/riscv-sbi.adoc), but there isn't an official SBI Spec v2.0 yet.
 
-So what exactly does JH7110 OpenSBI implement? The Debug Console code is already inside: [sbi_ecall_dbcn.c](https://github.com/starfive-tech/opensbi/blob/c6a092cd80112529cb2e92e180767ff5341b22a3/lib/sbi/sbi_ecall_dbcn.c)
+What exactly does JH7110 OpenSBI implement? The Debug Console code is already inside: [sbi_ecall_dbcn.c](https://github.com/starfive-tech/opensbi/blob/c6a092cd80112529cb2e92e180767ff5341b22a3/lib/sbi/sbi_ecall_dbcn.c)
 
 Why can't we call the Debug Console? Messy sigh.
 
