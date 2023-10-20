@@ -8180,6 +8180,7 @@ TODO
 From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L155-L237
 
 ```c
+// After NuttX boots on JH7110...
 void board_late_initialize(void) {
   ...
   // Make an ecall to OpenSBI
@@ -8198,6 +8199,51 @@ int test_opensbi(void) {
   sbi_ecall(SBI_EXT_0_1_CONSOLE_PUTCHAR, 0, '1', 0, 0, 0, 0, 0);
   sbi_ecall(SBI_EXT_0_1_CONSOLE_PUTCHAR, 0, '2', 0, 0, 0, 0, 0);
   sbi_ecall(SBI_EXT_0_1_CONSOLE_PUTCHAR, 0, '3', 0, 0, 0, 0, 0);
+```
+
+From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L268-L299
+
+```c
+// Make an ecall to OpenSBI. Based on
+// https://github.com/apache/nuttx/blob/master/arch/risc-v/src/common/supervisor/riscv_sbi.c#L52-L77
+// https://github.com/riscv-software-src/opensbi/blob/master/firmware/payloads/test_main.c
+static struct sbiret sbi_ecall(unsigned int extid, unsigned int fid,
+                                  uintptr_t parm0, uintptr_t parm1,
+                                  uintptr_t parm2, uintptr_t parm3,
+                                  uintptr_t parm4, uintptr_t parm5)
+{
+  struct sbiret ret;
+  register long r0 asm("a0") = (long)(parm0);
+  register long r1 asm("a1") = (long)(parm1);
+  register long r2 asm("a2") = (long)(parm2);
+  register long r3 asm("a3") = (long)(parm3);
+  register long r4 asm("a4") = (long)(parm4);
+  register long r5 asm("a5") = (long)(parm5);
+  register long r6 asm("a6") = (long)(fid);
+  register long r7 asm("a7") = (long)(extid);
+
+  asm volatile
+    (
+     "ecall"
+     : "+r"(r0), "+r"(r1)
+     : "r"(r2), "r"(r3), "r"(r4), "r"(r5), "r"(r6), "r"(r7)
+     : "memory"
+     );
+
+  ret.error = r0;
+  ret.value = r1;
+  return ret;
+}
+```
+
+From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L300-L310
+
+```text
+Starting kernel ...
+BC123test_opensbi: sret.value=0, sret.error=-2
+test_opensbi: sret.value=0, sret.error=-2
+NuttShell (NSH) NuttX-12.0.3
+nsh> 
 ```
 
 From https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L237-L265
