@@ -8265,7 +8265,7 @@ Let's call the newer [Debug Console Functions](https://github.com/riscv-non-isa/
 From [jh7110_appinit.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi/boards/risc-v/jh7110/star64/src/jh7110_appinit.c#L237-L265)
 
 ```c
-  // TODO: Not supported by SBI v0.2, this will return SBI_ERR_NOT_SUPPORTED
+  // TODO: Not supported by SBI v1.0, this will return SBI_ERR_NOT_SUPPORTED
   // Print `456` to Debug Console.
   // Call sbi_debug_console_write: EID 0x4442434E, FID 0
   // https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-debug-console.adoc#function-console-write-fid-0
@@ -8282,7 +8282,7 @@ From [jh7110_appinit.c](https://github.com/lupyuen2/wip-pinephone-nuttx/blob/sbi
   // DEBUGASSERT(sret.error == SBI_SUCCESS);
   // DEBUGASSERT(sret.value == strlen(str));
 
-  // TODO: Not supported by SBI v0.2, this will return SBI_ERR_NOT_SUPPORTED
+  // TODO: Not supported by SBI v1.0, this will return SBI_ERR_NOT_SUPPORTED
   // Print `789` to Debug Console.
   // Call sbi_debug_console_write_byte: EID 0x4442434E, FID 2
   // https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-debug-console.adoc#function-console-write-byte-fid-2
