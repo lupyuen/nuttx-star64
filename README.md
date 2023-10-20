@@ -8327,6 +8327,14 @@ But then we see this: [sbi_ecall.h](https://github.com/starfive-tech/opensbi/blo
 
 Which is returned by [GET_SPEC_VERSION](https://github.com/starfive-tech/opensbi/blob/c6a092cd80112529cb2e92e180767ff5341b22a3/lib/sbi/sbi_ecall_base.c#L43-L48). So JH7110 OpenSBI probably implements SBI v1.0.
 
+SBI v1.0 also appears in the JH7110 OpenSBI Log...
+
+```text
+Runtime SBI Version: 1.0
+```
+
+[(Source)](https://gist.github.com/lupyuen/1e009a3343da70257d6f24400339053f#file-nuttx-scheme-star64-log-L30)
+
 _What exactly is in SBI v0.2 and v1.0?_
 
 Here are the SBI Specs...
