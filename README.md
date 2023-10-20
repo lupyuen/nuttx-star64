@@ -8339,15 +8339,15 @@ _What exactly is in SBI v0.2 and v1.0?_
 
 Here are the SBI Specs...
 
-- [SBI Spec v0.2](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v0.2.0/riscv-sbi.adoc)
+- [SBI Spec v0.2](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v0.2.0/riscv-sbi.adoc) (Jan 2020)
 
-- [SBI Spec v1.0](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v1.0.0/riscv-sbi.adoc)
+- [SBI Spec v1.0](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v1.0.0/riscv-sbi.adoc) (Mar 2022)
 
 Definitely no Debug Console in there!
 
 _When was Debug Console added to the SBI Spec?_
 
-Debug Console appears in [SBI Spec v2.0 RC1](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v2.0-rc1/riscv-sbi.adoc), but there isn't an official SBI Spec v2.0 yet.
+Debug Console appears in [SBI Spec v2.0 RC1](https://github.com/riscv-non-isa/riscv-sbi-doc/blob/v2.0-rc1/riscv-sbi.adoc) (Jun 2023), but there isn't an official SBI Spec v2.0 yet.
 
 And the Debug Console code is already inside JH7110 OpenSBI: [sbi_ecall_dbcn.c](https://github.com/starfive-tech/opensbi/blob/c6a092cd80112529cb2e92e180767ff5341b22a3/lib/sbi/sbi_ecall_dbcn.c)
 
