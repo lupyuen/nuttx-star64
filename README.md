@@ -8335,6 +8335,8 @@ Runtime SBI Version: 1.0
 
 [(Source)](https://gist.github.com/lupyuen/1e009a3343da70257d6f24400339053f#file-nuttx-scheme-star64-log-L30)
 
+![SBI v1.0 appears in the JH7110 OpenSBI Log](https://lupyuen.github.io/images/sbi-title.png)
+
 _What exactly is in SBI v0.2 and v1.0?_
 
 Here are the SBI Specs...
