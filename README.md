@@ -8173,6 +8173,8 @@ Not AXP15060 PMIC, which has I2C Address 0x36 [(Page 7)](https://files.pine64.or
 
 TODO: Check the U-Boot Device Tree
 
+TODO: [OpenSBI PMIC Driver](https://github.com/starfive-tech/opensbi/blob/JH7110_VisionFive2_devel/platform/generic/starfive/jh7110.c)
+
 # Call OpenSBI from NuttX
 
 _How to call OpenSBI in NuttX?_
