@@ -6,6 +6,8 @@
 
 Read the articles...
 
+-   ["Star64 JH7110 RISC-V SBC: Experiments with OpenSBI (Supervisor Binary Interface)"](https://lupyuen.github.io/articles/sbi)
+
 -   ["RISC-V Star64 JH7110: Power Up the Display Controller with U-Boot Bootloader"](https://lupyuen.github.io/articles/display3)
 
 -   ["RISC-V Star64 JH7110: Inside the Display Controller"](https://lupyuen.github.io/articles/display2)
@@ -8176,6 +8178,10 @@ TODO: Check the U-Boot Device Tree
 TODO: [OpenSBI PMIC Driver](https://github.com/starfive-tech/opensbi/blob/JH7110_VisionFive2_devel/platform/generic/starfive/jh7110.c)
 
 # Call OpenSBI from NuttX
+
+Read the article...
+
+-   ["Star64 JH7110 RISC-V SBC: Experiments with OpenSBI (Supervisor Binary Interface)"](https://lupyuen.github.io/articles/sbi)
 
 _How to call OpenSBI in NuttX?_
 
