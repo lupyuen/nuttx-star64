@@ -7901,9 +7901,9 @@ clk u5_dw_i2c_clk_apb already disabled
 
 # Explore the I2C Controller for Star64 JH7110
 
-TODO: Not linked in any section, appears when we search for "I2C": [I2C Register Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_descript_i2c.html) (Looks garbled)
-
 JH7110 I2C is based on [DesignWare I2C](https://github.com/torvalds/linux/blob/master/drivers/i2c/busses/i2c-designware-core.h)
+
+_How do we send data over JH7110 I2C?_
 
 From [DesignWare DW_apb_i2c Databook](https://github.com/lupyuen/nuttx-star64/blob/main/designware-apb-i2c.pdf) Page 252: "Figure 8-2: Flowchart for DW_apb_i2c Master"
 
@@ -7966,9 +7966,7 @@ Which is implemented by this NuttX Driver:
 
 - Bit Bang Version: [cxd56_i2c_bitbang.c](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c_bitbang.c) and [cxd56_i2c_bitbang.h](https://github.com/apache/nuttx/blob/master/arch/arm/src/cxd56xx/cxd56_i2c_bitbang.h)
 
-TODO: Test this with U-Boot
-
-TODO: Read I2C Controller with U-Boot
+Let's test this with U-Boot! We read the I2C Registers with U-Boot...
 
 From [DesignWare DW_apb_i2c Databook](https://github.com/lupyuen/nuttx-star64/blob/main/designware-apb-i2c.pdf) Page 154:
 
@@ -8018,7 +8016,7 @@ From [DesignWare DW_apb_i2c Databook](https://github.com/lupyuen/nuttx-star64/bl
 
   Actual Value: 0
 
-The above Actual Values were retrieved from U-Boot...
+The above Actual Values were retrieved from I2C Port 0 via U-Boot...
 
 ```bash
 ## Omitted: Power Up the I2C Controller
@@ -8045,7 +8043,9 @@ $ md 0x10030000 0x40
 
 TODO: Read PMIC with U-Boot
 
-TODO: Which I2C ports are in use?
+_Which I2C ports are in use?_
+
+Let's dump the I2C Registers for I2C Ports 1 to 6...
 
 ```bash
 ## Omitted: Power Up the I2C Controller
@@ -8165,17 +8165,17 @@ $ md 0x12060000 0x40
 120600f0: 00000000 001f1fee 3230302a 44570140  ........*002@.WD
 ```
 
-TODO: I2C Port 5 has I2C Target Address 0x50. Probably in use
+I2C Port 5 has I2C Target Address 0x50. Probably in use.
 
 TODO: What are the I2C Controller Registers?
 
-TODO: What is I2C Target Address 0x50? 
-
-Not AXP15060 PMIC, which has I2C Address 0x36 [(Page 7)](https://files.pine64.org/doc/datasheet/star64/AXP15060%20datasheet%20V0.1.pdf)
+TODO: What is I2C Target Address 0x50? It's not AXP15060 PMIC, which has I2C Address 0x36 [(Page 7)](https://files.pine64.org/doc/datasheet/star64/AXP15060%20datasheet%20V0.1.pdf)
 
 TODO: Check the U-Boot Device Tree
 
-TODO: [OpenSBI PMIC Driver](https://github.com/starfive-tech/opensbi/blob/JH7110_VisionFive2_devel/platform/generic/starfive/jh7110.c)
+TODO: Read the PMIC over I2C with U-Boot. Refer to [OpenSBI PMIC Driver](https://github.com/starfive-tech/opensbi/blob/JH7110_VisionFive2_devel/platform/generic/starfive/jh7110.c)
+
+FYI: When we search the JH7110 Docs for "I2C", this garbled page appears, not linked in any section: [I2C Register Description](https://doc-en.rvspace.org/JH7110/TRM/JH7110_TRM/register_descript_i2c.html)
 
 # Call OpenSBI from NuttX
 
