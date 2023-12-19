@@ -99,16 +99,26 @@ jobs:
 
         ## Dump the disassembly to nuttx.S
         riscv64-unknown-elf-objdump \
-          -t -S --demangle --line-numbers --wide \
+          --syms --source --reloc --demangle --line-numbers --wide \
+          --debugging \
           nuttx \
           >nuttx.S \
           2>&1
 
         ## Dump the init disassembly to init.S
         riscv64-unknown-elf-objdump \
-          -t -S --demangle --line-numbers --wide \
+          --syms --source --reloc --demangle --line-numbers --wide \
+          --debugging \
           ../apps/bin/init \
           >init.S \
+          2>&1
+
+        ## Dump the hello disassembly to hello.S
+        riscv64-unknown-elf-objdump \
+          --syms --source --reloc --demangle --line-numbers --wide \
+          --debugging \
+          ../apps/bin/hello \
+          >hello.S \
           2>&1
 
     - name: Upload Build Outputs as Artifacts
@@ -121,11 +131,12 @@ jobs:
           nuttx/nuttx/starfiveu.fit
           nuttx/nuttx/jh7110-visionfive-v2.dtb
           nuttx/nuttx/init.S
+          nuttx/nuttx/hello.S
 
     - name: Zip Build Outputs for GitHub Release
       run: |
         cd nuttx/nuttx
-        zip nuttx.zip nuttx* initrd starfiveu.fit jh7110-visionfive-v2.dtb init.S
+        zip nuttx.zip nuttx* initrd starfiveu.fit jh7110-visionfive-v2.dtb init.S hello.S
 
     - name: Get Current Date
       id: date
@@ -153,3 +164,4 @@ jobs:
           nuttx/nuttx/starfiveu.fit
           nuttx/nuttx/jh7110-visionfive-v2.dtb
           nuttx/nuttx/init.S
+          nuttx/nuttx/hello.S
