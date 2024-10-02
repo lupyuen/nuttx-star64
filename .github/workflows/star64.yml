@@ -62,7 +62,7 @@ jobs:
         cat nuttx.hash
 
         ## Show the GCC version
-        riscv64-unknown-elf-gcc -v
+        riscv-none-elf-gcc -v
 
         ## Configure the build
         tools/configure.sh star64:nsh
@@ -74,7 +74,7 @@ jobs:
         make
 
         ## Export the Binary Image to nuttx.bin
-        riscv64-unknown-elf-objcopy \
+        riscv-none-elf-objcopy \
           -O binary \
           nuttx \
           nuttx.bin
@@ -95,10 +95,10 @@ jobs:
         mkimage -f nuttx.its -A riscv -O linux -T flat_dt starfiveu.fit
 
         ## Show the size
-        riscv64-unknown-elf-size nuttx
+        riscv-none-elf-size nuttx
 
         ## Dump the disassembly to nuttx.S
-        riscv64-unknown-elf-objdump \
+        riscv-none-elf-objdump \
           --syms --source --reloc --demangle --line-numbers --wide \
           --debugging \
           nuttx \
@@ -106,7 +106,7 @@ jobs:
           2>&1
 
         ## Dump the init disassembly to init.S
-        riscv64-unknown-elf-objdump \
+        riscv-none-elf-objdump \
           --syms --source --reloc --demangle --line-numbers --wide \
           --debugging \
           ../apps/bin/init \
@@ -114,7 +114,7 @@ jobs:
           2>&1
 
         ## Dump the hello disassembly to hello.S
-        riscv64-unknown-elf-objdump \
+        riscv-none-elf-objdump \
           --syms --source --reloc --demangle --line-numbers --wide \
           --debugging \
           ../apps/bin/hello \
